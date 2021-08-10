@@ -291,7 +291,8 @@ class Session {
 			//https://bugs.php.net/bug.php?id=79413
 			return session_create_id();
 		} elseif ($this->engine == 'native' && version_compare(phpversion(), '5.5.4', '>=')) {
-			return $this->adaptor->create_sid();
+			//return $this->adaptor->create_sid();
+			return session_id();
 		} elseif (function_exists('random_bytes')) {
 			return substr(bin2hex(random_bytes($this->config->get('session_length'))), 0, $this->config->get('session_length'));
 		} elseif (function_exists('openssl_random_pseudo_bytes')) {
