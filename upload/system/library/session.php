@@ -7,6 +7,7 @@
 class Session {
 	protected $adaptor;
 	protected $session_id = '';
+	private $cookie_status = true;
 	private $engine = 'native';
 	public $data = array();
 
@@ -39,6 +40,21 @@ class Session {
 			$this->adaptor = new $class($registry);
 
 			if ($this->adaptor) {
+				$cookie_status_path = DIR_SESSION . $this->config->get('session_prefix') . md5($this->request->server['REMOTE_ADDR']);
+				if (!isset($this->request->cookie['cookie_status'])) {
+					setcookie('cookie_status', true, 0);
+					if (!is_file($cookie_status_path)) {
+						file_put_contents($cookie_status_path, false);
+					} else {
+						$this->cookie_status = false;
+						return false;
+					}
+				} else {
+					if (is_file($cookie_status_path)) {
+						@unlink($cookie_status_path);
+					}
+				}
+
 				if ($engine == 'native') {
 					// обработчик, например, 'files', 'sqlite', 'memcache' или 'memcached',
 					/* $this->config->set('session_save_handler', 'files');
@@ -133,6 +149,9 @@ class Session {
 	}
 
 	public function start($name = 'PHPSESSID', $session_id = '') {
+		if (!$this->cookie_status) {
+			return false;
+		}
 		if (!$session_id) {
 			if (isset($this->request->cookie[$name])) {
 				$session_id = $this->request->cookie[$name];
