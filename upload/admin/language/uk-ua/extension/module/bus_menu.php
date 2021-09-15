@@ -4,7 +4,7 @@
 // *   Спецыяльна для сайта: "OpenCart.pro" ( http://opencart.pro/ )
 
 // Heading
-$_['heading_title']                         = '<b>ЫМеню <span style="color:limegreen">Full</span></b> v' . (isset($this->data['bus_menu_version']) ? $this->data['bus_menu_version'] : '1.0');
+$_['heading_title']                         = '<b>ЫМеню <span style="color:blue">Pro</span></b> v' . (isset($this->data['bus_menu_version']) ? $this->data['bus_menu_version'] : '1.0');
 
 // Tab
 $_['tab_setting']                           = 'Налаштування';
