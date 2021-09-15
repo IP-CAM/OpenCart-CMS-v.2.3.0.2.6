@@ -4,7 +4,7 @@
 // *   Спецыяльна для сайта: "OpenCart.pro" ( http://opencart.pro/ )
 
 // Heading
-$_['heading_title']                         = '<b>blMenu <span style="color:blue">Pro</span></b> v' . (isset($this->data['bus_menu_version']) ? $this->data['bus_menu_version'] : '1.0');
+$_['heading_title']                         = '<b>blMenu <span style="color:limegreen">Full</span></b> v' . (isset($this->data['bus_menu_version']) ? $this->data['bus_menu_version'] : '1.0');
 
 // Tab
 $_['tab_setting']                           = 'Settings';
@@ -18,6 +18,8 @@ $_['tab_support']                           = 'Technical Support';
 $_['text_extension']                        = 'Extensions';
 $_['text_module']                           = 'Modules';
 $_['text_edit']                             = 'Editing';
+$_['text_min']                              = 'Min';
+$_['text_max']                              = 'Max';
 $_['text_yes']                              = 'Yes';
 $_['text_no']                               = 'No';
 $_['text_enabled']                          = 'Enabled';
@@ -26,6 +28,9 @@ $_['text_all']                              = ' --- All --- ';
 $_['text_none']                             = ' --- None --- ';
 $_['text_select']                           = ' --- Please Select --- ';
 $_['text_select_all']                       = 'Select All';
+$_['text_unselect_all']                     = 'Unselect all';
+$_['text_width']                            = 'Width';
+$_['text_height']                           = 'Height';
 $_['text_install']                          = 'Installing module...';
 $_['text_uninstall']                        = 'Uninstalling module...';
 $_['text_uninstall_files']                  = 'Removing module files...';
@@ -34,6 +39,12 @@ $_['text_ocmod_clear']                      = 'Clearing modification...';
 $_['text_ocmod_clearlog']                   = 'Clearing modification log...';
 $_['text_ocmod_refresh']                    = 'Updating modification...';
 $_['text_cache_clear']                      = 'Clearing the cache...';
+$_['text_processing']                       = 'Processing';
+$_['text_loading']                          = 'Loading';
+$_['text_start']                            = 'Start';
+$_['text_continue']                         = 'Continue';
+$_['text_pause']                            = 'Pause';
+$_['text_restart']                          = 'Restart';
 $_['text_horizontal']                       = 'Horizontal (Menu)';
 $_['text_vertical']                         = 'Vertically (List)';
 $_['text_cell']                             = 'Cell (Showcase)';
@@ -84,8 +95,8 @@ $_['text_rating_count_check_1']             = ' Ratings from reviews';
 $_['text_rating_count_check_2']             = ' Number of views';
 $_['text_rating_count_check_3']             = ' Number of Sales';
 $_['text_product_count']                    = 'Current categories only';
-$_['text_author']                           = 'Author: <a href="http://buslikdrev.by/" title="Handicraft Products" rel="noreferrer noopener" target="_blank">BuslikDrev</a>. Support: <a href="https://liveopencart.ru/buslikdrev" title="Technical help to solve problems associated with the module" rel="noreferrer noopener" target="_blank">HERE</a>. Support topic: <a href="https://forum.opencart.pro/topic/5750-ыменю-blmenu-максимальная-скорость/" title="Technical help to solve problems associated with the module" rel="noreferrer noopener" target="_blank">HERE</a>.';
-$_['text_corp']                             = '© 2016-' . date('d.m.Y') . '; <a href="http://buslikdrev.by/" title="BuslikDrev" rel="noreferrer noopener" target="_blank">BuslikDrev</a> - All rights reserved.';
+$_['text_author']                           = 'Author: <a href="http://buslikdrev.by/" title="Handicraft Products" target="_blank">BuslikDrev</a>. Support: <a href="https://liveopencart.ru/buslikdrev" title="Technical help to solve problems associated with the module" target="_blank">HERE</a>. Support topic: <a href="https://forum.opencart.pro/topic/5750-ыменю-blmenu-максимальная-скорость/" title="Technical help to solve problems associated with the module" target="_blank">HERE</a>.';
+$_['text_corp']                             = '© 2016-' . date('d.m.Y') . '; <a href="http://buslikdrev.by/" title="BuslikDrev" target="_blank">BuslikDrev</a> - All rights reserved.';
 
 // Entry
 $_['entry_type']                            = 'Module type';
@@ -273,3 +284,6 @@ $_['success_setting_save']                  = 'Settings changed save!';
 $_['success_setting_new']                   = 'New module added successfully!';
 $_['success_setting_redirect']              = 'You have been redirected to the desired settings page!';
 $_['success_setting_import']                = 'Module settings "%s" were successfully imported into the module, you just have to apply them!';
+$_['success_add']                           = 'Successfully added!';
+$_['success_delete']                        = 'Successfully deleted!';
+$_['success_clear']                         = 'Successfully cleared!';

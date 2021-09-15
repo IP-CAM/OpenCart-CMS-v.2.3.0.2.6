@@ -4,7 +4,7 @@
 // *   Спецыяльна для сайта: "OpenCart.pro" ( http://opencart.pro/ )
 
 // Heading
-$_['heading_title']                         = '<b>ЫМеню <span style="color:blue">Pro</span></b> v' . (isset($this->data['bus_menu_version']) ? $this->data['bus_menu_version'] : '1.0');
+$_['heading_title']                         = '<b>ЫМеню <span style="color:limegreen">Full</span></b> v' . (isset($this->data['bus_menu_version']) ? $this->data['bus_menu_version'] : '1.0');
 
 // Tab
 $_['tab_setting']                           = 'Настройки';
@@ -18,6 +18,8 @@ $_['tab_support']                           = 'Техническая подде
 $_['text_extension']                        = 'Расширения';
 $_['text_module']                           = 'Модули';
 $_['text_edit']                             = 'Редактирование';
+$_['text_min']                              = 'От';
+$_['text_max']                              = 'До';
 $_['text_yes']                              = 'Да';
 $_['text_no']                               = 'Нет';
 $_['text_enabled']                          = 'Включено';
@@ -26,6 +28,9 @@ $_['text_all']                              = ' --- Все --- ';
 $_['text_none']                             = ' --- Не выбрано --- ';
 $_['text_select']                           = ' --- Выберите --- ';
 $_['text_select_all']                       = 'Выделить всё';
+$_['text_unselect_all']                     = 'Снять выделение';
+$_['text_width']                            = 'Ширина';
+$_['text_height']                           = 'Высота';
 $_['text_install']                          = 'Установка модуля...';
 $_['text_uninstall']                        = 'Удаление модуля...';
 $_['text_uninstall_files']                  = 'Удаление файлов модуля...';
@@ -34,6 +39,12 @@ $_['text_ocmod_clear']                      = 'Чистка модификато
 $_['text_ocmod_clearlog']                   = 'Чистка лога модификаторов...';
 $_['text_ocmod_refresh']                    = 'Обновление модификаторов...';
 $_['text_cache_clear']                      = 'Чистка кэша...';
+$_['text_processing']                       = 'Обработка';
+$_['text_loading']                          = 'Загрузка';
+$_['text_start']                            = 'Старт';
+$_['text_continue']                         = 'Продолжить';
+$_['text_pause']                            = 'Пауза';
+$_['text_restart']                          = 'Рестарт';
 $_['text_horizontal']                       = 'Горизонтально (Меню)';
 $_['text_vertical']                         = 'Вертикально (Список)';
 $_['text_cell']                             = 'Клеткой (Витрина)';
@@ -84,8 +95,8 @@ $_['text_rating_count_check_1']             = ' Оценок из отзывов
 $_['text_rating_count_check_2']             = ' Количества просмотров';
 $_['text_rating_count_check_3']             = ' Количества продаж';
 $_['text_product_count']                    = 'Только текущих категорий';
-$_['text_author']                           = 'Автор: <a href="https://buslikdrev.by/" title="Изделия ремесленного производства" rel="noreferrer noopener" target="_blank">БусликДрев</a>. Тех. поддержка: <a href="https://liveopencart.ru/buslikdrev" title="Техническая помощь по решению проблем связанные с модулем" rel="noreferrer noopener" target="_blank">ТУТ</a>. Тема поддержки: <a href="https://forum.opencart.pro/topic/5750-ыменю-blmenu-максимальная-скорость/" title="Техническая помощь по решению проблем связанные с модулем" rel="noreferrer noopener" target="_blank">ТУТ</a>.';
-$_['text_corp']                             = '© 2016-' . date('d.m.Y') . '; <a href="https://buslikdrev.by/" title="BuslikDrev" rel="noreferrer noopener" target="_blank">BuslikDrev</a> - Все права сохранены.';
+$_['text_author']                           = 'Автор: <a href="http://buslikdrev.by/" title="Изделия ремесленного производства" target="_blank">БусликДрев</a>. Тех. поддержка: <a href="https://liveopencart.ru/buslikdrev" title="Техническая помощь по решению проблем связанные с модулем" target="_blank">ТУТ</a>. Тема поддержки: <a href="https://forum.opencart.pro/topic/5750-ыменю-blmenu-максимальная-скорость/" title="Техническая помощь по решению проблем связанные с модулем" target="_blank">ТУТ</a>.';
+$_['text_corp']                             = '© 2016-' . date('d.m.Y') . '; <a href="http://buslikdrev.by/" title="BuslikDrev" target="_blank">BuslikDrev</a> - Все права сохранены.';
 
 // Entry
 $_['entry_type']                            = 'Тип модуля';
@@ -273,3 +284,6 @@ $_['success_setting_save']                  = 'Настройки успешно
 $_['success_setting_new']                   = 'Новый модуль успешно добавлен!';
 $_['success_setting_redirect']              = 'Вы были перенаправлены на нужную страницу настроек!';
 $_['success_setting_import']                = 'Настройки модуля "%s" успешно импортированы в модуль, вам осталось их применить!';
+$_['success_add']                           = 'Успешно добавлено!';
+$_['success_delete']                        = 'Успешно удалено!';
+$_['success_clear']                         = 'Успешно очищено!';
