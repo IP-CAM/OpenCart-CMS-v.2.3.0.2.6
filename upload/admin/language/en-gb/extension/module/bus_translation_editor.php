@@ -32,6 +32,7 @@ $_['text_all']                                   = ' --- All --- ';
 $_['text_none']                                  = ' --- None --- ';
 $_['text_select']                                = ' --- Please Select --- ';
 $_['text_select_all']                            = 'Select All';
+$_['text_unselect_all']                          = 'Unselect All';
 $_['text_width']                                 = 'Width';
 $_['text_height']                                = 'Height';
 $_['text_install']                               = 'Installing module...';
