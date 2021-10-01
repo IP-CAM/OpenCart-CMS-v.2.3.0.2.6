@@ -65,7 +65,10 @@ $_['session_probability']     = 1;
 $_['session_divisor']         = 5;
 
 // Template
-$_['template_type']           = 'php';
+$_['template_type']           = 'php'; // php, twig
+
+// Pre Config
+$_['pre_config']              = false;
 
 // Error
 $_['error_display']           = false;
