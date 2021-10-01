@@ -13,7 +13,41 @@ $config->load('default');
 $config->load($application_config);
 $registry->set('config', $config);
 
-// Error fix
+// Pre config
+if ($config->get('pre_config') && isset($_GET['route'])) {
+	if ($_GET['route']) {
+		$pre_config_route = preg_replace('/[^a-zA-Z0-9_\/]/', '', (string)$_GET['route']);
+
+		if (!is_file(DIR_APPLICATION . 'controller/' . $pre_config_route . '.php')) {
+			$pre_config_route = substr($pre_config_route, 0, -strlen('/' . basename($pre_config_route)));
+			if (!is_file(DIR_APPLICATION . 'controller/' . $pre_config_route . '.php')) {
+				$pre_config_route = false;
+			}
+		}
+	} else {
+		$pre_config_route = 'common/home';
+	}
+
+	if ($pre_config_route) {
+		$pre_config = new Action($pre_config_route . '/preConfig');
+		$pre_config = $pre_config->execute($registry, array((string)$_GET['route']));
+
+		if (is_array($pre_config)) {
+			foreach ($pre_config as $key => $result) {
+				$registry->get('config')->set($key, $result);
+				$config->set($key, $result);
+			}
+		}
+	}
+}
+
+// Logging
+if ($config->get('error_log')) {
+	$log = new Log($config->get('error_filename'));
+	$registry->set('log', $log);
+}
+
+// Error Handler Fix
 set_error_handler(function($code, $message, $file, $line) use($config) {
 	// error suppressed with @
 	if (error_reporting() === 0) {
@@ -38,7 +72,11 @@ set_error_handler(function($code, $message, $file, $line) use($config) {
 			break;
 	}
 
-	if ($config->get('config_error_display')) {
+	if ($this->config->get('error_log')) {
+		$this->log->write('PHP ' . $error . ':  ' . $message . ' in ' . $file . ' on line ' . $line);
+	}
+
+	if ($config->get('error_display')) {
 		echo '<b>' . $error . '</b>: ' . $message . ' in <b>' . $file . '</b> on line <b>' . $line . '</b>';
 	} else {
 		error_reporting(0);
