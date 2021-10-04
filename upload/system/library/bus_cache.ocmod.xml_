@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Аўтар: "БуслікДрэў" ( https://buslikdrev.by/ )
+© 2016-2021; BuslikDrev - Усе правы захаваныя.
+Спецыяльна для сайта: "OpenCart.pro" ( https://opencart.pro/ ) -->
+
+<modification>
+    <code>01000024</code>
+    <name>Буслік Кэш - "Buslik Cache"</name>
+    <version>1.0 Full</version>
+    <author>BuslikDrev.by</author>
+    <link>https://liveopencart.ru/buslikdrev</link>
+    <!-- ↓ САЙТ КОНТРОЛЛЕРЫ ↓ -->
+    <file path="catalog/controller/common/header.php">
+        <operation error="skip">
+            <search index="0">
+            <![CDATA[$data['scripts'] = $this->document->getScripts(]]>
+            </search>
+            <add position="after">
+            <![CDATA[		$this->response->setBuslikCache(array(
+			'styles' => $this->document->getStyles(),
+			'scripts' => $this->document->getScripts('header')
+		));]]>
+            </add>
+        </operation>
+    </file>
+	<!-- <file path="catalog/controller/common/footer.php">
+        <operation error="skip">
+            <search index="0">
+            <![CDATA[$data['scripts'] = $this->document->getScripts(]]>
+            </search>
+            <add position="after">
+            <![CDATA[		$this->response->setBuslikCache(array(
+			'styles' => $this->document->getStyles(),
+			'scripts' => $this->document->getScripts('footer')
+		));]]>
+            </add>
+        </operation>
+    </file> -->
+    <file path="system/engine/action.php">
+        <operation error="skip">
+            <search index="0">
+            <![CDATA[public function __construct($route, $args = array()) {]]>
+            </search>
+            <add position="replace">
+            <![CDATA[private $bus_id;
+	public function getBusId() {
+		return $this->bus_id;
+	}
+
+	public function __construct($route, $args = array()) {
+		$this->bus_id = $route;]]>
+            </add>
+        </operation>
+    </file>
+    <file path="system/engine/{front,router}.php">
+        <operation error="skip">
+            <search index="0">
+            <![CDATA[foreach ($this->pre_action as $pre_action) {]]>
+            </search>
+            <add position="after">
+            <![CDATA[			/* BuslikDrev edition cache */
+			if (!defined('DIR_CATALOG') && (version_compare(VERSION, '2.2.0', '>') ? $pre_action->getId() == 'startup/maintenance' : $pre_action->getBusId() == 'common/maintenance')) {
+				if (!(php_sapi_name() === 'cli')) {
+					$ЖЫДКЭШ = new Bus_Cache\Bus_Cache($this->registry, microtime(true));
+				}
+			}
+			/* BuslikDrev edition cache */]]>
+            </add>
+        </operation>
+    </file>
+    <file path="system/engine/loader.php">
+        <operation error="skip">
+            <search index="0">
+            <![CDATA[class Loader {]]>
+            </search>
+            <add position="before">
+            <![CDATA[if (!defined('BUS_CACHE_TIMER')) {
+	define('BUS_CACHE_TIMER', microtime(true));
+}
+]]>
+            </add>
+        </operation>
+        <operation error="skip">
+            <search index="0">
+            <![CDATA[function controller(]]>
+            </search>
+            <add position="after">
+            <![CDATA[		if (!defined('DIR_CATALOG') && ($route == 'common/column_left' || $route == 'common/column_right')) {
+			if ($this->registry->get('bus_cache_device') == 'mobile' || $this->registry->get('bus_cache_device') == 'pagespeed') {
+				return false;
+			}
+		}]]>
+            </add>
+        </operation>
+    </file>
+    <file path="system/library/cache.php">
+        <operation error="skip">
+            <search index="0">
+            <![CDATA[if (class_exists($class)) {]]>
+            </search>
+            <add position="before">
+            <![CDATA[		if (strpos($class, 'Bus_Cache') !== false) {
+			$class = str_ireplace('Cache\\Bus_Cache', 'Bus_Cache', $class);
+		}]]>
+            </add>
+        </operation>
+    </file>
+    <file path="system/library/response.php">
+        <operation error="skip">
+            <search index="0">
+            <![CDATA[class Response {]]>
+            </search>
+            <add position="after">
+            <![CDATA[	private $setBuslikCache = array();
+
+	public function setBuslikCache($data = array()) {
+		if ($this->setBuslikCache) {
+			foreach ($this->setBuslikCache as $key => $result) {
+				$data[$key] = $result;
+			}
+		}
+		$data['headers'] = $this->headers;
+		$this->setBuslikCache = $data;
+	}]]>
+            </add>
+        </operation>
+        <operation error="skip">
+            <search index="0">
+            <![CDATA[if ($this->output) {]]>
+            </search>
+            <add position="after">
+            <![CDATA[			if (!defined('DIR_CATALOG') && !(php_sapi_name() === 'cli')) {
+				$this->output = (new Bus_Cache\Bus_Cache())->output($this->output, $this->setBuslikCache);
+			}]]>
+            </add>
+        </operation>
+    </file>
+    <file path="admin/controller/module/cachemanager.php">
+        <operation error="skip">
+            <search>
+            <![CDATA['cache.*']]>
+            </search>
+            <add position="replace">
+            <![CDATA['*']]>
+            </add>
+        </operation>
+    </file>
+    <file path="admin/controller/extension/module/cachemanager.php">
+        <operation error="skip">
+            <search>
+            <![CDATA['cache.*']]>
+            </search>
+            <add position="replace">
+            <![CDATA['*']]>
+            </add>
+        </operation>
+    </file>
+    <file path="admin/controller/common/developer.php">
+        <operation error="skip">
+            <search index="0">
+            <![CDATA[foreach ($directories as $directory) {]]>
+            </search>
+            <add position="after">
+            <![CDATA[					if (DIR_CACHE . 'buslik' == $directory) {continue;}]]>
+            </add>
+        </operation>
+        <operation error="skip">
+            <search>
+            <![CDATA['cache.*']]>
+            </search>
+            <add position="replace">
+            <![CDATA['*']]>
+            </add>
+        </operation>
+    </file>
+    <!-- ↑ САЙТ КОНТРОЛЛЕРЫ ↑ -->
+</modification>
+
+<!-- Аўтар: "БуслікДрэў" ( https://buslikdrev.by/ )
+© 2016-2021; BuslikDrev - Усе правы захаваныя.
+Спецыяльна для сайта: "OpenCart.pro" ( https://opencart.pro/ ) -->
