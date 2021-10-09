@@ -32,6 +32,17 @@ class ControllerAccountRegister extends Controller {
 
 			unset($this->session->data['guest']);
 
+			// Wishlist
+			if (isset($this->session->data['wishlist']) && is_array($this->session->data['wishlist'])) {
+				$this->load->model('account/wishlist');
+
+				foreach ($this->session->data['wishlist'] as $key => $product_id) {
+					$this->model_account_wishlist->addWishlist($product_id);
+
+					unset($this->session->data['wishlist'][$key]);
+				}
+			}
+
 			// Add to activity log
 			if ($this->config->get('config_customer_activity')) {
 				$this->load->model('account/activity');
