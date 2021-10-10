@@ -1,18 +1,20 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2020.
+// *	@copyright	OPENCART.PRO 2011 - 2021.
 // *	@forum		http://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
 class ControllerEventDebug extends Controller {
 	public function before(&$route, &$data) {
-		if ($route) {
+		$user = new \Cart\User($this->registry);
+		if ($route && $user->isLogged()) {
 			$this->session->data['debug'][$route] = microtime(true);
 		}
 	}
 
 	public function after(&$route, &$data, &$output) {
-		if ($route) {
+		$user = new \Cart\User($this->registry);
+		if ($route && $user->isLogged()) {
 			if (isset($this->session->data['debug'][$route])) {
 				$data = array(
 					'route' => $route,
