@@ -1,7 +1,7 @@
 <?php
-// *   Аўтар: "БуслікДрэў" ( http://buslikdrev.by/ )
-// *   © 2016-2020; BuslikDrev - Усе правы захаваныя.
-// *   Спецыяльна для сайта: "OpenCart.pro" ( http://opencart.pro/ )
+// *   Аўтар: "БуслікДрэў" ( https://buslikdrev.by/ )
+// *   © 2016-2021; BuslikDrev - Усе правы захаваныя.
+// *   Спецыяльна для сайта: "OpenCart.pro" ( https://opencart.pro/ )
 
 /*
                                                              ░░░░░                                                      
@@ -86,7 +86,7 @@ class ControllerExtensionModuleBusMenu extends Controller {
 	private $name_arhive = 'blMenu';
 	private $code = '01000046';
 	private $mame = 'ЫМеню - "blMenu"';
-	private $version = '1.0.29';
+	private $version = '1.0.30';
 	private $author = 'BuslikDrev.by';
 	private $link = 'https://liveopencart.ru/buslikdrev';
 	private $version_oc = 2.2;
@@ -2545,10 +2545,6 @@ class ControllerExtensionModuleBusMenu extends Controller {
 		$this->load->language($this->paths['language']['bus_menu']);
 
 		// посылыаем на йух
-		if (!$this->user->hasPermission('modify', 'extension/extension/module')) {
-			$this->error['warning'] = $this->language->get('error_permission');
-		}
-
 		if ($this->version_oc >= 2.2) {
 			if (!$this->user->hasPermission('modify', 'extension/extension/module')) {
 				$this->error['warning'] = $this->language->get('error_permission');
@@ -2733,8 +2729,6 @@ HTML;
 		$this->load->language($this->paths['language']['bus_menu']);
 
 		// посылыаем на йух
-		$this->load->language($this->paths['language']['bus_menu']);
-
 		if ($this->version_oc >= 2.2) {
 			if (!$this->user->hasPermission('modify', 'extension/extension/module')) {
 				$this->error['warning'] = $this->language->get('error_permission');
