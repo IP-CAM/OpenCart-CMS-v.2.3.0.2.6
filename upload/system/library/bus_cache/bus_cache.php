@@ -96,7 +96,7 @@ class Bus_Cache {
 			$cart = new \Cart\Cart($this->registry);
 		} */
 		$cart = (int)$this->cart->hasProducts();
-		if ($cart > 20) {
+		if ($cart) {
 			$setting['cache_status'] = false;
 		}
 
