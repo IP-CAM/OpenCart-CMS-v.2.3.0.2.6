@@ -43,6 +43,6 @@ class Native extends \SessionHandler {
 	}
 
 	public function gc($maxlifetime = 0) {
-		return parent::gc(time() + $maxlifetime);
+		return parent::gc($maxlifetime);
 	}
 }
