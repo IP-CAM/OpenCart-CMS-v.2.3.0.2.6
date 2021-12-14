@@ -6,6 +6,7 @@
 
 class ControllerCommonFileManager extends Controller {
 	public function index() {
+		// History
 		if (isset($this->request->get['directory'])) {
 			$this->session->data['filemanager_directory'] = $this->request->get['directory'];
 		} else {
@@ -22,6 +23,15 @@ class ControllerCommonFileManager extends Controller {
 				$this->request->get['page'] = $this->session->data['filemanager_page'];
 			}
 			unset($this->session->data['filemanager_page']);
+		}
+
+		if (isset($this->request->get['filter_name'])) {
+			$this->session->data['filemanager_filter_name'] = $this->request->get['filter_name'];
+		} else {
+			if (isset($this->session->data['filemanager_filter_name']) && !isset($this->request->get['history_off'])) {
+				$this->request->get['filter_name'] = $this->session->data['filemanager_filter_name'];
+			}
+			unset($this->session->data['filemanager_filter_name']);
 		}
 
 		$this->load->language('common/filemanager');
