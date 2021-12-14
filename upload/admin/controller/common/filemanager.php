@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2021.
+// *	@copyright	OPENCART.PRO 2011 - 2022.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -8,17 +8,20 @@ class ControllerCommonFileManager extends Controller {
 	public function index() {
 		if (isset($this->request->get['directory'])) {
 			$this->session->data['filemanager_directory'] = $this->request->get['directory'];
-			if (isset($this->request->get['page'])) {
-				$this->session->data['filemanager_page'] = $this->request->get['page'];
-			}
 		} else {
-			if (isset($this->request->get['parent'])) {
-				unset($this->session->data['filemanager_directory']);
-				unset($this->session->data['filemanager_page']);
-			} else {
-				$this->request->get['directory'] = (isset($this->session->data['filemanager_directory']) ? $this->session->data['filemanager_directory'] : null);
-				$this->request->get['page'] = (isset($this->session->data['filemanager_page']) ? $this->session->data['filemanager_page'] : null);
+			if (isset($this->session->data['filemanager_directory']) && !isset($this->request->get['parent'])) {
+				$this->request->get['directory'] = $this->session->data['filemanager_directory'];
 			}
+			unset($this->session->data['filemanager_directory']);
+		}
+
+		if (isset($this->request->get['page'])) {
+			$this->session->data['filemanager_page'] = $this->request->get['page'];
+		} else {
+			if (isset($this->session->data['filemanager_page']) && !isset($this->request->get['parent'])) {
+				$this->request->get['page'] = $this->session->data['filemanager_page'];
+			}
+			unset($this->session->data['filemanager_page']);
 		}
 
 		$this->load->language('common/filemanager');
@@ -271,7 +274,7 @@ class ControllerCommonFileManager extends Controller {
 					if ((utf8_strlen($filename) < 3) || (utf8_strlen($filename) > 255)) {
 						$json['error'] = $this->language->get('error_filename');
 					}
-					
+
 					// Allowed file extension types
 					$allowed = array(
 						'jpg',
@@ -283,7 +286,7 @@ class ControllerCommonFileManager extends Controller {
 					if (!in_array(utf8_strtolower(utf8_substr(strrchr($filename, '.'), 1)), $allowed)) {
 						$json['error'] = $this->language->get('error_filetype');
 					}
-					
+
 					// Allowed file mime types
 					$allowed = array(
 						'image/jpeg',
