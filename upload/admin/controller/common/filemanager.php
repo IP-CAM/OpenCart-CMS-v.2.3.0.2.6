@@ -9,7 +9,7 @@ class ControllerCommonFileManager extends Controller {
 		if (isset($this->request->get['directory'])) {
 			$this->session->data['filemanager_directory'] = $this->request->get['directory'];
 		} else {
-			if (isset($this->session->data['filemanager_directory']) && !isset($this->request->get['parent'])) {
+			if (isset($this->session->data['filemanager_directory']) && !isset($this->request->get['history_off'])) {
 				$this->request->get['directory'] = $this->session->data['filemanager_directory'];
 			}
 			unset($this->session->data['filemanager_directory']);
@@ -18,7 +18,7 @@ class ControllerCommonFileManager extends Controller {
 		if (isset($this->request->get['page'])) {
 			$this->session->data['filemanager_page'] = $this->request->get['page'];
 		} else {
-			if (isset($this->session->data['filemanager_page']) && !isset($this->request->get['parent'])) {
+			if (isset($this->session->data['filemanager_page']) && !isset($this->request->get['history_off'])) {
 				$this->request->get['page'] = $this->session->data['filemanager_page'];
 			}
 			unset($this->session->data['filemanager_page']);
@@ -161,7 +161,7 @@ class ControllerCommonFileManager extends Controller {
 
 		// Parent
 		$url = '';
-		$url .= '&parent=1';
+		$url .= '&history_off=1';
 
 		if (isset($this->request->get['directory'])) {
 			$pos = strrpos($this->request->get['directory'], '/');
@@ -183,6 +183,7 @@ class ControllerCommonFileManager extends Controller {
 
 		// Refresh
 		$url = '';
+		$url .= '&history_off=1';
 
 		if (isset($this->request->get['directory'])) {
 			$url .= '&directory=' . urlencode($this->request->get['directory']);
@@ -198,7 +199,9 @@ class ControllerCommonFileManager extends Controller {
 
 		$data['refresh'] = $this->url->link('common/filemanager', 'token=' . $this->session->data['token'] . $url, true);
 
+		// Transition
 		$url = '';
+		$url .= '&history_off=1';
 
 		if (isset($this->request->get['directory'])) {
 			$url .= '&directory=' . urlencode(html_entity_decode($this->request->get['directory'], ENT_QUOTES, 'UTF-8'));
