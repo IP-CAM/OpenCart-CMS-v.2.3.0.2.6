@@ -1,6 +1,6 @@
 <?php
 // *   Аўтар: "БуслікДрэў" ( https://buslikdrev.by/ )
-// *   © 2016-2021; BuslikDrev - Усе правы захаваныя.
+// *   © 2016-2022; BuslikDrev - Усе правы захаваныя.
 // *   Спецыяльна для сайта: "OpenCart.pro" ( https://opencart.pro/ )
 
 /*
@@ -88,7 +88,7 @@ class ControllerExtensionModuleBusCache extends Controller {
 	private $name_arhive = 'Buslik Cache';
 	private $code = '01000024';
 	private $mame = 'Буслік Кэш - "Buslik Cache"';
-	private $version = '1.0.9';
+	private $version = '1.0.11';
 	private $author = 'BuslikDrev.by';
 	private $link = 'https://liveopencart.ru/buslikdrev';
 	private $version_oc = 2.2;
@@ -343,35 +343,155 @@ class ControllerExtensionModuleBusCache extends Controller {
 			$this->request->get['route'] = $this->request->post['route'];
 		}
 
+		if (!empty($this->request->post['minify'])) {
+			$this->request->get['minify'] = $this->request->post['minify'];
+		} elseif (!empty($setting['minify'])) {
+			$this->request->get['minify'] = $this->request->post['minify'];
+		}
+
 		if ($this->validate()) {
-			if (($this->request->server['REQUEST_METHOD'] != 'POST')) {
-				$this->load->model('setting/setting');
+			if (!empty($this->request->get['minify'])) {
+				if (($this->request->server['REQUEST_METHOD'] != 'POST')) {
+					$this->load->model('setting/setting');
 
-				$module_info = $this->configGet();
-				$module_info['time_save'] = time();
+					$module_info = $this->configGet();
+					$module_info['time_save'] = time();
+					$this->request->post['pagespeed_css_min_download'] = $module_info['pagespeed_css_min_download'];
+					$this->request->post['pagespeed_js_min_download'] = $module_info['pagespeed_js_min_download'];
 
-				$this->model_setting_setting->editSetting('bus_cache', array('bus_cache' => $module_info));
-			}
-			$text = $this->deleteDir(DIR_IMAGE . 'cache/bus_cache[NAGIBATOR]');
-			$cache_engine = $this->configGet('cache_engine');
-			if ($cache_engine == 'apc' && ini_get('apc.enabled') && function_exists('apc_clear_cache')) {
-				(new Bus_Cache\apc())->flush();
-				$text .= "\n" . '<br>APC cache delete';
-			} elseif ($cache_engine == 'apcu' && ini_get('apc.enabled') && function_exists('apcu_clear_cache')) {
-				(new Bus_Cache\apcu())->flush();
-				$text .= "\n" . '<br>APCu cache delete';
-			} elseif ($cache_engine == 'mem' && extension_loaded('memcache') && class_exists('Memcache') && function_exists('memcache_connect')) {
-				(new Bus_Cache\mem())->flush();
-				$text .= "\n" . '<br>Memcache cache delete';
-			} elseif ($cache_engine == 'memcached' && function_exists('Memcached')) {
-				(new Bus_Cache\memcached())->flush();
-				$text .= "\n" . '<br>Memcached cache delete';
-			} elseif ($cache_engine == 'redis' && function_exists('Redis')) {
-				(new Bus_Cache\redis())->flush();
-				$text .= "\n" . '<br>Redis cache delete';
+					$this->model_setting_setting->editSetting('bus_cache', array('bus_cache' => $module_info));
+				}
+
+				$text = $this->deleteDir(DIR_IMAGE . 'cache/bus_cache[NAGIBATOR]');
 			} else {
-				$text .= $this->deleteDir(DIR_CACHE . 'buslik[NAGIBATOR]');
-				$text .= $this->deleteDir(DIR_CACHE);
+				// чистим всё или то, что используем
+				if (1 == 0) {
+					if (ini_get('apc.enabled') && function_exists('apc_clear_cache')) {
+						(new Bus_Cache\apc())->flush();
+						$text = "\n" . '<br>APC cache delete';
+					}
+					if (ini_get('apc.enabled') && function_exists('apcu_clear_cache')) {
+						(new Bus_Cache\apcu())->flush();
+						if (1 == 0 && function_exists('opcache_reset')) {
+							opcache_reset();
+						}
+						$text = "\n" . '<br>APCu cache delete';
+					}
+					if (extension_loaded('memcache') && class_exists('Memcache') && function_exists('memcache_connect')) {
+						(new Bus_Cache\mem())->flush();
+						$text = "\n" . '<br>Memcache cache delete';
+					}
+					if (function_exists('Memcached')) {
+						(new Bus_Cache\memcached())->flush();
+						$text = "\n" . '<br>Memcached cache delete';
+					}
+					if (function_exists('Redis')) {
+						(new Bus_Cache\redis())->flush();
+						$text = "\n" . '<br>Redis cache delete';
+					}
+					$text .= $this->deleteDir(DIR_CACHE . 'buslik[NAGIBATOR]');
+					$text .= $this->deleteDir(DIR_CACHE);
+				} else {
+					$cache_engine = $this->configGet('cache_engine');
+					if ($cache_engine == 'apc' && ini_get('apc.enabled') && function_exists('apc_clear_cache')) {
+						(new Bus_Cache\apc())->flush();
+						$text = "\n" . '<br>APC cache delete';
+					} elseif ($cache_engine == 'apcu' && ini_get('apc.enabled') && function_exists('apcu_clear_cache')) {
+						(new Bus_Cache\apcu())->flush();
+						if (1 == 0 && function_exists('opcache_reset')) {
+							opcache_reset();
+						}
+						$text = "\n" . '<br>APCu cache delete';
+					} elseif ($cache_engine == 'mem' && extension_loaded('memcache') && class_exists('Memcache') && function_exists('memcache_connect')) {
+						(new Bus_Cache\mem())->flush();
+						$text = "\n" . '<br>Memcache cache delete';
+					} elseif ($cache_engine == 'memcached' && function_exists('Memcached')) {
+						(new Bus_Cache\memcached())->flush();
+						$text = "\n" . '<br>Memcached cache delete';
+					} elseif ($cache_engine == 'redis' && function_exists('Redis')) {
+						(new Bus_Cache\redis())->flush();
+						$text = "\n" . '<br>Redis cache delete';
+					} else {
+						$text = $this->deleteDir(DIR_CACHE . 'buslik[NAGIBATOR]');
+						$text .= $this->deleteDir(DIR_CACHE);
+					}
+				}
+			}
+
+			if (!is_dir(DIR_IMAGE . 'cache/bus_cache/download/')) {
+				mkdir(DIR_IMAGE . 'cache/bus_cache/download/', 0755, true);
+			}
+
+			if (!empty($this->request->post['pagespeed_css_min_download'])) {
+				$css_links = str_replace(array("\r", "\n", '&amp;'), array('ЖЫДКЭШ', 'ЖЫДКЭШ', '&'), $this->request->post['pagespeed_css_min_download']);
+				$css_links = str_replace(array('ЖЫДКЭШЖЫДКЭШ'), 'ЖЫДКЭШ', $css_links);
+				$css_links = explode('ЖЫДКЭШ', $css_links);
+				foreach ($css_links as $link) {
+					$file = DIR_IMAGE . 'cache/bus_cache/download/' . md5($link) . '.css';
+					if ($link && stristr($link, '//') && !\is_file($file)) {
+						$href = @get_headers($link);
+						if (!empty($href[0]) && strpos($href[0], '404') === false) {
+							/* $postdata = http_build_query(array(
+								'family'  => 'Open+Sans:400,400i,300,700',
+								'display' => 'swap'
+							)); */
+							if (!empty($this->request->server['HTTP_USER_AGENT'])) {
+								$user_agent = $this->request->server['HTTP_USER_AGENT'];
+							} else {
+								$user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36';
+							}
+							$context  = stream_context_create(array('http' =>
+								array(
+									'method'  => "GET",
+									'header'  => 
+										"Content-Type: application/x-www-form-urlencoded\r\n" . "Referer: /\r\n" . "User-Agent: " . $user_agent,
+									//'content' => $postdata
+								)
+							));
+							$content = file_get_contents(str_replace('&amp;', '&', $link), false, $context);
+							//$content = fopen($link, 'r', false, $context);
+							if ($content) {
+								file_put_contents($file, $content);
+							}
+						}
+					}
+				}
+			}
+
+			if (!empty($this->request->post['pagespeed_js_min_download'])) {
+				$js_links = str_replace(array("\r", "\n", '&amp;'), array('ЖЫДКЭШ', 'ЖЫДКЭШ', '&'), $this->request->post['pagespeed_js_min_download']);
+				$js_links = str_replace(array('ЖЫДКЭШЖЫДКЭШ'), 'ЖЫДКЭШ', $js_links);
+				$js_links = explode('ЖЫДКЭШ', $js_links);
+				foreach ($js_links as $link) {
+					$file = DIR_IMAGE . 'cache/bus_cache/download/' . md5($link) . '.js';
+					if ($link && stristr($link, '//') && !\is_file($file)) {
+						$href = @get_headers($link);
+						if (!empty($href[0]) && strpos($href[0], '404') === false) {
+							/* $postdata = http_build_query(array(
+								'family'  => 'Open+Sans:400,400i,300,700',
+								'display' => 'swap'
+							)); */
+							if (!empty($this->request->server['HTTP_USER_AGENT'])) {
+								$user_agent = $this->request->server['HTTP_USER_AGENT'];
+							} else {
+								$user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36';
+							}
+							$context  = stream_context_create(array('http' =>
+								array(
+									'method'  => "GET",
+									'header'  => 
+										"Content-Type: application/x-www-form-urlencoded\r\n" . "Referer: /\r\n" . "User-Agent: " . $user_agent,
+									//'content' => $postdata
+								)
+							));
+							$content = file_get_contents(str_replace('&amp;', '&', $link), false, $context);
+							//$content = fopen($link, 'r', false, $context);
+							if ($content) {
+								file_put_contents($file, $content);
+							}
+						}
+					}
+				}
 			}
 
 			if (isset($this->request->post['info'])) {
@@ -411,6 +531,9 @@ class ControllerExtensionModuleBusCache extends Controller {
 		}
 
 		$data['heading_title'] = $this->language->get('heading_title');
+		$data['help_pagespeed_css_style'] = htmlspecialchars($this->language->get('help_pagespeed_css_style'));
+		$data['help_pagespeed_js_inline_event'] = htmlspecialchars($this->language->get('help_pagespeed_js_inline_event'));
+		$data['help_pagespeed_js_script'] = htmlspecialchars($this->language->get('help_pagespeed_js_script'));
 
 		//$this->load->model('customer/customer_group');
 
@@ -443,7 +566,6 @@ class ControllerExtensionModuleBusCache extends Controller {
 		$module_info = $this->configGet();
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-			$this->clear();
 			if (isset($this->request->post['apply']) && !empty($this->request->post['apply'])) {
 				$apply = $this->request->post['apply'];
 				unset($this->request->post['apply']);
@@ -453,6 +575,24 @@ class ControllerExtensionModuleBusCache extends Controller {
 
 			$this->request->post['version'] = $this->version;
 			$this->request->post['time_save'] = time();
+
+			if (isset($this->request->post['pagespeed_css_style'])) {
+				$this->setFile('replace', html_entity_decode($this->request->post['pagespeed_css_style']), 'css');
+
+				if (!empty($this->request->post['pagespeed_css_style'])) {
+					$this->request->post['pagespeed_css_style'] = true;
+				}
+			}
+
+			if (isset($this->request->post['pagespeed_js_script'])) {
+				$this->setFile('replace', html_entity_decode($this->request->post['pagespeed_js_script']), 'js');
+
+				if (!empty($this->request->post['pagespeed_js_script'])) {
+					$this->request->post['pagespeed_js_script'] = true;
+				}
+			}
+
+			$this->clear();
 
 			$modification = '';
 			if (!empty($module_info['status']) && empty($this->request->post['status'])) {
@@ -518,6 +658,7 @@ class ControllerExtensionModuleBusCache extends Controller {
 
 		$data['action'] = $this->url->link($this->paths['controller']['bus_cache'], $this->paths['token'], true);
 		$data['clear'] = $this->url->link($this->paths['controller']['bus_cache'] . '/clear', $this->paths['token'], true);
+		$data['clear_minify'] = $this->url->link($this->paths['controller']['bus_cache'] . '/clear', $this->paths['token'] . '&minify=1', true);
 		if ($this->config->get('bus_app')) {
 			$data['clear_pwa'] = $this->url->link(str_replace('bus_cache', 'bus_app', $this->paths['controller']['bus_cache']) . '/clear', $this->paths['token'] . '&redirect=' . $this->paths['controller']['bus_cache'], true);
 		} else {
@@ -547,6 +688,30 @@ class ControllerExtensionModuleBusCache extends Controller {
 			$data['cache_status'] = $module_info['cache_status'];
 		} else {
 			$data['cache_status'] = true;
+		}
+
+		if (isset($this->request->post['cache_ses'])) {
+			$data['cache_ses'] = $this->request->post['cache_ses'];
+		} elseif (isset($module_info['cache_ses'])) {
+			$data['cache_ses'] = $module_info['cache_ses'];
+		} else {
+			$data['cache_ses'] = "customer_id\r\naffiliate_id\r\nlanguage\r\ncurrency\r\nwishlist\r\ncompare";
+		}
+
+		if (isset($this->request->post['cache_onrot'])) {
+			$data['cache_onrot'] = $this->request->post['cache_onrot'];
+		} elseif (isset($module_info['cache_onrot'])) {
+			$data['cache_onrot'] = $module_info['cache_onrot'];
+		} else {
+			$data['cache_onrot'] = false;
+		}
+
+		if (isset($this->request->post['cache_rot'])) {
+			$data['cache_rot'] = $this->request->post['cache_rot'];
+		} elseif (isset($module_info['cache_rot'])) {
+			$data['cache_rot'] = $module_info['cache_rot'];
+		} else {
+			$data['cache_rot'] = "extension/module/bus_editor\r\nmodule/bus_editor\r\nextension/module/bus_menu/ajax\r\nmodule/bus_menu/ajax\r\naccount\r\ncart\r\ncheckout\r\ncompare\r\nwishlist\r\ncountry\r\ncaptcha\r\nsuccess\r\nnot_found\r\napi\r\najax_viewed\r\ncontact";
 		}
 
 		if (isset($this->request->post['cache_customer'])) {
@@ -591,22 +756,6 @@ class ControllerExtensionModuleBusCache extends Controller {
 			$data['cache_expire'] = 3600;
 		}
 
-		if (isset($this->request->post['cache_ses'])) {
-			$data['cache_ses'] = $this->request->post['cache_ses'];
-		} elseif (isset($module_info['cache_ses'])) {
-			$data['cache_ses'] = $module_info['cache_ses'];
-		} else {
-			$data['cache_ses'] = "customer_id\r\naffiliate_id\r\nlanguage\r\ncurrency\r\nwishlist\r\ncompare";
-		}
-
-		if (isset($this->request->post['cache_rot'])) {
-			$data['cache_rot'] = $this->request->post['cache_rot'];
-		} elseif (isset($module_info['cache_rot'])) {
-			$data['cache_rot'] = $module_info['cache_rot'];
-		} else {
-			$data['cache_rot'] = "extension/module/bus_editor\r\nmodule/bus_editor\r\nextension/module/bus_menu/ajax\r\nmodule/bus_menu/ajax\r\naccount\r\ncart\r\ncheckout\r\ncompare\r\nwishlist\r\ncountry\r\ncaptcha\r\nsuccess\r\nnot_found\r\napi\r\najax_viewed\r\ncontact";
-		}
-
 		if (isset($this->request->post['cache_device'])) {
 			$data['cache_device'] = $this->request->post['cache_device'];
 		} elseif (isset($module_info['cache_device'])) {
@@ -621,6 +770,14 @@ class ControllerExtensionModuleBusCache extends Controller {
 			$data['pagespeed_status'] = $module_info['pagespeed_status'];
 		} else {
 			$data['pagespeed_status'] = true;
+		}
+
+		if (isset($this->request->post['pagespeed_rot'])) {
+			$data['pagespeed_rot'] = $this->request->post['pagespeed_rot'];
+		} elseif (isset($module_info['pagespeed_rot'])) {
+			$data['pagespeed_rot'] = $module_info['pagespeed_rot'];
+		} else {
+			$data['pagespeed_rot'] = false;
 		}
 
 		if (isset($this->request->post['pagespeed_preload_logo'])) {
@@ -647,6 +804,14 @@ class ControllerExtensionModuleBusCache extends Controller {
 			$data['pagespeed_lazy_load'] = 1;
 		}
 
+		if (isset($this->request->post['pagespeed_replace'])) {
+			$data['pagespeed_replace'] = $this->request->post['pagespeed_replace'];
+		} elseif (isset($module_info['pagespeed_replace'])) {
+			$data['pagespeed_replace'] = $module_info['pagespeed_replace'];
+		} else {
+			$data['pagespeed_replace'] = false;
+		}
+
 		if (isset($this->request->post['pagespeed_html_min'])) {
 			$data['pagespeed_html_min'] = $this->request->post['pagespeed_html_min'];
 		} elseif (isset($module_info['pagespeed_html_min'])) {
@@ -671,6 +836,70 @@ class ControllerExtensionModuleBusCache extends Controller {
 			$data['pagespeed_css_min_links'] = false;
 		}
 
+		if (isset($this->request->post['pagespeed_css_min_download'])) {
+			$data['pagespeed_css_min_download'] = $this->request->post['pagespeed_css_min_download'];
+		} elseif (isset($module_info['pagespeed_css_min_download'])) {
+			$data['pagespeed_css_min_download'] = $module_info['pagespeed_css_min_download'];
+		} else {
+			$data['pagespeed_css_min_download'] = false;
+		}
+
+		if (isset($this->request->post['pagespeed_css_min_exception'])) {
+			$data['pagespeed_css_min_exception'] = $this->request->post['pagespeed_css_min_exception'];
+		} elseif (isset($module_info['pagespeed_css_min_exception'])) {
+			$data['pagespeed_css_min_exception'] = $module_info['pagespeed_css_min_exception'];
+		} else {
+			$data['pagespeed_css_min_exception'] = false;
+		}
+
+		if (isset($this->request->post['pagespeed_css_min_font'])) {
+			$data['pagespeed_css_min_font'] = $this->request->post['pagespeed_css_min_font'];
+		} elseif (isset($module_info['pagespeed_css_min_font'])) {
+			$data['pagespeed_css_min_font'] = $module_info['pagespeed_css_min_font'];
+		} else {
+			$data['pagespeed_css_min_font'] = false;
+		}
+
+		if (isset($this->request->post['pagespeed_css_min_display'])) {
+			$data['pagespeed_css_min_display'] = $this->request->post['pagespeed_css_min_display'];
+		} elseif (isset($module_info['pagespeed_css_min_display'])) {
+			$data['pagespeed_css_min_display'] = $module_info['pagespeed_css_min_display'];
+		} else {
+			$data['pagespeed_css_min_display'] = false;
+		}
+
+		if (isset($this->request->post['pagespeed_css_critical'])) {
+			$data['pagespeed_css_critical'] = $this->request->post['pagespeed_css_critical'];
+		} elseif (isset($module_info['pagespeed_css_critical'])) {
+			$data['pagespeed_css_critical'] = $module_info['pagespeed_css_critical'];
+		} else {
+			$data['pagespeed_css_critical'] = false;
+		}
+
+		if (isset($this->request->post['pagespeed_css_inline_transfer'])) {
+			$data['pagespeed_css_inline_transfer'] = $this->request->post['pagespeed_css_inline_transfer'];
+		} elseif (isset($module_info['pagespeed_css_inline_transfer'])) {
+			$data['pagespeed_css_inline_transfer'] = $module_info['pagespeed_css_inline_transfer'];
+		} else {
+			$data['pagespeed_css_inline_transfer'] = 0;
+		}
+
+		if (isset($this->request->post['pagespeed_css_events'])) {
+			$data['pagespeed_css_events'] = $this->request->post['pagespeed_css_events'];
+		} elseif (!empty($module_info['pagespeed_css_events'])) {
+			$data['pagespeed_css_events'] = $module_info['pagespeed_css_events'];
+		} else {
+			$data['pagespeed_css_events'] = "pagehide\r\nscroll\r\nmouseover\r\ntouchstart";
+		}
+
+		if (isset($this->request->post['pagespeed_css_style'])) {
+			$data['pagespeed_css_style'] = $this->getFile('replace', 'css');
+		} elseif (!empty($module_info['pagespeed_css_style'])) {
+			$data['pagespeed_css_style'] = $this->getFile('replace', 'css');
+		} else {
+			$data['pagespeed_css_style'] = false;
+		}
+
 		if (isset($this->request->post['pagespeed_js_min'])) {
 			$data['pagespeed_js_min'] = $this->request->post['pagespeed_js_min'];
 		} elseif (isset($module_info['pagespeed_js_min'])) {
@@ -687,12 +916,60 @@ class ControllerExtensionModuleBusCache extends Controller {
 			$data['pagespeed_js_min_links'] = false;
 		}
 
-		if (isset($this->request->post['pagespeed_rot'])) {
-			$data['pagespeed_rot'] = $this->request->post['pagespeed_rot'];
-		} elseif (isset($module_info['pagespeed_rot'])) {
-			$data['pagespeed_rot'] = $module_info['pagespeed_rot'];
+		if (isset($this->request->post['pagespeed_js_min_download'])) {
+			$data['pagespeed_js_min_download'] = $this->request->post['pagespeed_js_min_download'];
+		} elseif (isset($module_info['pagespeed_js_min_download'])) {
+			$data['pagespeed_js_min_download'] = $module_info['pagespeed_js_min_download'];
 		} else {
-			$data['pagespeed_rot'] = false;
+			$data['pagespeed_js_min_download'] = false;
+		}
+
+		if (isset($this->request->post['pagespeed_js_min_exception'])) {
+			$data['pagespeed_js_min_exception'] = $this->request->post['pagespeed_js_min_exception'];
+		} elseif (isset($module_info['pagespeed_js_min_exception'])) {
+			$data['pagespeed_js_min_exception'] = $module_info['pagespeed_js_min_exception'];
+		} else {
+			$data['pagespeed_js_min_exception'] = false;
+		}
+
+		if (isset($this->request->post['pagespeed_js_inline_event'])) {
+			$data['pagespeed_js_inline_event'] = $this->request->post['pagespeed_js_inline_event'];
+		} elseif (isset($module_info['pagespeed_js_inline_event'])) {
+			$data['pagespeed_js_inline_event'] = $module_info['pagespeed_js_inline_event'];
+		} else {
+			$data['pagespeed_js_inline_event'] = false;
+		}
+
+		if (isset($this->request->post['pagespeed_js_inline_event_time'])) {
+			$data['pagespeed_js_inline_event_time'] = $this->request->post['pagespeed_js_inline_event_time'];
+		} elseif (isset($module_info['pagespeed_js_inline_event_time'])) {
+			$data['pagespeed_js_inline_event_time'] = $module_info['pagespeed_js_inline_event_time'];
+		} else {
+			$data['pagespeed_js_inline_event_time'] = 0;
+		}
+
+		if (isset($this->request->post['pagespeed_js_inline_transfer'])) {
+			$data['pagespeed_js_inline_transfer'] = $this->request->post['pagespeed_js_inline_transfer'];
+		} elseif (isset($module_info['pagespeed_js_inline_transfer'])) {
+			$data['pagespeed_js_inline_transfer'] = $module_info['pagespeed_js_inline_transfer'];
+		} else {
+			$data['pagespeed_js_inline_transfer'] = 0;
+		}
+
+		if (isset($this->request->post['pagespeed_js_events'])) {
+			$data['pagespeed_js_events'] = $this->request->post['pagespeed_js_events'];
+		} elseif (!empty($module_info['pagespeed_js_events'])) {
+			$data['pagespeed_js_events'] = $module_info['pagespeed_js_events'];
+		} else {
+			$data['pagespeed_js_events'] = "pagehide\r\nscroll\r\nmouseover\r\ntouchstart";
+		}
+
+		if (isset($this->request->post['pagespeed_js_script'])) {
+			$data['pagespeed_js_script'] = $this->getFile('replace', 'js');
+		} elseif (!empty($module_info['script'])) {
+			$data['pagespeed_js_script'] = $this->getFile('replace', 'js');
+		} else {
+			$data['pagespeed_js_script'] = false;
 		}
 
 		if (isset($this->request->post['debug'])) {
@@ -1248,6 +1525,8 @@ HTML;
 				//DIR_IMAGE . 'catalog/bus_cache[NAGIBATOR]',
 				//DIR_LOGS . 'bus_cache',
 				DIR_SYSTEM . 'library/bus_cache[NAGIBATOR]',
+				DIR_SYSTEM . 'library/bus_cube/bus_cache[NAGIBATOR]',
+				DIR_SYSTEM . 'library/bus_cube',
 				DIR_SYSTEM . 'library/bus_cache.ocmod.xml_',
 				DIR_SYSTEM . 'bus_cache.ocmod.xml',
 			);
@@ -1363,7 +1642,7 @@ HTML;
 			}
 
 			$this->clear();
-			$this->session->data['success'] = $this->modification($this->language->get('heading_title') . $this->language->get('success_update'));
+			$this->session->data['success'] = $this->modification($this->language->get('heading_title') . $this->language->get('success_update'), true, 500);
 		}
 	}
 

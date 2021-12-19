@@ -3,16 +3,28 @@
 #form-bus-app option:disabled {
     color: rgb(200 200 200);
 }
+.tooltip {
+    font-size: 12px;
+}
+.tooltip-inner {
+    max-width: 300px;
+    padding: 3px 8px;
+    color: #fff;
+    text-align: center;
+    background-color: #000;
+    border-radius: 3px;
+}
 </style>
 <?php echo $column_left; ?>
 <!-- // *   Аўтар: "БуслікДрэў" ( https://buslikdrev.by/ )
-     // *   © 2016-2021; BuslikDrev - Усе правы захаваныя.
+     // *   © 2016-2022; BuslikDrev - Усе правы захаваныя.
      // *   Спецыяльна для сайта: "OpenCart.pro" ( https://opencart.pro/ ) -->
 <div id="content">
   <div class="page-header">
     <div class="container-fluid">
       <div class="pull-right">
         <button type="button" onclick="location.href = '<?php echo $clear; ?>';" data-toggle="tooltip" title="<?php echo $button_clear; ?>" class="btn btn-default"><i class="fa fa-eraser"></i></button>
+        <button type="button" onclick="location.href = '<?php echo $clear_minify; ?>';" data-toggle="tooltip" title="<?php echo $button_clear; ?> CSS, JS" class="btn btn-warning"><i class="fa fa-eraser"></i></button>
         <?php if ($clear_pwa) { ?>
         <button type="button" onclick="location.href = '<?php echo $clear_pwa; ?>';" data-toggle="tooltip" title="<?php echo $button_clear; ?> PWA" class="btn btn-primary" style="background-color:#570fc2;"><i class="fa fa-eraser"></i></button>
         <?php } ?>
@@ -99,6 +111,24 @@
             </div>
           </div>
           <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-cache-ses"><span title="<?php echo $help_cache_ses; ?>" data-toggle="tooltip"><?php echo $entry_cache_ses; ?></span></label>
+            <div class="col-sm-10">
+              <textarea name="cache_ses" rows="5" placeholder="<?php echo $entry_cache_ses; ?>" id="input-cache-ses" class="form-control"><?php echo $cache_ses; ?></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-cache-onrot"><span title="<?php echo $help_cache_onrot; ?>" data-toggle="tooltip"><?php echo $entry_cache_onrot; ?></span></label>
+            <div class="col-sm-10">
+              <textarea name="cache_onrot" rows="5" placeholder="<?php echo $entry_cache_onrot; ?>" id="input-cache-onrot" class="form-control"><?php echo $cache_onrot; ?></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-cache-rot"><span title="<?php echo $help_cache_rot; ?>" data-toggle="tooltip"><?php echo $entry_cache_rot; ?></span></label>
+            <div class="col-sm-10">
+              <textarea name="cache_rot" rows="5" placeholder="<?php echo $entry_cache_rot; ?>" id="input-cache-rot" class="form-control"><?php echo $cache_rot; ?></textarea>
+            </div>
+          </div>
+          <div class="form-group">
             <label class="col-sm-2 control-label" for="input-cache-customer"><?php echo $entry_cache_customer; ?></label>
             <div class="col-sm-10">
               <select name="cache_customer" id="input-cache-customer" class="form-control">
@@ -133,18 +163,6 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label" for="input-cache-ses"><span title="<?php echo $help_cache_ses; ?>" data-toggle="tooltip"><?php echo $entry_cache_ses; ?></span></label>
-            <div class="col-sm-10">
-              <textarea name="cache_ses" rows="5" placeholder="<?php echo $entry_cache_ses; ?>" id="input-cache-ses" class="form-control"><?php echo $cache_ses; ?></textarea>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-2 control-label" for="input-cache-rot"><span title="<?php echo $help_cache_rot; ?>" data-toggle="tooltip"><?php echo $entry_cache_rot; ?></span></label>
-            <div class="col-sm-10">
-              <textarea name="cache_rot" rows="5" placeholder="<?php echo $entry_cache_rot; ?>" id="input-cache-rot" class="form-control"><?php echo $cache_rot; ?></textarea>
-            </div>
-          </div>
-          <div class="form-group">
             <label class="col-sm-2 control-label" for="input-cache-device"><span title="<?php echo $help_cache_device; ?>" data-toggle="tooltip"><?php echo $entry_cache_device; ?></span></label>
             <div class="col-sm-10">
               <select name="cache_device" id="input-cache-device" class="form-control">
@@ -161,6 +179,12 @@
                 <option value="1"<?php if ($pagespeed_status == 1) { ?> selected="selected"<?php } ?>><?php echo $text_yes; ?></option>
                 <option value="0"<?php if (!$pagespeed_status) { ?> selected="selected"<?php } ?>><?php echo $text_no; ?></option>
               </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-pagespeed-rot"><span title="<?php echo $help_pagespeed_rot; ?>" data-toggle="tooltip"><?php echo $entry_pagespeed_rot; ?></span></label>
+            <div class="col-sm-10">
+              <textarea name="pagespeed_rot" rows="5" placeholder="<?php echo $entry_cache_rot; ?>" id="input-pagespeed-rot" class="form-control"><?php echo $pagespeed_rot; ?></textarea>
             </div>
           </div>
           <div class="form-group">
@@ -192,6 +216,12 @@
             </div>
           </div>
           <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-pagespeed-replace"><span title="<?php echo $help_pagespeed_replace; ?>" data-toggle="tooltip"><?php echo $entry_pagespeed_replace; ?></span></label>
+            <div class="col-sm-10">
+              <textarea name="pagespeed_replace" rows="10" placeholder="<?php echo $entry_pagespeed_replace; ?>" id="input-pagespeed-replaces" class="form-control"><?php echo $pagespeed_replace; ?></textarea>
+            </div>
+          </div>
+          <div class="form-group">
             <label class="col-sm-2 control-label" for="input-pagespeed-html-min"><span title="<?php echo $help_pagespeed_html_min; ?>" data-toggle="tooltip"><?php echo $entry_pagespeed_html_min; ?></span></label>
             <div class="col-sm-10">
               <input type="number" name="pagespeed_html_min" value="<?php echo $pagespeed_html_min; ?>" placeholder="<?php echo $entry_pagespeed_html_min; ?>" id="input-pagespeed-html-min" class="form-control" />
@@ -206,7 +236,56 @@
           <div class="form-group">
             <label class="col-sm-2 control-label" for="input-pagespeed-css-min-links"><span title="<?php echo $help_pagespeed_css_min_links; ?>" data-toggle="tooltip"><?php echo $entry_pagespeed_css_min_links; ?></span></label>
             <div class="col-sm-10">
-              <textarea name="pagespeed_css_min_links" rows="5" placeholder="<?php echo $entry_pagespeed_css_min_links; ?>" id="input-pagespeed-css-min-links" class="form-control"><?php echo $pagespeed_css_min_links; ?></textarea>
+              Чтобы отложить по взаимодействию, после ссылки установить "|after"
+              <textarea name="pagespeed_css_min_links" rows="10" placeholder="<?php echo $entry_pagespeed_css_min_links; ?>" id="input-pagespeed-css-min-links" class="form-control"><?php echo $pagespeed_css_min_links; ?></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-pagespeed-css-min-download"><span title="<?php echo $help_pagespeed_css_min_download; ?>" data-toggle="tooltip"><?php echo $entry_pagespeed_css_min_download; ?></span></label>
+            <div class="col-sm-10">
+              <textarea name="pagespeed_css_min_download" rows="5" placeholder="<?php echo $entry_pagespeed_css_min_download; ?>" id="input-pagespeed-css-min-download" class="form-control"><?php echo $pagespeed_css_min_download; ?></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-pagespeed-css-min-exception"><span title="<?php echo $help_pagespeed_css_min_exception; ?>" data-toggle="tooltip"><?php echo $entry_pagespeed_css_min_exception; ?></span></label>
+            <div class="col-sm-10">
+              Чтобы отложить по взаимодействию, после ссылки установить "|after"
+              <textarea name="pagespeed_css_min_exception" rows="10" placeholder="<?php echo $entry_pagespeed_css_min_exception; ?>" id="input-pagespeed-css-min-exception" class="form-control"><?php echo $pagespeed_css_min_exception; ?></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-pagespeed-css-min-font"><span title="<?php echo $help_pagespeed_css_min_font; ?>" data-toggle="tooltip"><?php echo $entry_pagespeed_css_min_font; ?></span></label>
+            <div class="col-sm-10">
+              <textarea name="pagespeed_css_min_font" rows="10" placeholder="<?php echo $entry_pagespeed_css_min_font; ?>" id="input-pagespeed-css-min-font" class="form-control"><?php echo $pagespeed_css_min_font; ?></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-pagespeed-css-min-display"><span title="<?php echo $help_pagespeed_css_min_display; ?>" data-toggle="tooltip"><?php echo $entry_pagespeed_css_min_display; ?></span></label>
+            <div class="col-sm-10">
+              <select name="pagespeed_css_min_display" id="input-pagespeed-css-min-display" class="form-control">
+                <option value="auto"<?php if ($pagespeed_css_min_display == 'auto') { ?> selected="selected"<?php } ?>>auto</option>
+                <option value="block"<?php if ($pagespeed_css_min_display == 'block') { ?> selected="selected"<?php } ?>>block</option>
+                <option value="swap"<?php if ($pagespeed_css_min_display == 'swap') { ?> selected="selected"<?php } ?>>swap</option>
+                <option value="fallback"<?php if ($pagespeed_css_min_display == 'fallback') { ?> selected="selected"<?php } ?>>fallback</option>
+                <option value="optional"<?php if ($pagespeed_css_min_display == 'optional') { ?> selected="selected"<?php } ?>>optional</option>
+                <option value="0"<?php if (!$pagespeed_css_min_display) { ?> selected="selected"<?php } ?>><?php echo $text_no; ?></option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-pagespeed-css-inline-transfer"><span title="<?php echo $help_pagespeed_css_inline_transfer; ?>" data-toggle="tooltip"><?php echo $entry_pagespeed_css_inline_transfer; ?></span></label>
+            <div class="col-sm-10">
+              <select name="pagespeed_css_inline_transfer" id="input-pagespeed-css-inline-transfer" class="form-control">
+                <option value="0"<?php if (!$pagespeed_css_inline_transfer) { ?> selected="selected"<?php } ?>><?php echo $text_no; ?></option>
+                <option value="1"<?php if ($pagespeed_css_inline_transfer == 1) { ?> selected="selected"<?php } ?>><?php echo $text_pagespeed_inline_transfer_1; ?></option>
+                <option value="2"<?php if ($pagespeed_css_inline_transfer == 2) { ?> selected="selected"<?php } ?>><?php echo $text_pagespeed_inline_transfer_2; ?></option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-pagespeed-css-style"><span title="<?php echo $help_pagespeed_css_style; ?>" data-toggle="tooltip"><?php echo $entry_pagespeed_css_style; ?></span></label>
+            <div class="col-sm-10">
+              <textarea name="pagespeed_css_style" rows="10" placeholder="<?php echo $entry_pagespeed_css_style; ?>" id="input-pagespeed-css-style" class="form-control"><?php echo $pagespeed_css_style; ?></textarea>
             </div>
           </div>
           <div class="form-group">
@@ -218,13 +297,55 @@
           <div class="form-group">
             <label class="col-sm-2 control-label" for="input-pagespeed-js-min-links"><span title="<?php echo $help_pagespeed_js_min_links; ?>" data-toggle="tooltip"><?php echo $entry_pagespeed_js_min_links; ?></span></label>
             <div class="col-sm-10">
-              <textarea name="pagespeed_js_min_links" rows="5" placeholder="<?php echo $entry_pagespeed_js_min_links; ?>" id="input-pagespeed-js-min-links" class="form-control"><?php echo $pagespeed_js_min_links; ?></textarea>
+              Чтобы отложить по взаимодействию, после ссылки установить "|after"
+              <textarea name="pagespeed_js_min_links" rows="10" placeholder="<?php echo $entry_pagespeed_js_min_links; ?>" id="input-pagespeed-js-min-links" class="form-control"><?php echo $pagespeed_js_min_links; ?></textarea>
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label" for="input-pagespeed-rot"><span title="<?php echo $help_pagespeed_rot; ?>" data-toggle="tooltip"><?php echo $entry_pagespeed_rot; ?></span></label>
+            <label class="col-sm-2 control-label" for="input-pagespeed-js-min-download"><span title="<?php echo $help_pagespeed_js_min_download; ?>" data-toggle="tooltip"><?php echo $entry_pagespeed_js_min_download; ?></span></label>
             <div class="col-sm-10">
-              <textarea name="pagespeed_rot" rows="5" placeholder="<?php echo $entry_pagespeed_rot; ?>" id="input-pagespeed-rot" class="form-control"><?php echo $pagespeed_rot; ?></textarea>
+              <textarea name="pagespeed_js_min_download" rows="5" placeholder="<?php echo $entry_pagespeed_js_min_download; ?>" id="input-pagespeed-js-min-download" class="form-control"><?php echo $pagespeed_js_min_download; ?></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-pagespeed-js-min-exception"><span title="<?php echo $help_pagespeed_js_min_exception; ?>" data-toggle="tooltip"><?php echo $entry_pagespeed_js_min_exception; ?></span></label>
+            <div class="col-sm-10">
+              Чтобы отложить по взаимодействию, после ссылки установить "|after"
+              <textarea name="pagespeed_js_min_exception" rows="10" placeholder="<?php echo $entry_pagespeed_js_min_exception; ?>" id="input-pagespeed-js-min-exception" class="form-control"><?php echo $pagespeed_js_min_exception; ?></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-pagespeed-js-inline-event"><span title="<?php echo $help_pagespeed_js_inline_event; ?>" data-toggle="tooltip"><?php echo $entry_pagespeed_js_inline_event; ?></span></label>
+            <div class="col-sm-10">
+              <textarea name="pagespeed_js_inline_event" rows="10" placeholder="<?php echo $entry_pagespeed_js_inline_event; ?>" id="input-pagespeed-js-inline-event" class="form-control"><?php echo $pagespeed_js_inline_event; ?></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-pagespeed-js-inline-event-time"><span title="<?php echo $help_pagespeed_js_inline_event_time; ?>" data-toggle="tooltip"><?php echo $entry_pagespeed_js_inline_event_time; ?></span></label>
+            <div class="col-sm-10">
+              <input type="number" name="pagespeed_js_inline_event_time" value="<?php echo $pagespeed_js_inline_event_time; ?>" placeholder="<?php echo $entry_pagespeed_js_inline_event_time; ?>" id="input-pagespeed-js-inline-event-time" class="form-control" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-pagespeed-js-inline-transfer"><span title="<?php echo $help_pagespeed_js_inline_transfer; ?>" data-toggle="tooltip"><?php echo $entry_pagespeed_js_inline_transfer; ?></span></label>
+            <div class="col-sm-10">
+              <select name="pagespeed_js_inline_transfer" id="input-pagespeed-js-inline-transfer" class="form-control">
+                <option value="0"<?php if (!$pagespeed_js_inline_transfer) { ?> selected="selected"<?php } ?>><?php echo $text_no; ?></option>
+                <option value="1"<?php if ($pagespeed_js_inline_transfer == 1) { ?> selected="selected"<?php } ?>><?php echo $text_pagespeed_inline_transfer_1; ?></option>
+                <option value="2"<?php if ($pagespeed_js_inline_transfer == 2) { ?> selected="selected"<?php } ?>><?php echo $text_pagespeed_inline_transfer_2; ?></option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-pagespeed-js-events"><span title="<?php echo $help_pagespeed_js_events; ?>" data-toggle="tooltip"><?php echo $entry_pagespeed_js_events; ?></span></label>
+            <div class="col-sm-10">
+              <textarea name="pagespeed_js_events" rows="5" placeholder="<?php echo $entry_pagespeed_js_events; ?>" id="input-pagespeed-js-events" class="form-control"><?php echo $pagespeed_js_events; ?></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-pagespeed-js-script"><span title="<?php echo $help_pagespeed_js_script; ?>" data-toggle="tooltip"><?php echo $entry_pagespeed_js_script; ?></span></label>
+            <div class="col-sm-10">
+              <textarea name="pagespeed_js_script" rows="10" placeholder="<?php echo $entry_pagespeed_js_script; ?>" id="input-pagespeed-js-script" class="form-control"><?php echo $pagespeed_js_script; ?></textarea>
             </div>
           </div>
           <legend><b><?php echo $tab_support; ?></b></legend>
@@ -249,14 +370,16 @@
 $(document).ready(function() {
 	$('select[name="cache_status"]').change(function() {
 		if ($('select[name="cache_status"]').val() == 1) {
-			$('select[name="cache_customer"]').removeAttr('disabled').parent().parent().fadeIn();
 			$('textarea[name="cache_ses"]').parent().parent().fadeIn();
+			$('textarea[name="cache_onrot"]').parent().parent().fadeIn();
 			$('textarea[name="cache_rot"]').parent().parent().fadeIn();
+			$('select[name="cache_customer"]').removeAttr('disabled').parent().parent().fadeIn();
 			$('select[name="cache_device"]').removeAttr('disabled').parent().parent().fadeIn();
 		} else {
-			$('select[name="cache_customer"]').attr('disabled', true).parent().parent().fadeOut(1);
 			$('textarea[name="cache_ses"]').parent().parent().fadeOut(1);
+			$('textarea[name="cache_onrot"]').parent().parent().fadeOut(1);
 			$('textarea[name="cache_rot"]').parent().parent().fadeOut(1);
+			$('select[name="cache_customer"]').attr('disabled', true).parent().parent().fadeOut(1);
 			$('select[name="cache_device"]').attr('disabled', true).parent().parent().fadeOut(1);
 		}
 	});
@@ -264,31 +387,63 @@ $(document).ready(function() {
 
 	$('select[name="pagespeed_status"]').change(function() {
 		if ($('select[name="pagespeed_status"]').val() == 1) {
-			$('select[name="pagespeed_preload_logo"]').removeAttr('disabled').parent().parent().fadeIn();
-			$('select[name="pagespeed_attribute_w_h"]').removeAttr('disabled').parent().parent().fadeIn();
-			$('select[name="pagespeed_lazy_load"]').removeAttr('disabled').parent().parent().fadeIn();
-			$('input[name="pagespeed_html_min"]').removeAttr('disabled').parent().parent().fadeIn();
-			$('input[name="pagespeed_css_min"]').removeAttr('disabled').parent().parent().fadeIn();
-			$('textarea[name="pagespeed_css_min_links"]').parent().parent().fadeIn();
-			$('input[name="pagespeed_js_min"]').removeAttr('disabled').parent().parent().fadeIn();
-			$('textarea[name="pagespeed_js_min_links"]').parent().parent().fadeIn();
 			$('textarea[name="pagespeed_rot"]').parent().parent().fadeIn();
+			$('select[name="pagespeed_preload_logo"]').parent().parent().fadeIn();
+			$('select[name="pagespeed_attribute_w_h"]').parent().parent().fadeIn();
+			$('select[name="pagespeed_lazy_load"]').parent().parent().fadeIn();
+			$('textarea[name="pagespeed_replace"]').parent().parent().fadeIn();
+			$('input[name="pagespeed_html_min"]').parent().parent().fadeIn();
+			$('input[name="pagespeed_css_min"]').parent().parent().fadeIn();
+			$('textarea[name="pagespeed_css_min_links"]').parent().parent().fadeIn();
+			$('textarea[name="pagespeed_css_min_download"]').parent().parent().fadeIn();
+			$('textarea[name="pagespeed_css_min_exception"]').parent().parent().fadeIn();
+			$('textarea[name="pagespeed_css_min_font"]').parent().parent().fadeIn();
+			$('select[name="pagespeed_css_min_display"]').parent().parent().fadeIn();
+			$('select[name="pagespeed_css_critical"]').parent().parent().fadeIn();
+			$('select[name="pagespeed_css_inline_transfer"]').parent().parent().fadeIn();
+			$('textarea[name^="pagespeed_css_events"]').parent().parent().fadeIn();
+			$('textarea[name="pagespeed_css_style"]').parent().parent().fadeIn();
+			$('input[name="pagespeed_js_min"]').parent().parent().fadeIn();
+			$('textarea[name="pagespeed_js_min_links"]').parent().parent().fadeIn();
+			$('textarea[name="pagespeed_js_min_download"]').parent().parent().fadeIn();
+			$('textarea[name="pagespeed_js_min_exception"]').parent().parent().fadeIn();
+			$('textarea[name="pagespeed_js_inline_event"]').parent().parent().fadeIn();
+			$('input[name="pagespeed_js_inline_event_time"]').parent().parent().fadeIn();
+			$('select[name="pagespeed_js_inline_transfer"]').parent().parent().fadeIn();
+			$('textarea[name^="pagespeed_js_events"]').parent().parent().fadeIn();
+			$('textarea[name="pagespeed_js_script"]').parent().parent().fadeIn();
 		} else {
-			$('select[name="pagespeed_preload_logo"]').attr('disabled', true).parent().parent().fadeOut(1);
-			$('select[name="pagespeed_attribute_w_h"]').attr('disabled', true).parent().parent().fadeOut(1);
-			$('select[name="pagespeed_lazy_load"]').attr('disabled', true).parent().parent().fadeOut(1);
-			$('input[name="pagespeed_html_min"]').attr('disabled', true).parent().parent().fadeOut(1);
-			$('input[name="pagespeed_css_min"]').attr('disabled', true).parent().parent().fadeOut(1);
-			$('textarea[name="pagespeed_css_min_links"]').parent().parent().fadeOut(1);
-			$('input[name="pagespeed_js_min"]').attr('disabled', true).parent().parent().fadeOut(1);
-			$('textarea[name="pagespeed_js_min_links"]').parent().parent().fadeOut(1);
 			$('textarea[name="pagespeed_rot"]').parent().parent().fadeOut(1);
+			$('select[name="pagespeed_preload_logo"]').parent().parent().fadeOut(1);
+			$('select[name="pagespeed_attribute_w_h"]').parent().parent().fadeOut(1);
+			$('select[name="pagespeed_lazy_load"]').parent().parent().fadeOut(1);
+			$('textarea[name="pagespeed_replace"]').parent().parent().fadeOut(1);
+			$('input[name="pagespeed_html_min"]').parent().parent().fadeOut(1);
+			$('input[name="pagespeed_css_min"]').parent().parent().fadeOut(1);
+			$('textarea[name="pagespeed_css_min_links"]').parent().parent().fadeOut(1);
+			$('textarea[name="pagespeed_css_min_download"]').parent().parent().fadeOut(1);
+			$('textarea[name="pagespeed_css_min_exception"]').parent().parent().fadeOut(1);
+			$('textarea[name="pagespeed_css_min_font"]').parent().parent().fadeOut(1);
+			$('select[name="pagespeed_css_min_display"]').parent().parent().fadeOut(1);
+			$('select[name="pagespeed_css_critical"]').parent().parent().fadeOut(1);
+			$('select[name="pagespeed_css_inline_transfer"]').parent().parent().fadeOut(1);
+			$('textarea[name^="pagespeed_css_events"]').parent().parent().fadeOut(1);
+			$('textarea[name="pagespeed_css_style"]').parent().parent().fadeOut(1);
+			$('input[name="pagespeed_js_min"]').parent().parent().fadeOut(1);
+			$('textarea[name="pagespeed_js_min_links"]').parent().parent().fadeOut(1);
+			$('textarea[name="pagespeed_js_min_download"]').parent().parent().fadeOut(1);
+			$('textarea[name="pagespeed_js_min_exception"]').parent().parent().fadeOut(1);
+			$('textarea[name="pagespeed_js_inline_event"]').parent().parent().fadeOut(1);
+			$('input[name="pagespeed_js_inline_event_time"]').parent().parent().fadeOut(1);
+			$('select[name="pagespeed_js_inline_transfer"]').parent().parent().fadeOut(1);
+			$('textarea[name^="pagespeed_js_events"]').parent().parent().fadeOut(1);
+			$('textarea[name="pagespeed_js_script"]').parent().parent().fadeOut(1);
 		}
 	});
 	$('select[name="pagespeed_status"]').trigger("change");
 });
 //--></script>
 <!-- // *   Аўтар: "БуслікДрэў" ( https://buslikdrev.by/ )
-     // *   © 2016-2021; BuslikDrev - Усе правы захаваныя.
+     // *   © 2016-2022; BuslikDrev - Усе правы захаваныя.
      // *   Спецыяльна для сайта: "OpenCart.pro" ( https://opencart.pro/ ) -->
 <?php echo $footer; ?>

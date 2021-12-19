@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Аўтар: "БуслікДрэў" ( https://buslikdrev.by/ )
-© 2016-2021; BuslikDrev - Усе правы захаваныя.
+© 2016-2022; BuslikDrev - Усе правы захаваныя.
 Спецыяльна для сайта: "OpenCart.pro" ( https://opencart.pro/ ) -->
 
 <modification>
@@ -23,19 +23,18 @@
             </add>
         </operation>
     </file>
-	<!-- <file path="catalog/controller/common/footer.php">
+	<file path="catalog/controller/common/footer.php">
         <operation error="skip">
             <search index="0">
-            <![CDATA[$data['scripts'] = $this->document->getScripts(]]>
+            <![CDATA[$this->document->getScripts(]]>
             </search>
             <add position="after">
             <![CDATA[		$this->response->setBuslikCache(array(
-			'styles' => $this->document->getStyles(),
-			'scripts' => $this->document->getScripts('footer')
+			'scripts_footer' => $this->document->getScripts('footer')
 		));]]>
             </add>
         </operation>
-    </file> -->
+    </file>
     <file path="system/engine/action.php">
         <operation error="skip">
             <search index="0">
@@ -52,8 +51,24 @@
             </add>
         </operation>
     </file>
-    <file path="system/engine/{front,router}.php">
-        <operation error="skip">
+    <file path="system/engine/front.php">
+        <operation>
+            <search index="0">
+            <![CDATA[foreach ($this->pre_action as $pre_action) {]]>
+            </search>
+            <add position="after">
+            <![CDATA[			/* BuslikDrev edition cache */
+			if (!defined('DIR_CATALOG') && (version_compare(VERSION, '2.2.0', '>') ? $pre_action->getId() == 'startup/maintenance' : $pre_action->getBusId() == 'common/maintenance')) {
+				if (!(php_sapi_name() === 'cli')) {
+					$ЖЫДКЭШ = new Bus_Cache\Bus_Cache($this->registry, microtime(true));
+				}
+			}
+			/* BuslikDrev edition cache */]]>
+            </add>
+        </operation>
+    </file>
+    <file path="system/engine/router.php">
+        <operation>
             <search index="0">
             <![CDATA[foreach ($this->pre_action as $pre_action) {]]>
             </search>
@@ -114,13 +129,12 @@
             <![CDATA[	private $setBuslikCache = array();
 
 	public function setBuslikCache($data = array()) {
-		if ($this->setBuslikCache) {
-			foreach ($this->setBuslikCache as $key => $result) {
-				$data[$key] = $result;
+		if (is_array($data)) {
+			foreach ($data as $key => $result) {
+				$this->setBuslikCache[$key] = $result;
 			}
 		}
-		$data['headers'] = $this->headers;
-		$this->setBuslikCache = $data;
+		$this->setBuslikCache['headers'] = $this->headers;
 	}]]>
             </add>
         </operation>
@@ -177,5 +191,5 @@
 </modification>
 
 <!-- Аўтар: "БуслікДрэў" ( https://buslikdrev.by/ )
-© 2016-2021; BuslikDrev - Усе правы захаваныя.
+© 2016-2022; BuslikDrev - Усе правы захаваныя.
 Спецыяльна для сайта: "OpenCart.pro" ( https://opencart.pro/ ) -->
