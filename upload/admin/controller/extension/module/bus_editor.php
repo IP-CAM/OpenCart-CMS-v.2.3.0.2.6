@@ -1,16 +1,189 @@
 <?php
-// *   Аўтар: "БуслікДрэў" ( http://buslikdrev.by/ )
-// *   © 2016-2020; BuslikDrev - Усе правы захаваныя.
-// *   Спецыяльна для сайта: "OpenCart.pro" ( http://opencart.pro/ )
+// *   Аўтар: "БуслікДрэў" ( https://buslikdrev.by/ )
+// *   © 2016-2022; BuslikDrev - Усе правы захаваныя.
+// *   Спецыяльна для сайта: "OpenCart.pro" ( https://opencart.pro/ )
+
+/*
+                                                             ░░░░░                                                      
+                                                            ▒░    ▒░                                                    
+                                 ▒▒░░                       ▒  ▒▒  ▓                                                    
+                                  ▓████▓▒░▒░░               ▒  ░▒░░▒                                                    
+                                    ▒██████████▒░           ░    ▓▓░                                                    
+                                    ░▒▒▓████▒▒▒▒▓██▒░       ░     █▓                                                    
+                                     ░▓█████▓░     ▒▓█▒     ▒      █                                                    
+                                       ░▒██████▓▒     ▒▓░   ▒       ░                                                   
+                                       ▒██████████▒     ░▓  ▒                                                           
+                                         ▒█████████       ░░ ▒                                                          
+                                           ░▒▓█████         ░▒                                                          
+                                          ▒▓███████▓         ░▒                                                         
+                                              ░▓█▓▒▒▒░░░      ░                                                         
+                                               ░░              ░                                                        
+                                            ░▒                 ░                                                        
+                                           ▓▒▒▒░░░░░░     ░    ░                                                        
+                                           ▒█▒░▓▓▒░  ▒     ░░░                                                          
+                                                     ░░   ▓                                                             
+                                                      ▒  ▓                                                              
+                                                      ▓ ▒░                                                              
+                                                      ▓ ▓                                                               
+                                                      ▓ ▒                                                               
+                                                      ▒░░                                                               
+                                                      ▒▒░                                                               
+                                                      ▒▒░                                                               
+                                                      ▓░░                                                               
+                                                      ▓░▒                                                               
+                                               ████▓ ░▒ ▒           ░▓███                                               
+                                               ▒██████  ▓         ░██████                                               
+                                                 ▒█████▓▓       ░██████░                                                
+                                                   ▒█████▓    ░██████░                                                  
+                                                     ▒█████▒░██████░                                                    
+                                                       ▒█████████░                                                      
+                                                        ▒██▒░███                                                        
+                                                      ░██████████▒                                                      
+                                                    ░██████░ ▓█████▒                                                    
+                                                  ░██████░     ▓█████▒                                                  
+                                                ░██████░         ▓█████▒                                                
+                                              ░██████░             ▓█████▒                                              
+                                            ▒██████░                 ▓█████▒                                            
+                                          ░█████▓░                     ▓█████▒                                          
+                                        ░▓████▓░                         ▓█████▒                                        
+        ▒▒▒▒▒▒░                    ░▒▒▒▓███▓█▓▒       ▒▒▒▒▒▒░              ▓███▓▓░             ▒▒▒                      
+        ████▓███░                  ▓███▓███░███░      ████████░              ▒▒▒▒▒▒           ░███                      
+        ████ ███▓▒██▓ ▓██▒ ▒▓███▓▒ ▓███▒██▓░███░░███░ ███▓ ███▓░███▓██▓░ ▒▓███▓▓░▓██▒ ░███    ░███▓██▓░▒██▓  ▓██▒       
+        ████ ███▒▒███ ███▓▒███░███▒▓██▓▒███░███░███▒  ███▓ ███▓▒███░███▓▒███░███▒▒███ ▒███    ░███░▓██▓ ███░ ███        
+        ███████▒ ▒███ ███▓▒███ ███▒▓██▓▒███░██████▓   ███▓ ███▓▒███ ▓██▓▓███ ███▒ ███ ▓██▒    ░███ ▓██▓ ▓██▒▒██▓        
+        ████ ███▒▒███ ███▓ ▓████▒░ ▓██▓▒███░██████░   ███▓ ███▓▒███     ▓███▓███▒ ███▒███     ░███ ▓██▓ ░███▓██▒        
+        ████ ███▓▒███ ███▓░▒▒▓▓███▒▓██▓▒███░███████   ███▓ ███▓▒███     ▓███░▓▓▓▒ ▒█████▓     ░███ ▓██▓  ▓█████         
+        ████ ███▓▒███ ███▓▓███ ███▒▓██▓▒███░███▒████  ███▓ ███▓▒███     ▓███ ███▒  █████▒     ░███ ▓██▓  ░████▓         
+        ████████░▒███▓███▓░███▓███░▓██▓▒███░███░░███▓ ████████░▒███     ░███▓███░  ▓████  ░███░███▓███▓   ▓███░         
+        ░░░░░░    ░░░░░░░░  ░░░░░  ░▒▒▒▒▒▒▒ ░░░  ░░░░ ░░░░░░    ░░░       ░░░░▒░░░░▒▒░░░   ░░░ ░░ ░░░     ▓███          
+                                      ▒▓▓▓▓▒░                               ░▒▒▓▓▓▒                     ▒▓▓▓▓           
+                                       ░▓████▓░                           ░▓████▓░                                      
+                                         ░▓█████░                       ▒█████▓░                                        
+                                           ░██████░                   ▒█████▓░                                          
+                                             ░██████░               ▒█████▓░                                            
+                                               ░██████░           ▒█████▓░                                              
+                                                 ░██████░       ▒█████▓░                                                
+                                                   ░█████▓░   ▒█████▓░                                                  
+                                                     ░█████▓▒█████▓░                                                    
+                                                       ░████▓███▓░                                                      
+                                                        ▒██▓▒███░                                                       
+                                                      ▒██████████▓░                                                     
+                                                    ▒█████▓░ ▒█████▓░                                                   
+                                                  ▒█████▓░     ▒█████▓░                                                 
+                                                ▒█████▓░         ▒█████▓░                                               
+*/
+
+// забараняем прамы доступ
+if (!class_exists('Controller')) {
+	header('Refresh: 1; URL=/');
+	exit('ЗАПРЫШЧАЮ!');
+}
+
+if (version_compare(VERSION, '2.2.0', '<')) {
+	class ControllerModuleBusEditor extends ControllerExtensionModuleBusEditor {}
+}
 
 class ControllerExtensionModuleBusEditor extends Controller {
 	private $error = array();
 	private $name_arhive = 'Convenient Editor';
 	private $code = '01000048';
 	private $name = 'Удобный Редактор - "Convenient Editor"';
-	private $version = '1.0.1';
+	private $version = '1.0.2';
 	private $author = 'BuslikDrev.by';
 	private $link = 'https://liveopencart.ru/buslikdrev';
+	private $version_oc = 2.2;
+	private $paths = array();
+
+	public function __construct($foo) {
+		parent::__construct($foo);
+		if (version_compare(VERSION, '3.0.0', '>=')) {
+			$this->language->set('bus_editor_version', $this->version);
+			$this->version_oc = 3;
+			$this->paths = array(
+				'controller' => array(
+					'bus_editor' => 'extension/module/bus_editor',
+					'extension' => 'marketplace/extension',
+					'modification' => 'marketplace/modification',
+				),
+				'language' => array(
+					'bus_editor' => 'extension/module/bus_editor',
+				),
+				'model' => array(
+					'bus_editor' => 'extension/module/bus_editor',
+					'bus_editor_path' => 'model_extension_module_bus_editor',
+					'module' => 'setting/module',
+					'module_path' => 'model_setting_module',
+					'extension' => 'setting/extension',
+					'extension_path' => 'model_setting_extension',
+					'modification' => 'setting/modification',
+					'modification_path' => 'model_setting_modification',
+					'event' => 'setting/event',
+					'event_path' => 'model_setting_event',
+				),
+				'view' => array(
+					'bus_editor' => 'extension/module/bus_editor',
+				),
+				'token' => 'user_token=' . $this->session->data['user_token']
+			);
+		} elseif (version_compare(VERSION, '2.2.0', '>=')) {
+			$this->language->set('bus_editor_version', $this->version);
+			$this->version_oc = 2.2;
+			$this->paths = array(
+				'controller' => array(
+					'bus_editor' => 'extension/module/bus_editor',
+					'extension' => 'extension/extension',
+					'modification' => 'extension/modification',
+				),
+				'language' => array(
+					'bus_editor' => 'extension/module/bus_editor',
+				),
+				'model' => array(
+					'bus_editor' => 'extension/module/bus_editor',
+					'bus_editor_path' => 'model_extension_module_bus_editor',
+					'module' => 'extension/module',
+					'module_path' => 'model_extension_module',
+					'extension' => 'extension/extension',
+					'extension_path' => 'model_extension_extension',
+					'modification' => 'extension/modification',
+					'modification_path' => 'model_extension_modification',
+					'event' => 'extension/event',
+					'event_path' => 'model_extension_event',
+				),
+				'view' => array(
+					'bus_editor' => 'extension/module/bus_editor',
+				),
+				'token' => 'token=' . $this->session->data['token']
+			);
+		} else {
+			$this->version_oc = 2;
+			$this->paths = array(
+				'controller' => array(
+					'bus_editor' => 'module/bus_editor',
+					'extension' => 'extension/module',
+					'modification' => 'extension/modification',
+				),
+				'language' => array(
+					'bus_editor' => 'module/bus_editor',
+				),
+				'model' => array(
+					'bus_editor' => 'module/bus_editor',
+					'bus_editor_path' => 'model_module_bus_editor',
+					'module' => 'extension/module',
+					'module_path' => 'model_extension_module',
+					'extension' => 'extension/extension',
+					'extension_path' => 'model_extension_extension',
+					'modification' => 'extension/modification',
+					'modification_path' => 'model_extension_modification',
+					'event' => 'extension/event',
+					'event_path' => 'model_extension_event',
+				),
+				'view' => array(
+					'bus_editor' => 'module/bus_editor.tpl',
+				),
+				'token' => 'token=' . $this->session->data['token']
+			);
+		}
+	}
 
 	// подмена $this->config->get()
 	private function configGet($name = false) {
@@ -43,22 +216,50 @@ class ControllerExtensionModuleBusEditor extends Controller {
 	}
 
 	private function setFile($name, $value, $format = 'xml') {
-		$this->deleteFile($name);
+		$this->deleteFile($name, $format);
 
 		if ($value) {
-			$theme = ($this->config->get('config_template') ? $this->config->get('config_template') : $this->config->get('theme_' . str_replace('theme_', '', $this->config->get('config_theme')) . '_directory'));
+			$theme = ($this->config->get('config_template') ? $this->config->get('config_template') : ($this->config->get('theme_' . str_replace('theme_', '', $this->config->get('config_theme')) . '_directory') ? $this->config->get('theme_' . str_replace('theme_', '', $this->config->get('config_theme')) . '_directory') : $this->config->get('config_theme')));
 
 			if ($format == 'css') {
 				$path = DIR_CATALOG . 'view/theme/' . $theme . '/stylesheet/bus_editor/bus_editor_';
+				$name = ($name == 'library' ? false : preg_replace('/[^A-Z0-9_-]/i', '', $name));
+				$format = '.' . preg_replace('/[^A-Z_]/i', '', $format);
+				if (!is_dir(str_replace('/bus_editor/bus_editor_', '', $path))) {
+					mkdir(str_replace('/bus_editor/bus_editor_', '', $path), 0755);
+				}
+				if (!is_dir(str_replace('/bus_editor_', '', $path))) {
+					mkdir(str_replace('/bus_editor_', '', $path), 0755);
+				}
+			} elseif ($format == 'js') {
+				$path = DIR_CATALOG . 'view/theme/' . $theme . '/javascript/bus_editor/bus_editor_';
+				$name = ($name == 'library' ? false : preg_replace('/[^A-Z0-9_-]/i', '', $name));
+				$format = '.' . preg_replace('/[^A-Z_]/i', '', $format);
+				if (!is_dir(str_replace('/bus_editor/bus_editor_', '', $path))) {
+					mkdir(str_replace('/bus_editor/bus_editor_', '', $path), 0755);
+				}
+				if (!is_dir(str_replace('/bus_editor_', '', $path))) {
+					mkdir(str_replace('/bus_editor_', '', $path), 0755);
+				}
 			} elseif ($format == 'tpl') {
-				$path = DIR_CATALOG . 'view/theme/' . $theme . '/template/extension/module/bus_editor/bus_editor_';
+				$path = DIR_CATALOG . 'view/theme/' . $theme . '/template/' . $this->paths['controller']['bus_editor'] . '/bus_editor_';
+				$name = ($name == 'library' ? false : preg_replace('/[^A-Z0-9_-]/i', '', $name));
+				$format = '.' . preg_replace('/[^A-Z_]/i', '', $format);
 			} elseif ($format == 'twig') {
-				$path = DIR_CATALOG . 'view/theme/' . $theme . '/template/extension/module/bus_editor/bus_editor_';
+				$path = DIR_CATALOG . 'view/theme/' . $theme . '/template/' . $this->paths['controller']['bus_editor'] . '/bus_editor_';
+				$name = ($name == 'library' ? false : preg_replace('/[^A-Z0-9_-]/i', '', $name));
+				$format = '.' . preg_replace('/[^A-Z_]/i', '', $format);
+			} elseif (in_array($format, array('jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'ico', 'json', 'webmanifest', 'webapp', 'appcache'))) {
+				$path = DIR_IMAGE . 'catalog/bus_editor/';
+				$name = ($name == 'library' ? false : preg_replace('/[^\/A-Z0-9_-]/i', '', $name));
+				$format = '.' . preg_replace('/[^A-Z_]/i', '', $format);
 			} else {
 				$path = DIR_SYSTEM . ($name == 'library' ? 'library/' : false) . 'bus_editor.ocmod';
+				$name = ($name == 'library' ? false : preg_replace('/[^A-Z0-9_-]/i', '', $name));
+				$format = '.' . preg_replace('/[^A-Z_]/i', '', $format);
 			}
 
-			$file = $path . ($name == 'library' ? false : preg_replace('/[^A-Z0-9_]/i', '', $name)) . '.' . preg_replace('/[^A-Z_]/i', '', $format);
+			$file = $path . $name . $format;
 
 			$handle = fopen($file, 'w');
 
@@ -75,19 +276,23 @@ class ControllerExtensionModuleBusEditor extends Controller {
 	}
 
 	private function deleteFile($name, $format = 'xml') {
-		$theme = ($this->config->get('config_template') ? $this->config->get('config_template') : $this->config->get('theme_' . str_replace('theme_', '', $this->config->get('config_theme')) . '_directory'));
+		$theme = ($this->config->get('config_template') ? $this->config->get('config_template') : ($this->config->get('theme_' . str_replace('theme_', '', $this->config->get('config_theme')) . '_directory') ? $this->config->get('theme_' . str_replace('theme_', '', $this->config->get('config_theme')) . '_directory') : $this->config->get('config_theme')));
 
 		if ($format == 'css') {
 			$path = DIR_CATALOG . 'view/theme/' . $theme . '/stylesheet/bus_editor/bus_editor_';
+		} elseif ($format == 'js') {
+			$path = DIR_CATALOG . 'view/theme/' . $theme . '/javascript/bus_editor/bus_editor_';
 		} elseif ($format == 'tpl') {
-			$path = DIR_CATALOG . 'view/theme/' . $theme . '/template/extension/module/bus_editor/bus_editor_';
+			$path = DIR_CATALOG . 'view/theme/' . $theme . '/template/' . $this->paths['controller']['bus_editor'] . '/bus_editor_';
 		} elseif ($format == 'twig') {
-			$path = DIR_CATALOG . 'view/theme/' . $theme . '/template/extension/module/bus_editor/bus_editor_';
+			$path = DIR_CATALOG . 'view/theme/' . $theme . '/template/' . $this->paths['controller']['bus_editor'] . '/bus_editor_';
+		} elseif (in_array($format, array('jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'ico', 'json', 'webmanifest', 'webapp', 'appcache'))) {
+			$path = DIR_IMAGE . 'catalog/bus_editor/';
 		} else {
 			$path = DIR_SYSTEM . ($name == 'library' ? 'library/' : false) . 'bus_editor.ocmod';
 		}
 
-		$file = $path . ($name == 'library' ? false : preg_replace('/[^A-Z0-9_]/i', '', $name)) . '.' . preg_replace('/[^A-Z_]/i', '', $format);
+		$file = $path . ($name == 'library' ? false : preg_replace('/[^A-Z0-9_-]/i', '', $name)) . '.' . preg_replace('/[^A-Z_]/i', '', $format);
 
 		if (file_exists($file)) {
 			unlink($file);
@@ -100,19 +305,23 @@ class ControllerExtensionModuleBusEditor extends Controller {
 	}
 
 	private function getFile($name = false, $format = 'xml') {
-		$theme = ($this->config->get('config_template') ? $this->config->get('config_template') : $this->config->get('theme_' . str_replace('theme_', '', $this->config->get('config_theme')) . '_directory'));
+		$theme = ($this->config->get('config_template') ? $this->config->get('config_template') : ($this->config->get('theme_' . str_replace('theme_', '', $this->config->get('config_theme')) . '_directory') ? $this->config->get('theme_' . str_replace('theme_', '', $this->config->get('config_theme')) . '_directory') : $this->config->get('config_theme')));
 
 		if ($format == 'css') {
 			$path = DIR_CATALOG . 'view/theme/' . $theme . '/stylesheet/bus_editor/bus_editor_';
+		} elseif ($format == 'js') {
+			$path = DIR_CATALOG . 'view/theme/' . $theme . '/javascript/bus_editor/bus_editor_';
 		} elseif ($format == 'tpl') {
-			$path = DIR_CATALOG . 'view/theme/' . $theme . '/template/extension/module/bus_editor/bus_editor_';
+			$path = DIR_CATALOG . 'view/theme/' . $theme . '/template/' . $this->paths['controller']['bus_editor'] . '/bus_editor_';
 		} elseif ($format == 'twig') {
-			$path = DIR_CATALOG . 'view/theme/' . $theme . '/template/extension/module/bus_editor/bus_editor_';
+			$path = DIR_CATALOG . 'view/theme/' . $theme . '/template/' . $this->paths['controller']['bus_editor'] . '/bus_editor_';
+		} elseif (in_array($format, array('jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'ico', 'json', 'webmanifest', 'webapp', 'appcache'))) {
+			$path = DIR_IMAGE . 'catalog/bus_editor/';
 		} else {
 			$path = DIR_SYSTEM . ($name == 'library' ? 'library/' : false) . 'bus_editor.ocmod';
 		}
 
-		$file = $path . ($name == 'library' ? false : preg_replace('/[^A-Z0-9_]/i', '', $name)) . '.' . preg_replace('/[^A-Z_]/i', '', $format);
+		$file = $path . ($name == 'library' ? false : preg_replace('/[^A-Z0-9_-]/i', '', $name)) . '.' . preg_replace('/[^A-Z_]/i', '', $format);
 
 		if (file_exists($file)) {
 			if (filesize($file) > 0) {
@@ -134,9 +343,11 @@ class ControllerExtensionModuleBusEditor extends Controller {
 	}
 
 	public function index() {
-		$this->load->language('extension/module/bus_editor');
+		foreach ($this->load->language($this->paths['language']['bus_editor']) as $key => $lang) {
+			$data[$key] = $lang;
+		}
 
-		//$this->load->model('extension/module/bus_editor');
+		//$this->load->model($this->paths['model']['bus_editor']);
 
 		//$this->load->model('design/layout');
 
@@ -148,6 +359,8 @@ class ControllerExtensionModuleBusEditor extends Controller {
 
 		$this->document->setTitle(strip_tags($this->language->get('heading_title')));
 
+		$this->update();
+
 		//$data['languages'] = $this->model_localisation_language->getLanguages();
 
 		//$language_id = $this->config->get('config_language_id');
@@ -157,27 +370,18 @@ class ControllerExtensionModuleBusEditor extends Controller {
 		$data['tabl_array'] = $tabl_array;
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-			if (isset($this->request->post['apply'])) {
+			if (!empty($this->request->post['apply'])) {
 				$apply = $this->request->post['apply'];
-				$this->session->data['apply'] = $apply;
+				unset($this->request->post['apply']);
 			} else {
 				$apply = false;
 			}
 
-			unset($this->request->post['apply']);
-
-			/* if (isset($this->request->post['style']) && isset($this->request->post['type'])) {
-				$this->setFile($this->request->post['type'] . '_replace', html_entity_decode($this->request->post['style']));
-
-				if (!empty($this->request->post['style'])) {
-					$this->request->post['style'] = true;
-				}
-			} */
-
 			$this->load->model('setting/setting');
 
 			$post = array(
-				'bus_editor_href_admin'          => $this->request->post['href_admin']
+				'bus_editor_version' => $this->version,
+				'bus_editor_href_admin' => $this->request->post['href_admin']
 			);
 
 			foreach($tabl_array as $tabl) {
@@ -187,106 +391,45 @@ class ControllerExtensionModuleBusEditor extends Controller {
 			}
 
 			if (isset($this->request->post['modification'])) {
-				$this->modification($this->request->post['modification']);
 				$post['bus_editor_modification'] = $this->request->post['modification'];
-			} else {
-				$this->modification();
 			}
+
+			$modification = $this->modification(null, true, 1);
 
 			$this->model_setting_setting->editSetting('bus_editor', $post);
 
 			if ($apply) {
-				$this->session->data['success'] = $this->language->get('success_setting_apply');
+				$this->session->data['success'] = $this->language->get('success_setting_apply') . $modification;
 
-				if (isset($this->session->data['modification'])) {
-					$this->session->data['success'] = $this->session->data['modification'];
-				}
-
-				$this->response->redirect($this->url->link('extension/module/bus_editor', 'token=' . $this->session->data['token'], true));
+				$this->response->redirect($this->url->link($this->paths['controller']['bus_editor'], $this->paths['token'], true));
 			} else {
-				$this->session->data['success'] = $this->language->get('success_setting_save');
+				$this->session->data['success'] = $this->language->get('success_setting_save') . $modification;
 
-				if (isset($this->session->data['modification'])) {
-					$this->session->data['success'] = $this->session->data['modification'];
-				}
-
-				$this->response->redirect($this->url->link('extension/extension', 'token=' . $this->session->data['token'] . '&type=module', true));
+				$this->response->redirect($this->url->link($this->paths['controller']['extension'], $this->paths['token'] . '&type=module', true));
 			}
 		}
 
-		$data['heading_title'] = $this->language->get('heading_title');
-
-		$data['tab_blog_category'] = $this->language->get('tab_blog_category');
-		$data['tab_blog_article'] = $this->language->get('tab_blog_article');
-		$data['tab_category'] = $this->language->get('tab_category');
-		$data['tab_information'] = $this->language->get('tab_information');
-		$data['tab_manufacturer'] = $this->language->get('tab_manufacturer');
-		$data['tab_product'] = $this->language->get('tab_product');
-		$data['tab_universal'] = $this->language->get('tab_universal');
-		$data['tab_other'] = $this->language->get('tab_other');
-
-		$data['text_edit'] = $this->language->get('text_edit');
-		$data['text_enabled'] = $this->language->get('text_enabled');
-		$data['text_disabled'] = $this->language->get('text_disabled');
-		$data['text_yes'] = $this->language->get('text_yes');
-		$data['text_no'] = $this->language->get('text_no');
-		$data['text_select'] = $this->language->get('text_select');
-		$data['text_select_all'] = $this->language->get('text_select_all');
-		$data['text_unselect_all'] = $this->language->get('text_unselect_all');
-		$data['text_default'] = $this->language->get('text_default');
-		$data['text_none'] = $this->language->get('text_none');
-		$data['text_width'] = $this->language->get('text_width');
-		$data['text_height'] = $this->language->get('text_height');
-		$data['text_after'] = $this->language->get('text_after');
-		$data['text_before'] = $this->language->get('text_before');
-		$data['text_replace'] = $this->language->get('text_replace');
-		$data['text_left'] = $this->language->get('text_left');
-		$data['text_right'] = $this->language->get('text_right');
-		$data['text_top'] = $this->language->get('text_top');
-		$data['text_bottom'] = $this->language->get('text_bottom');
-
-		$href_search = <<<'XML'
+		if ($this->version_oc == 3) {
+			$href_search = <<<'XML'
+{{ button_compare }}
+XML;
+			$href_add = <<<'XML'
+{% if (bus_editor_href is defined) %}<!--noindex--><button type="button" data-toggle="tooltip" class="btn btn-success" title="{{ button_bus_editor_href }}" onclick="window.open('{{ bus_editor_href }}', '_blank');"><i class="fa fa-pencil"></i></button><!--/noindex-->{% endif %}
+XML;
+		} else {
+			$href_search = <<<'XML'
 <?php echo $button_compare; ?>
 XML;
-
-		$data['text_example_search'] = sprintf($this->language->get('text_example'), htmlspecialchars($href_search, ENT_COMPAT, 'UTF-8'));
-
-		$href_add = <<<'XML'
+			$href_add = <<<'XML'
 <?php if (isset($bus_editor_href)) { ?><!--noindex--><button type="button" data-toggle="tooltip" class="btn btn-success" title="<?php echo $button_bus_editor_href; ?>" onclick="window.open('<?php echo $bus_editor_href; ?>', '_blank');"><i class="fa fa-pencil"></i></button><!--/noindex--><?php } ?>
 XML;
+		}
 
+		$data['text_example_search'] = sprintf($this->language->get('text_example'), htmlspecialchars($href_search, ENT_COMPAT, 'UTF-8'));
 		$data['text_example_add'] = sprintf($this->language->get('text_example'), htmlspecialchars($href_add, ENT_COMPAT, 'UTF-8'));
+
 		$theme = ($this->config->get('config_template') ? $this->config->get('config_template') : $this->config->get('theme_' . str_replace('theme_', '', $this->config->get('config_theme')) . '_directory'));
 		$data['text_view'] = sprintf($this->language->get('text_view'), $theme);
-		$data['text_author'] = $this->language->get('text_author');
-		$data['text_corp'] = $this->language->get('text_corp');
-
-		$data['entry_index'] = $this->language->get('entry_index');
-		$data['entry_position'] = $this->language->get('entry_position');
-		$data['entry_href_status'] = $this->language->get('entry_href_status');
-		$data['entry_href_search'] = $this->language->get('entry_href_search');
-		$data['entry_href_add'] = $this->language->get('entry_href_add');
-		$data['entry_href_admin'] = $this->language->get('entry_href_admin');
-		$data['entry_status'] = $this->language->get('entry_status');
-
-		$data['help_index'] = $this->language->get('help_index');
-		$data['help_blog_category_href_status'] = $this->language->get('help_blog_category_href_status');
-		$data['help_blog_article_href_status'] = $this->language->get('help_blog_article_href_status');
-		$data['help_category_href_status'] = $this->language->get('help_category_href_status');
-		$data['help_information_href_status'] = $this->language->get('help_information_href_status');
-		$data['help_manufacturer_href_status'] = $this->language->get('help_manufacturer_href_status');
-		$data['help_product_href_status'] = $this->language->get('help_product_href_status');
-		$data['help_href_search'] = $this->language->get('help_href_search');
-		$data['help_href_add'] = $this->language->get('help_href_add');
-		$data['help_href_admin'] = $this->language->get('help_href_admin');
-		$data['help_status'] = $this->language->get('help_status');
-
-		$data['button_apply'] = $this->language->get('button_apply');
-		$data['button_save'] = $this->language->get('button_save');
-		$data['button_delete'] = $this->language->get('button_delete');
-		$data['button_add'] = $this->language->get('button_add');
-		$data['button_category_add'] = $this->language->get('button_category_add');
-		$data['button_cancel'] = $this->language->get('button_cancel');
 
 		if (isset($this->error['error'])) {
 			$data['error'] = $this->error['error'];
@@ -305,26 +448,28 @@ XML;
 
 		$data['breadcrumbs'][] = array(
 			'text' => $this->language->get('text_home'),
-			'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], true)
+			'href' => $this->url->link('common/dashboard', $this->paths['token'], true)
 		);
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_extension'),
-			'href' => $this->url->link('extension/extension', 'token=' . $this->session->data['token'], true)
-		);
+		if ($this->version_oc >= 2.2) {
+			$data['breadcrumbs'][] = array(
+				'text' => $this->language->get('text_extension'),
+				'href' => $this->url->link($this->paths['controller']['extension'], $this->paths['token'], true)
+			);
+		}
 
 		$data['breadcrumbs'][] = array(
 			'text' => $this->language->get('text_module'),
-			'href' => $this->url->link('extension/extension', 'token=' . $this->session->data['token'] . '&type=module', true)
+			'href' => $this->url->link($this->paths['controller']['extension'], $this->paths['token'] . ($this->version_oc >= 2.2 ? '&type=module' : false), true)
 		);
 
 		$data['breadcrumbs'][] = array(
 			'text' => $this->language->get('heading_title'),
-			'href' => $this->url->link('extension/module/bus_editor', 'token=' . $this->session->data['token'], true)
+			'href' => $this->url->link($this->paths['controller']['bus_editor'], $this->paths['token'], true)
 		);
 
-		$data['action'] = $this->url->link('extension/module/bus_editor', 'token=' . $this->session->data['token'], true);
-		$data['cancel'] = $this->url->link('extension/extension', 'token=' . $this->session->data['token'] . '&type=module', true);
+		$data['action'] = $this->url->link($this->paths['controller']['bus_editor'], $this->paths['token'], true);
+		$data['cancel'] = $this->url->link($this->paths['controller']['extension'], $this->paths['token'] . ($this->version_oc >= 2.2 ? '&type=module' : false), true);
 
 		$module_info = $this->configGet();
 
@@ -390,12 +535,24 @@ XML;
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['footer'] = $this->load->controller('common/footer');
 
-		$this->response->setOutput($this->load->view('extension/module/bus_editor/settings', $data));
+		if ($this->version_oc >= 3) {
+			$template_engine = $this->registry->get('config')->get('template_engine');
+			$this->registry->get('config')->set('template_engine', 'template');
+		}
+
+		$template = $this->load->view($this->paths['view']['bus_editor'], $data);
+
+		if ($this->version_oc >= 3) {
+			$this->registry->get('config')->set('template_engine', $template_engine);
+			$this->response->addHeader('Content-Type: text/html; charset=utf-8');
+		}
+
+		$this->response->setOutput($template);
 	}
 
 	protected function validate() {
-		if (!$this->user->hasPermission('modify', 'extension/module/bus_editor')) {
-			$this->error['error'] = $this->language->get('error_permission');
+		if (!$this->user->hasPermission('modify', $this->paths['controller']['bus_editor'])) {
+			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
 		return !$this->error;
@@ -403,16 +560,24 @@ XML;
 
 	// установка
 	public function install() {
-		$this->load->language('extension/module/bus_editor');
-
 		// посылыаем на йух
-		if (!$this->user->hasPermission('modify', 'extension/extension/module')) {
-			$this->error['warning'] = $this->language->get('error_permission');
+		$this->load->language($this->paths['language']['bus_editor']);
+
+		if ($this->version_oc >= 2.2) {
+			if (!$this->user->hasPermission('modify', 'extension/extension/module')) {
+				$this->error['warning'] = $this->language->get('error_permission');
+			}
+		} else {
+			if (!$this->user->hasPermission('modify', 'extension/module')) {
+				$this->error['warning'] = $this->language->get('error_permission');
+			}
 		}
 
 		if (!$this->error) {
 			// создаём таблицу модуля
-			//$this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "bus_editor` (`module_id` int(11) NOT NULL, `setting` text NOT NULL, `cats` mediumtext NOT NULL, PRIMARY KEY (`module_id`)) ENGINE = MyISAM DEFAULT CHARSET = utf8");
+			//$this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "bus_editor` (`module_id` int(11) NOT NULL AUTO_INCREMENT, `setting` text NOT NULL, PRIMARY KEY (`module_id`)) ENGINE = MyISAM DEFAULT CHARSET = utf8");
+			//$this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "bus_editor_description` (`module_id` int(11) NOT NULL, `language_id` int(11) NOT NULL, `setting` text NOT NULL, PRIMARY KEY (`module_id`, `language_id`)) ENGINE = MyISAM DEFAULT CHARSET = utf8");
+			//$this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "bus_editor_account` (`customer_id` int(11) NOT NULL, `setting` text NOT NULL, PRIMARY KEY (`customer_id`)) ENGINE = MyISAM DEFAULT CHARSET = utf8");
 
 			// создаём индекс status товара, если его нет
 			/* $result = $this->db->query("SHOW INDEX FROM `" . DB_PREFIX . "product` where Key_name='status'");
@@ -421,29 +586,54 @@ XML;
 			} */
 
 			// включаем модификатор модуля, если заливался в БД
-			$this->load->model('extension/modification');
+			/* $this->load->model($this->paths['model']['modification']);
 
-			$code = $this->model_extension_modification->getModificationByCode($this->code);
+			$code = $this->{$this->paths['model']['modification_path']}->getModificationByCode($this->code);
 
 			if ($code) {
-				$this->model_extension_modification->enableModification($code['modification_id']);
+				$this->{$this->paths['model']['modification_path']}->enableModification($code['modification_id']);
+			} */
+
+			// удаляем модификатор модуля, если заливался в БД
+			$this->load->model($this->paths['model']['modification']);
+
+			$code = $this->{$this->paths['model']['modification_path']}->getModificationByCode($this->code);
+
+			if ($code) {
+				$this->{$this->paths['model']['modification_path']}->deleteModification($code['modification_id']);
 			}
 
 			// создаём копию из резерва и переименовываем модификатор, если заливался в system
-			$file = $this->getFile(false, 'xml_');
+			$file = $this->getFile('library', 'xml_');
 
 			$this->setFile(false, $file, 'xml');
 
+			// создаём событие
+			//$this->load->model($this->paths['model']['event']); 
+
+			//if ($this->version_oc >= 3) {
+				//$code = $this->{$this->paths['model']['event_path']}->getEvent($this->name_arhive, 'catalog/view/*/after', $this->paths['controller']['bus_editor'] . '/event');
+
+				//if (!$code) {
+					//$this->{$this->paths['model']['event_path']}->addEvent($this->name_arhive, 'catalog/view/*/after', $this->paths['controller']['bus_editor'] . '/event', 1, 1001);
+				//}
+			//}
+
 			// чистим кэши необходимые для модуля
-			/* $this->cache->delete('blog_category');
+			//$this->cache->delete('*');
+			//$this->cache->delete('blog_category');
 			//$this->cache->delete('blog_article');
-			$this->cache->delete('article');
-			$this->cache->delete('category');
-			$this->cache->delete('information');
-			$this->cache->delete('manufacturer');
-			$this->cache->delete('product');
-			$this->cache->delete('seo_pro');
-			$this->cache->delete('seo_url'); */
+			//$this->cache->delete('article');
+			//$this->cache->delete('category');
+			//$this->cache->delete('information');
+			//$this->cache->delete('manufacturer');
+			//$this->cache->delete('product');
+			//$this->cache->delete('seo_pro');
+			//$this->cache->delete('seo_url');
+			if ($this->version_oc >= 3) {
+				$this->load->controller('common/developer/theme');
+				$this->load->controller('common/developer/sass');
+			}
 
 			// готовим данные для ajax
 			$text_install = $this->language->get('text_install');
@@ -456,11 +646,11 @@ XML;
 
 			$error_install = $this->language->get('error_install');
 
-			$url_ocmod_clear = $this->url->link('extension/modification/clear', 'token=' . $this->session->data['token'], true);
+			$url_ocmod_clear = $this->url->link($this->paths['controller']['modification'] . '/clear', $this->paths['token'], true);
 			$url_ocmod_clear = str_ireplace('&amp;', '&', $url_ocmod_clear);
-			$url_ocmod_clearlog = $this->url->link('extension/modification/clearlog', 'token=' . $this->session->data['token'], true);
+			$url_ocmod_clearlog = $this->url->link($this->paths['controller']['modification'] . '/clearlog', $this->paths['token'], true);
 			$url_ocmod_clearlog = str_ireplace('&amp;', '&', $url_ocmod_clearlog);
-			$url_ocmod_refresh = $this->url->link('extension/modification/refresh', 'token=' . $this->session->data['token'], true);
+			$url_ocmod_refresh = $this->url->link($this->paths['controller']['modification'] . '/refresh', $this->paths['token'], true);
 			$url_ocmod_refresh = str_ireplace('&amp;', '&', $url_ocmod_refresh);
 
 			$text = <<<HTML
@@ -538,66 +728,89 @@ function ocmodRefresh() {
 
 function cacheClear() {
 	$('.alert-success').html('<i class="fa fa-check-circle"></i> $text_cache_clear <button type="button" class="close" data-dismiss="alert">×</button>');
-	setTimeout('success()', 2000);
+	setTimeout(successModule, 2000);
 }
 
-function success() {
+function successModule() {
 	$('.alert-success').html('<i class="fa fa-check-circle"></i> $success_install <button type="button" class="close" data-dismiss="alert">×</button>');
 	$('a, button, select, input').removeAttr('disabled');
 }
 //--></script>
 HTML;
 
-			//echo $text;
-			$this->response->addHeader('Content-Type: text/html; charset=utf-8');
-			$this->response->setOutput($text);
-			echo $this->response->getOutput();
+			if ($this->version_oc >= 2.2) {
+				$this->response->addHeader('Content-Type: text/html; charset=utf-8');
+				$this->response->setOutput($text);
+				echo $this->response->getOutput();
+			} else {
+				$this->session->data['success'] = $text;
 
-			//$this->session->data['success'] = $text;
-
-			//$this->response->redirect($this->url->link('extension/extension', 'token=' . $this->session->data['token'] . '&type=module', true));
+				$this->response->redirect($this->url->link($this->paths['controller']['extension'], $this->paths['token'], true));
+			}
 		} else {
-			echo $this->error['error'];
+			echo $this->error['warning'];
 		}
 	}
 
 	// удаление
 	public function uninstall() {
-		$this->load->language('extension/module/bus_editor');
-
 		// посылыаем на йух
-		if (!$this->user->hasPermission('modify', 'extension/extension/module')) {
-			$this->error['warning'] = $this->language->get('error_permission');
+		$this->load->language($this->paths['language']['bus_editor']);
+
+		if ($this->version_oc >= 2.2) {
+			if (!$this->user->hasPermission('modify', 'extension/extension/module')) {
+				$this->error['warning'] = $this->language->get('error_permission');
+			}
+		} else {
+			if (!$this->user->hasPermission('modify', 'extension/module')) {
+				$this->error['warning'] = $this->language->get('error_permission');
+			}
 		}
 
 		if (!$this->error) {
-			// очищаем таблицу модуля, если заливался в БД
-			//$this->db->query("TRUNCATE `" . DB_PREFIX . "bus_editor`");
+			// Очищаем таблицу модуля
+			//$this->db->query("DELETE FROM " . DB_PREFIX . "setting WHERE `code`='bus_editor'");
+			//$this->db->query("TRUNCATE TABLE `" . DB_PREFIX . "bus_editor`");
+			//$this->db->query("TRUNCATE TABLE `" . DB_PREFIX . "bus_editor_description`");
 
 			// выключаем модификатор модуля
-			$this->load->model('extension/modification');
+			/* $this->load->model($this->paths['model']['modification']);
 
-			$code = $this->model_extension_modification->getModificationByCode($this->code);
+			$code = $this->{$this->paths['model']['modification_path']}->getModificationByCode($this->code);
 
 			if ($code) {
-				$this->model_extension_modification->disableModification($code['modification_id']);
-			}
+				$this->{$this->paths['model']['modification_path']}->disableModification($code['modification_id']);
+			} */
 
 			// удаляем копию модификатора созданную из резерва, если заливался в system
 			$this->deleteFile(false, 'xml');
 
+			// удаляем событие
+			//$this->load->model($this->paths['model']['event']); 
+
+			//if ($this->version_oc >= 3) {
+				//$code = $this->{$this->paths['model']['event_path']}->getEvent($this->name_arhive, 'catalog/view/*/after', $this->paths['controller']['bus_editor'] . '/event');
+
+				//if ($code) {
+					//$this->{$this->paths['model']['event_path']}->deleteEvent($this->name_arhive);
+				//}
+			//}
+
 			// чистим кэши необходимые для модуля
-			/* $this->cache->delete('blog_category');
+			//$this->cache->delete('*');
+			//$this->cache->delete('blog_category');
 			//$this->cache->delete('blog_article');
-			$this->cache->delete('article');
-			$this->cache->delete('category');
-			$this->cache->delete('information');
-			$this->cache->delete('manufacturer');
-			$this->cache->delete('product');
-			$this->cache->delete('seo_pro');
-			$this->cache->delete('seo_url'); */
-			//$this->load->controller('common/developer/theme');
-			//$this->load->controller('common/developer/sass');
+			//$this->cache->delete('article');
+			//$this->cache->delete('category');
+			//$this->cache->delete('information');
+			//$this->cache->delete('manufacturer');
+			//$this->cache->delete('product');
+			//$this->cache->delete('seo_pro');
+			//$this->cache->delete('seo_url');
+			if ($this->version_oc >= 3) {
+				$this->load->controller('common/developer/theme');
+				$this->load->controller('common/developer/sass');
+			}
 
 			// готовим данные для ajax
 			$text_uninstall = $this->language->get('text_uninstall');
@@ -612,15 +825,14 @@ HTML;
 			$success_uninstall = $this->language->get('heading_title') . $this->language->get('success_uninstall');
 
 			$error_uninstall = $this->language->get('error_uninstall');
-			$error_uninstall_pro = $this->language->get('error_uninstall_pro');
 
-			$url_uninstall_files = $this->url->link('extension/module/bus_editor/uninstallFiles', 'token=' . $this->session->data['token'], true);
+			$url_uninstall_files = $this->url->link($this->paths['controller']['bus_editor'] . '/uninstallFiles', $this->paths['token'], true);
 			$url_uninstall_files = str_ireplace('&amp;', '&', $url_uninstall_files);
-			$url_ocmod_clear = $this->url->link('extension/modification/clear', 'token=' . $this->session->data['token'], true);
+			$url_ocmod_clear = $this->url->link($this->paths['controller']['modification'] . '/clear', $this->paths['token'], true);
 			$url_ocmod_clear = str_ireplace('&amp;', '&', $url_ocmod_clear);
-			$url_ocmod_clearlog = $this->url->link('extension/modification/clearlog', 'token=' . $this->session->data['token'], true);
+			$url_ocmod_clearlog = $this->url->link($this->paths['controller']['modification'] . '/clearlog', $this->paths['token'], true);
 			$url_ocmod_clearlog = str_ireplace('&amp;', '&', $url_ocmod_clearlog);
-			$url_ocmod_refresh = $this->url->link('extension/modification/refresh', 'token=' . $this->session->data['token'], true);
+			$url_ocmod_refresh = $this->url->link($this->paths['controller']['modification'] . '/refresh', $this->paths['token'], true);
 			$url_ocmod_refresh = str_ireplace('&amp;', '&', $url_ocmod_refresh);
 
 			$text = <<<HTML
@@ -695,20 +907,15 @@ function ocmodRefresh() {
 		}
 	});
 }
-
 function cacheClear() {
 	$('.alert-success').html('<i class="fa fa-check-circle"></i> $text_cache_clear <button type="button" class="close" data-dismiss="alert">×</button>');
-	setTimeout('success()', 2000);
+	setTimeout(successModule, 2000);
 }
 
-function success() {
+function successModule() {
 	$('.alert-success').html('<i class="fa fa-check-circle"></i> $success_uninstall <button type="button" class="close" data-dismiss="alert">×</button>');
 	$('.alert-success').after('<a type="button" onclick="uninstallFiles();" class="btn btn-info alert" style="width:100%;" data-dismiss="alert"><i class="fa fa-trash-o"></i> $button_files_clear</a>');
 	$('a, button, select, input').removeAttr('disabled');
-}
-
-function uninstallFilesPro() {
-	$('.alert-success').addClass('alert-danger').removeClass('alert-success').html('<i class="fa fa-check-circle"></i> $error_uninstall_pro =( <button type="button" class="close" data-dismiss="alert">×</button>');
 }
 
 function uninstallFiles() {
@@ -737,31 +944,72 @@ function uninstallFiles() {
 //--></script>
 HTML;
 
-			//echo $text;
-			$this->response->addHeader('Content-Type: text/html; charset=utf-8');
-			$this->response->setOutput($text);
-			echo $this->response->getOutput();
+			if ($this->version_oc >= 2.2) {
+				$this->response->addHeader('Content-Type: text/html; charset=utf-8');
+				$this->response->setOutput($text);
+				echo $this->response->getOutput();
+			} else {
+				$this->session->data['success'] = $text;
 
-			//$this->session->data['success'] = $text;
-
-			//$this->response->redirect($this->url->link('extension/extension', 'token=' . $this->session->data['token'] . '&type=module', true));
+				$this->response->redirect($this->url->link($this->paths['controller']['extension'], $this->paths['token'], true));
+			}
 		} else {
-			echo $this->error['error'];
+			echo $this->error['warning'];
 		}
 	}
 
 	// удаление файлов модуля
 	public function uninstallFiles() {
-		$this->load->language('extension/module/bus_editor');
+		$this->load->language($this->paths['language']['bus_editor']);
 
 		// посылыаем на йух
-		if (!$this->user->hasPermission('modify', 'extension/extension/module') || !$this->user->hasPermission('modify', 'extension/module/bus_editor')) {
-			$this->error['warning'] = $this->language->get('error_permission');
+		if ($this->version_oc >= 2.2) {
+			if (!$this->user->hasPermission('modify', 'extension/extension/module') || !$this->user->hasPermission('modify', $this->paths['controller']['bus_editor'])) {
+				$this->error['warning'] = $this->language->get('error_permission');
+			}
+		} else {
+			if (!$this->user->hasPermission('modify', 'extension/module') || !$this->user->hasPermission('modify', $this->paths['controller']['bus_editor'])) {
+				$this->error['warning'] = $this->language->get('error_permission');
+			}
 		}
 
 		if (!$this->error) {
+			// удаляем права администратора
+			$this->load->model('user/user_group');
+
+			foreach ($this->model_user_user_group->getUserGroups() as $result) {
+				if ($this->version_oc >= 4) {
+					$this->model_user_user_group->removePermission($result['user_group_id'], 'access', $this->paths['controller']['bus_editor']);
+					$this->model_user_user_group->removePermission($result['user_group_id'], 'modify', $this->paths['controller']['bus_editor']);
+				} else {
+					$users = array();
+					$users[0]['user_group_id'] = $result['user_group_id'];
+					$users[0]['type'] = 'access';
+					$users[0]['route'] = $this->paths['controller']['bus_editor'];
+					$users[1]['user_group_id'] = $result['user_group_id'];
+					$users[1]['type'] = 'modify';
+					$users[1]['route'] = $this->paths['controller']['bus_editor'];
+
+					foreach ($users as $user) {
+						$user_group_query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "user_group WHERE user_group_id = '" . (int)$user['user_group_id'] . "'");
+
+						if ($user_group_query->num_rows) {
+							$data = json_decode($user_group_query->row['permission'], true);
+
+							if (isset($data[$user['type']])) {
+								$data[$user['type']] = array_diff($data[$user['type']], array($user['route']));
+							}
+
+							$this->db->query("UPDATE " . DB_PREFIX . "user_group SET permission = '" . $this->db->escape(json_encode($data)) . "' WHERE user_group_id = '" . (int)$user['user_group_id'] . "'");
+						}
+					}
+				}
+			}
+
 			// удаляем таблицу модуля
 			//$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "bus_editor`");
+			//$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "bus_editor_description`");
+			//$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "bus_editor_account`");
 
 			// удаляем индекс status товара
 			/* $result = $this->db->query("SHOW INDEX FROM `" . DB_PREFIX . "product` where Key_name='status'");
@@ -770,75 +1018,106 @@ HTML;
 			} */
 
 			// удаляем модуль из БД списка установленных модулей
-			/* $this->load->model('setting/extension');
+			if ($this->version_oc >= 3) {
+				$this->load->model($this->paths['model']['extension']);
 
-			$results = $this->model_setting_extension->getExtensionInstalls(0, 1000);
+				$results = $this->{$this->paths['model']['extension_path']}->getExtensionInstalls(0, 1000);
 
-			foreach ($results as $result) {
-				if (stristr($result['filename'], $this->name_arhive)) {
-					$this->model_setting_extension->deleteExtensionInstall($result['extension_install_id']);
-					$paths = $this->model_setting_extension->getExtensionPathsByExtensionInstallId($result['extension_install_id']);
+				foreach ($results as $result) {
+					if (stristr($result['filename'], $this->name_arhive)) {
+						$this->{$this->paths['model']['extension_path']}->deleteExtensionInstall($result['extension_install_id']);
+						$paths = $this->{$this->paths['model']['extension_path']}->getExtensionPathsByExtensionInstallId($result['extension_install_id']);
 
-					foreach ($paths as $path) {
-						$this->model_setting_extension->deleteExtensionPath($path['extension_path_id']);
+						foreach ($paths as $path) {
+							$this->{$this->paths['model']['extension_path']}->deleteExtensionPath($path['extension_path_id']);
+						}
 					}
 				}
-			} */
-
-			// удаляем модификатор модуля, если заливался в БД
-			$this->load->model('extension/modification');
-
-			$code = $this->model_extension_modification->getModificationByCode($this->code);
-
-			if ($code) {
-				$this->model_extension_modification->deleteModification($code['modification_id']);
 			}
 
+			// удаляем модификатор модуля, если заливался в БД
+			$this->load->model($this->paths['model']['modification']);
+
+			$code = $this->{$this->paths['model']['modification_path']}->getModificationByCode($this->code);
+
+			if ($code) {
+				$this->{$this->paths['model']['modification_path']}->deleteModification($code['modification_id']);
+			}
+
+			// удаляем событие
+			//$this->load->model($this->paths['model']['event']); 
+
+			//if ($this->version_oc >= 3) {
+				//$code = $this->{$this->paths['model']['event_path']}->getEvent($this->name_arhive, 'catalog/view/*/after', $this->paths['controller']['bus_editor'] . '/event');
+
+				//if ($code) {
+					//$this->{$this->paths['model']['event_path']}->deleteEvent($this->name_arhive);
+				//}
+			//}
+
 			// готовим данные для php
-			//$theme = ($this->config->get('config_template') ? $this->config->get('config_template') : $this->config->get('theme_' . str_replace('theme_', '', $this->config->get('config_theme')) . '_directory'));
+			$db_paths = array(
+				//DB_PREFIX . 'bus_editor_geo',
+			);
 
 			$module_paths = array(
 				// 2.1 OpenCart
 				DIR_APPLICATION . 'controller/module/bus_editor.php',
-				DIR_APPLICATION . 'language/belarusian/module/bus_editor.php',
-				DIR_APPLICATION . 'language/english/module/bus_editor.php',
-				DIR_APPLICATION . 'language/russian/module/bus_editor.php',
-				DIR_APPLICATION . 'language/ukrainian/module/bus_editor.php',
-				DIR_APPLICATION . 'model/module/bus_editor.php',
-				/* DIR_APPLICATION . 'view/javascript/buslikdrev/colorpicker[NAGIBATOR]',
-				DIR_APPLICATION . 'view/javascript/buslikdrev/nestable[NAGIBATOR]',
-				DIR_APPLICATION . 'view/javascript/buslikdrev', */
-				DIR_APPLICATION . 'view/template/module/bus_editor[NAGIBATOR]',
-				DIR_CATALOG . 'controller/module/bus_editor.php',
+				//DIR_APPLICATION . 'model/module/bus_editor.php',
+				DIR_APPLICATION . 'view/template/module/bus_editor',
+				//DIR_CATALOG . 'controller/module/bus_editor.php',
+				//DIR_CATALOG . 'model/module/bus_editor.php',
 				// 2.3 и 3.0 OpenCart
 				DIR_APPLICATION . 'controller/extension/module/bus_editor.php',
-				DIR_APPLICATION . 'language/be-by/extension/module/bus_editor.php',
-				DIR_APPLICATION . 'language/en-gb/extension/module/bus_editor.php',
-				DIR_APPLICATION . 'language/ru-ru/extension/module/bus_editor.php',
-				DIR_APPLICATION . 'language/uk-ua/extension/module/bus_editor.php',
-				DIR_APPLICATION . 'model/extension/module/bus_editor.php',
-				DIR_APPLICATION . 'view/template/extension/module/bus_editor[NAGIBATOR]',
-				DIR_CATALOG . 'controller/extension/module/bus_editor.php',
+				//DIR_APPLICATION . 'model/extension/module/bus_editor.php',
+				DIR_APPLICATION . 'view/template/extension/module/bus_editor',
+				//DIR_CATALOG . 'controller/extension/module/bus_editor.php',
+				//DIR_CATALOG . 'model/extension/module/bus_editor.php',
+				//DIR_IMAGE . 'catalog/bus_editor[NAGIBATOR]',
+				//DIR_LOGS . 'bus_editor',
+				DIR_SYSTEM . 'library/bus_editor[NAGIBATOR]',
 				DIR_SYSTEM . 'library/bus_editor.ocmod.xml_',
 				DIR_SYSTEM . 'bus_editor.ocmod.xml',
 			);
 
-			$text = '------------------- Start: ' . date($this->language->get('datetime_format')) . ' ' . $this->language->get('text_uninstall_files_log') . ' ' . $this->language->get('heading_title') . ' -------------------';
-			//$text .= "\n" . '<br>' . $this->language->get('success_uninstall_data_base') . DB_PREFIX . 'bus_editor';
+			// проверяем и удаляем со всех языковых файлов
+			foreach (glob(DIR_APPLICATION . 'language/*') as $path) {
+				$module_paths[] = $path . '/module/bus_editor[NAGIBATOR]';
+				$module_paths[] = $path . '/extension/module/bus_editor[NAGIBATOR]';
+			}
+
+			/* foreach (glob(DIR_CATALOG . 'language/*') as $path) {
+				$module_paths[] = $path . '/module/bus_editor[NAGIBATOR]';
+				$module_paths[] = $path . '/extension/module/bus_editor[NAGIBATOR]';
+			} */
+
+			// проверяем и удаляем со всех тем
+			foreach (glob(DIR_CATALOG . 'view/theme/*') as $path) {
+				$module_paths[] = $path . '/stylesheet/bus_editor[NAGIBATOR]';
+				$module_paths[] = $path . '/javascript/bus_editor[NAGIBATOR]';
+				$module_paths[] = $path . '/javascript';
+				$module_paths[] = $path . '/template/module/bus_editor[NAGIBATOR]';
+				$module_paths[] = $path . '/template/extension/module/bus_editor[NAGIBATOR]';
+			}
+
+			$text = '------------------- Start: ' . date($this->language->get('datetime_format')) . ' ' . $this->language->get('text_uninstall_files_log') . ' ' . strip_tags($this->language->get('heading_title')) . ' -------------------';
+			foreach ($db_paths as $path) {
+				$text .= "\n" . '<br>' . $this->language->get('success_uninstall_data_base') . $path;
+			}
 			if ($code) {
 				$text .= "\n" . '<br>' . $this->language->get('success_uninstall_modification') . $this->name . ' (id: ' . $this->code . ')';
 			}
-			foreach ($module_paths as $module_path) {
-				$text .= $this->deleteDir($module_path);
+			foreach ($module_paths as $path) {
+				$text .= $this->deleteDir($path);
 			}
-			$text .= "\n" . '<br>------------------- Stop: ' . date($this->language->get('datetime_format')) . ' ' . $this->language->get('text_uninstall_files_log') . ' ' . $this->language->get('heading_title') . ' -------------------' . "\n";
+			$text .= "\n" . '<br>------------------- Stop: ' . date($this->language->get('datetime_format')) . ' ' . $this->language->get('text_uninstall_files_log') . ' ' . strip_tags($this->language->get('heading_title')) . ' -------------------' . "\n";
 
-			// Log т.к. в 2.3-3.0 oc отчёт не выводится на экран через ajax
+			// Log
 			$handle = fopen(DIR_LOGS . 'ocmod.log', 'w+');
 
 			flock($handle, LOCK_EX);
 
-			fwrite($handle, strip_tags($text));
+			fwrite($handle, strip_tags(str_replace(array(DIR_APPLICATION, DIR_CATALOG, DIR_IMAGE, DIR_SYSTEM), array(basename(DIR_APPLICATION) . '/', basename(DIR_CATALOG) . '/', basename(DIR_IMAGE) . '/', basename(DIR_SYSTEM) . '/'), $text)));
 
 			fflush($handle);
 
@@ -846,21 +1125,19 @@ HTML;
 
 			fclose($handle);
 
-			// Log
 			//$ocmod = new Log('ocmod.log');
 			//$ocmod->write($text);
 
-			//echo $text;
-			//$this->response->setOutput($text);
 			$this->response->addHeader('Content-Type: application/json');
 			$this->response->setOutput(json_encode($text, JSON_HEX_AMP));
 		} else {
-			$this->response->setOutput($this->error['error']);
+			$this->response->addHeader('Content-Type: application/json');
+			$this->response->setOutput(json_encode($this->error['warning'], JSON_HEX_AMP));
 		}
 	}
 
 	private function deleteDir($dirname, $nagibator = false) {
-		$this->load->language('extension/module/bus_editor');
+		$this->load->language($this->paths['language']['bus_editor']);
 
 		$text = false;
 		$files = glob($dirname . '*');
@@ -872,7 +1149,7 @@ HTML;
 						$dir_del = true;
 						$dir = opendir($dirname);
 						while (($filename = readdir($dir)) !== false) {
-							if ($filename != "." && $filename != "..") {
+							if ($filename != "." && $filename != ".." && $filename != "index.html" && $filename != ".htaccess") {
 								$dir_del = false;
 								if ($nagibator) {
 									$dir_del = true;
@@ -888,8 +1165,11 @@ HTML;
 							$text .= "\n" . '<br>' . $this->language->get('success_uninstall_folder') . $dirname;
 						}
 					} else {
-						unlink($dirname);
-						$text .= "\n" . '<br>' . $this->language->get('success_uninstall_file') . $dirname;
+						$filename = basename($dirname);
+						if ($nagibator || $filename != "index.html" && $filename != ".htaccess") {
+							@unlink($dirname);
+							$text .= "\n" . '<br>' . $this->language->get('success_uninstall_file') . $dirname;
+						}
 					}
 				}
 			}
@@ -903,106 +1183,118 @@ HTML;
 		return $text;
 	}
 
-	private function modification($data = array()) {
+	private function update() {
+		$version = $this->configGet('version');
+		if ($this->validate() && ($this->request->server['REQUEST_METHOD'] != 'POST') && $version && version_compare($this->version, $version, '>')) {
+			if (version_compare('1.1.1', $version, '>')) {
+
+			}
+
+			$this->session->data['success'] = $this->modification($this->language->get('heading_title') . $this->language->get('success_update'), true, 500);
+		}
+	}
+
+	private function modification($message = false, $data = true, $speed = 2000) {
 		// посылыаем на йух
-		if (!$this->user->hasPermission('modify', 'extension/module/bus_editor')) {
-			$this->error['error'] = $this->language->get('error_permission');
+		if ($this->version_oc >= 2.2) {
+			if (!$this->user->hasPermission('modify', 'extension/extension/module')) {
+				$this->error['warning'] = $this->language->get('error_permission');
+			}
+		} else {
+			if (!$this->user->hasPermission('modify', 'extension/module')) {
+				$this->error['warning'] = $this->language->get('error_permission');
+			}
 		}
 
 		if (!$this->error) {
-			$this->load->model('extension/modification');
+			$file = $this->getFile(false, 'xml');
 
-			$code = $this->model_extension_modification->getModificationByCode($this->code);
+			if ($data && $file) {
+				$this->deleteFile(false, 'xml');
+				if ($this->getFile('library', 'xml_')) {
+					$this->setFile(false, $this->getFile('library', 'xml_'), 'xml');
+				}
+			} elseif ($data && !$file) {
+				$this->setFile(false, $this->getFile('library', 'xml_'), 'xml');
+			} elseif (!$data) {
+				$this->deleteFile(false, 'xml');
+			}
+
+			// удаляем модификатор модуля, если заливался в БД
+			$this->load->model($this->paths['model']['modification']);
+
+			$code = $this->{$this->paths['model']['modification_path']}->getModificationByCode($this->code);
 
 			if ($code) {
-				$this->model_extension_modification->deleteModification($code['modification_id']);
+				$this->{$this->paths['model']['modification_path']}->deleteModification($code['modification_id']);
 			}
 
-			if (!$data) {
-				$data = $this->configGet('modification');
-			}
+			if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate() && isset($this->request->post['modification'])) {
+				$setting = $this->request->post['modification'];
 
-			if ($data) {
-				$modification = $this->getFile(false, 'xml_');
-				$modification = str_replace('<![CDATA[<?php echo $button_grid; ?>]]>', '<![CDATA[<?php echo $button_compare; ?>]]>', $modification);
-				$modification = str_replace('<![CDATA[<h1><?php echo $heading_title; ?></h1>]]>', '<![CDATA[<?php echo $button_compare; ?>]]>', $modification);
-			}
+				$status = false;
+				$modification = $this->getFile('library', 'xml_');
 
-			$tabl_array = $this->tablArray();
-
-			foreach ($tabl_array as $tabl) {
-				if (isset($data[$tabl . '_href_search']) && !empty($data[$tabl . '_href_search'])) {
-					$success = true;
-					$href_search = <<<'XML'
-<search index="0" tabl="{tabl}"><![CDATA[<?php echo $button_compare; ?>]]></search>
-XML;
-
-					$href_search = str_replace('{tabl}', $tabl, $href_search);
-
-					if (!isset($data[$tabl . '_href_index'])) {
-						$data[$tabl . '_href_index'] = 0;
-					}
-
-					$modification = str_replace($href_search, '<search index="' . (int)$data[$tabl . '_href_index'] . '"><![CDATA[' . $data[$tabl . '_href_search'] . ']]></search>', $modification);
-					unset($href_search);
-				}
-
-				if (isset($data[$tabl . '_href_add']) && !empty($data[$tabl . '_href_add'])) {
-					$success = true;
-					$href_add = <<<'XML'
-<add position="after" tabl="{tabl}"><![CDATA[			<?php if (isset($bus_editor_href)) { ?><!--noindex--><button type="button" data-toggle="tooltip" class="btn btn-success" title="<?php echo $button_bus_editor_href; ?>" onclick="window.open('<?php echo $bus_editor_href; ?>', '_blank');"><i class="fa fa-pencil"></i></button><!--/noindex--><?php } ?>]]></add>
-XML;
-
-					$href_add = str_replace('{tabl}', $tabl, $href_add);
-
-					if (!isset($data[$tabl . '_href_position'])) {
-						$data[$tabl . '_href_position'] = 'after';
-					} else {
-						if ($data[$tabl . '_href_position'] == 1) {
-							$data[$tabl . '_href_position'] = 'before';
-						} elseif ($data[$tabl . '_href_position'] == 2) {
-							$data[$tabl . '_href_position'] = 'replace';
-						} else {
-							$data[$tabl . '_href_position'] = 'after';
+				foreach ($this->tablArray() as $tabl) {
+					if (!empty($setting[$tabl . '_href_search'])) {
+						$status = true;
+						if (!isset($setting[$tabl . '_href_index'])) {
+							$setting[$tabl . '_href_index'] = 0;
 						}
+
+						$modification = preg_replace('~<search index="0" tabl="' . $tabl . '"><!\[CDATA\[(.*?)\]\]></search>~iS', '<search index="' . $setting[$tabl . '_href_index'] . '" tabl="' . $tabl . '"><![CDATA[' . $setting[$tabl . '_href_search'] . ']]></search>', $modification);
 					}
 
-					$modification = str_replace($href_add, '<add position="' . $data[$tabl . '_href_position'] . '"><![CDATA[			' . $data[$tabl . '_href_add'] . ']]></add>', $modification);
+					if (!empty($setting[$tabl . '_href_add'])) {
+						$status = true;
+						if (!isset($data[$tabl . '_href_position'])) {
+							$setting[$tabl . '_href_position'] = 'after';
+						} else {
+							if ($setting[$tabl . '_href_position'] == 1) {
+								$setting[$tabl . '_href_position'] = 'before';
+							} elseif ($setting[$tabl . '_href_position'] == 2) {
+								$setting[$tabl . '_href_position'] = 'replace';
+							} else {
+								$setting[$tabl . '_href_position'] = 'after';
+							}
+						}
+
+						$modification = preg_replace('~<add position="(.[^"]*?)" tabl="' . $tabl . '"><!\[CDATA\[(.*?)\]\]></add>~iS', '<add position="' . $setting[$tabl . '_href_position'] . '" tabl="' . $tabl . '"><![CDATA[' . $setting[$tabl . '_href_add'] . ']]></add>', $modification);
+					}
 				}
-			}
 
-			if (isset($success)) {
-				$data = array(
-					'code'    => $this->code,
-					'name'    => $this->name,
-					'author'  => $this->author,
-					'version' => $this->version,
-					'link'    => $this->link,
-					'xml'     => htmlspecialchars_decode($modification),
-					'status'  => 1
-				);
+				if ($status && $modification) {
+					$data = array(
+						'code'    => $this->code,
+						'name'    => $this->name,
+						'author'  => $this->author,
+						'version' => $this->version,
+						'link'    => $this->link,
+						'xml'     => htmlspecialchars_decode($modification),
+						'status'  => 1
+					);
 
-				$this->model_extension_modification->addModification($data);
+					$this->model_extension_modification->addModification($data);
 
-				$this->deleteFile(false, 'xml');
-			} else {
-				$file = $this->getFile('library', 'xml_');
-
-				$this->setFile(false, $file, 'xml');
+					$this->deleteFile(false, 'xml');
+				}
 			}
 
 			// чистим кэши необходимые для модуля
-			/* $this->cache->delete('blog_category');
+			//$this->cache->delete('*');
+			//$this->cache->delete('blog_category');
 			//$this->cache->delete('blog_article');
-			$this->cache->delete('article');
-			$this->cache->delete('category');
-			$this->cache->delete('information');
-			$this->cache->delete('manufacturer');
-			$this->cache->delete('product');
-			$this->cache->delete('seo_pro');
-			$this->cache->delete('seo_url'); */
-			//$this->load->controller('common/developer/theme');
-			//$this->load->controller('common/developer/sass');
+			//$this->cache->delete('article');
+			//$this->cache->delete('category');
+			//$this->cache->delete('information');
+			//$this->cache->delete('manufacturer');
+			//$this->cache->delete('product');
+			//$this->cache->delete('seo_pro');
+			//$this->cache->delete('seo_url');
+			if ($this->version_oc >= 3) {
+				$this->load->controller('common/developer/theme');
+				//$this->load->controller('common/developer/sass');
+			}
 
 			// готовим данные для ajax
 			$text_ocmod_clear = $this->language->get('text_ocmod_clear');
@@ -1010,19 +1302,19 @@ XML;
 			$text_ocmod_refresh = $this->language->get('text_ocmod_refresh');
 
 			if (isset($this->session->data['apply'])) {
-				$success = $this->language->get('success_setting_apply');
+				$success = $this->language->get('success_setting_apply') . ' ' . $message;
 				unset($this->session->data['apply']);
 			} else {
-				$success = $this->language->get('success_setting_save');
+				$success = $this->language->get('success_setting_save') . ' ' . $message;
 			}
 
 			$error_uninstall = $this->language->get('error_uninstall');
 
-			$url_ocmod_clear = $this->url->link('extension/modification/clear', 'token=' . $this->session->data['token'], true);
+			$url_ocmod_clear = $this->url->link($this->paths['controller']['modification'] . '/clear', $this->paths['token'], true);
 			$url_ocmod_clear = str_ireplace('&amp;', '&', $url_ocmod_clear);
-			$url_ocmod_clearlog = $this->url->link('extension/modification/clearlog', 'token=' . $this->session->data['token'], true);
+			$url_ocmod_clearlog = $this->url->link($this->paths['controller']['modification'] . '/clearlog', $this->paths['token'], true);
 			$url_ocmod_clearlog = str_ireplace('&amp;', '&', $url_ocmod_clearlog);
-			$url_ocmod_refresh = $this->url->link('extension/modification/refresh', 'token=' . $this->session->data['token'], true);
+			$url_ocmod_refresh = $this->url->link($this->paths['controller']['modification'] . '/refresh', $this->paths['token'], true);
 			$url_ocmod_refresh = str_ireplace('&amp;', '&', $url_ocmod_refresh);
 
 			$text = <<<HTML
@@ -1048,7 +1340,7 @@ function ocmodClear() {
 		success: function(html) {
 			if (html) {
 				$('.alert-success').html('<i class="fa fa-check-circle"></i> $text_ocmod_clear <button type="button" class="close" data-dismiss="alert">×</button>');
-				setTimeout('ocmodClearlog()', 2000);
+				setTimeout(ocmodClearlog, $speed);
 			}
 		},
 		error: function(xhr, ajaxOptions, thrownError) {
@@ -1068,7 +1360,7 @@ function ocmodClearlog() {
 		success: function(html) {
 			if (html) {
 				$('.alert-success').html('<i class="fa fa-check-circle"></i> $text_ocmod_clearlog <button type="button" class="close" data-dismiss="alert">×</button>');
-				setTimeout('ocmodRefresh()', 2000);
+				setTimeout(ocmodRefresh, $speed);
 			}
 		},
 		error: function(xhr, ajaxOptions, thrownError) {
@@ -1088,7 +1380,7 @@ function ocmodRefresh() {
 		success: function(html) {
 			if (html) {
 				$('.alert-success').html('<i class="fa fa-check-circle"></i> $text_ocmod_refresh <button type="button" class="close" data-dismiss="alert">×</button>');
-				setTimeout('success()', 2000);
+				setTimeout(successModule, $speed);
 			}
 		},
 		error: function(xhr, ajaxOptions, thrownError) {
@@ -1097,14 +1389,14 @@ function ocmodRefresh() {
 	});
 }
 
-function success() {
+function successModule() {
 	$('.alert-success').html('<i class="fa fa-check-circle"></i> $success <button type="button" class="close" data-dismiss="alert">×</button>');
 	$('a, button, select, input').removeAttr('disabled');
 }
 //--></script>
 HTML;
 
-			$this->session->data['modification'] = $text;
+			return $text;
 		}
 	}
 }

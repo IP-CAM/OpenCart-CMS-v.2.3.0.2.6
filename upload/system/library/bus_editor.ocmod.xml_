@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Аўтар: "БуслікДрэў" ( https://buslikdrev.by/ )
-© 2016-2021; BuslikDrev - Усе правы захаваныя.
+© 2016-2022; BuslikDrev - Усе правы захаваныя.
 Спецыяльна для сайта: "OpenCart.pro" ( https://opencart.pro/ ) -->
 
 <modification>
-	<code>01000048</code>
+    <code>01000048</code>
     <name>Удобный Редактор - "Convenient Editor"</name>
-    <version>Full</version>
+    <version>1.0.2 Full</version>
     <author>BuslikDrev.by</author>
     <link>https://liveopencart.ru/buslikdrev</link>
-	<!-- ↓ АДМИНКА КОНТРОЛЛЕРЫ ↓ -->
-	<file path="admin/view/template/common/footer.tpl">
-		<operation>
-			<search index="0">
-			<![CDATA[</body>]]>
-			</search>
-			<add position="before">
-			<![CDATA[<style type="text/css">
+    <!-- ↓ АДМИНКА КОНТРОЛЛЕРЫ ↓ -->
+    <file path="admin/view/template/common/footer.tpl">
+        <operation error="skip">
+            <search index="0">
+            <![CDATA[</body>]]>
+            </search>
+            <add position="before">
+            <![CDATA[<style type="text/css">
 /* bus-editor */
 a.bus-editor{margin-right:3px}
 #bus-editor .loading{display:none;position:relative;width:100%;height:300px;text-align:center;margin-top:15%;z-index:1}
@@ -33,7 +33,7 @@ a.bus-editor{margin-right:3px}
 $(document).ready(function() {
 	var route = getURLVar('route');
 
-	if (!$('#bus-editor').length && (route == 'blog/article' || route == 'blog/article' || route == 'catalog/category' || route == 'catalog/information' || route == 'catalog/manufacturer' || route == 'catalog/product')) {
+	if (!$('#bus-editor').length && (route == 'blog/category' || route == 'blog/article' || route == 'catalog/category' || route == 'catalog/information' || route == 'catalog/manufacturer' || route == 'catalog/product')) {
 		var btns = $('form[id*="form-"] tbody a.btn-primary .fa-pencil').parent();
 
 		for (var key = 0; key < btns.length; key++) {
@@ -91,213 +91,277 @@ $(document).ready(function() {
 						iframe.show();
 					});
 				});
-			})
+			});
 		});
 	}
 });
 //--></script>]]>
-			</add>
-		</operation>
-	</file>
-	<!-- ↑ АДМИНКА КОНТРОЛЛЕРЫ ↑ -->
-	<!-- ↓ САЙТ КОНТРОЛЛЕРЫ ↓ -->
-	<file path="catalog/controller/blog/category.php">
-		<operation error="skip">
-			<search index="0">
-			<![CDATA[function index(]]>
-			</search>
-			<add position="after">
-			<![CDATA[		if ($this->config->get('bus_editor_blog_category_href_status')) {
-			$this->user = new Cart\User($this->registry);
+            </add>
+        </operation>
+    </file>
+    <!-- ↑ АДМИНКА КОНТРОЛЛЕРЫ ↑ -->
+
+    <!-- ↓ САЙТ КОНТРОЛЛЕРЫ ↓ -->
+    <file path="catalog/controller/blog/category.php">
+        <operation error="skip">
+            <search index="0">
+            <![CDATA[function index(]]>
+            </search>
+            <add position="after">
+            <![CDATA[		if ($this->config->get('bus_editor_blog_category_href_status')) {
+			if (version_compare(VERSION, '2.2.0', '<')) {
+				$this->user = new User($this->registry);
+			} else {
+				$this->user = new Cart\User($this->registry);
+			}
 			if ($this->user->isLogged()) {
 				$data['button_bus_editor_href'] = $this->language->get('button_edit');
 				$id = explode('_', (string)$this->request->get['blog_category_id']);
 				$id = (int)array_pop($id);
-				$data['bus_editor_href'] = $this->url->link('extension/module/bus_editor', 'blog_category=' . $id);
+				$data['bus_editor_href'] = $this->url->link((version_compare(VERSION, '2.2.0', '>=') ? 'extension/' : false) . 'module/bus_editor', 'blog_category=' . $id);
 			}
 		}]]>
-			</add>
-		</operation>
-	</file>
-	<file path="catalog/controller/blog/article.php">
-		<operation error="skip">
-			<search index="0">
-			<![CDATA[function index(]]>
-			</search>
-			<add position="after">
-			<![CDATA[		if ($this->config->get('bus_editor_blog_article_href_status')) {
-			$this->user = new Cart\User($this->registry);
+            </add>
+        </operation>
+    </file>
+    <file path="catalog/controller/blog/article.php">
+        <operation error="skip">
+            <search index="0">
+            <![CDATA[function index(]]>
+            </search>
+            <add position="after">
+            <![CDATA[		if ($this->config->get('bus_editor_blog_article_href_status')) {
+			if (version_compare(VERSION, '2.2.0', '<')) {
+				$this->user = new User($this->registry);
+			} else {
+				$this->user = new Cart\User($this->registry);
+			}
 			if ($this->user->isLogged()) {
 				$data['button_bus_editor_href'] = $this->language->get('button_edit');
-				$data['bus_editor_href'] = $this->url->link('extension/module/bus_editor', 'article=' . $this->request->get['article_id']);
+				$data['bus_editor_href'] = $this->url->link((version_compare(VERSION, '2.2.0', '>=') ? 'extension/' : false) . 'module/bus_editor', 'article=' . $this->request->get['article_id']);
 			}
 		}]]>
-			</add>
-		</operation>
-	</file>
-	<file path="catalog/controller/product/category.php">
-		<operation error="skip">
-			<search index="0">
-			<![CDATA[function index(]]>
-			</search>
-			<add position="after">
-			<![CDATA[		if ($this->config->get('bus_editor_category_href_status')) {
-			$this->user = new Cart\User($this->registry);
+            </add>
+        </operation>
+    </file>
+    <file path="catalog/controller/product/category.php">
+        <operation error="skip">
+            <search index="0">
+            <![CDATA[function index(]]>
+            </search>
+            <add position="after">
+            <![CDATA[		if ($this->config->get('bus_editor_category_href_status')) {
+			if (version_compare(VERSION, '2.2.0', '<')) {
+				$this->user = new User($this->registry);
+			} else {
+				$this->user = new Cart\User($this->registry);
+			}
 			if ($this->user->isLogged()) {
 				$data['button_bus_editor_href'] = $this->language->get('button_edit');
 				$id = explode('_', (string)$this->request->get['path']);
 				$id = (int)array_pop($id);
-				$data['bus_editor_href'] = $this->url->link('extension/module/bus_editor', 'category=' . $id);
+				$data['bus_editor_href'] = $this->url->link((version_compare(VERSION, '2.2.0', '>=') ? 'extension/' : false) . 'module/bus_editor', 'category=' . $id);
 			}
 		}]]>
-			</add>
-		</operation>
-	</file>
-	<file path="catalog/controller/information/information.php">
-		<operation error="skip">
-			<search index="0">
-			<![CDATA[function index(]]>
-			</search>
-			<add position="after">
-			<![CDATA[		if ($this->config->get('bus_editor_information_href_status')) {
-			$this->user = new Cart\User($this->registry);
+            </add>
+        </operation>
+    </file>
+    <file path="catalog/controller/information/information.php">
+        <operation error="skip">
+            <search index="0">
+            <![CDATA[function index(]]>
+            </search>
+            <add position="after">
+            <![CDATA[		if ($this->config->get('bus_editor_information_href_status')) {
+			if (version_compare(VERSION, '2.2.0', '<')) {
+				$this->user = new User($this->registry);
+			} else {
+				$this->user = new Cart\User($this->registry);
+			}
 			if ($this->user->isLogged()) {
 				$data['button_bus_editor_href'] = $this->language->get('button_edit');
-				$data['bus_editor_href'] = $this->url->link('extension/module/bus_editor', 'information=' . $this->request->get['information_id']);
+				$data['bus_editor_href'] = $this->url->link((version_compare(VERSION, '2.2.0', '>=') ? 'extension/' : false) . 'module/bus_editor', 'information=' . $this->request->get['information_id']);
 			}
 		}]]>
-			</add>
-		</operation>
-	</file>
-	<file path="catalog/controller/product/manufacturer.php">
-		<operation error="skip">
-			<search index="0">
-			<![CDATA[function info(]]>
-			</search>
-			<add position="after">
-			<![CDATA[		if ($this->config->get('bus_editor_manufacturer_href_status')) {
-			$this->user = new Cart\User($this->registry);
+            </add>
+        </operation>
+    </file>
+    <file path="catalog/controller/product/manufacturer.php">
+        <operation error="skip">
+            <search index="0">
+            <![CDATA[function info(]]>
+            </search>
+            <add position="after">
+            <![CDATA[		if ($this->config->get('bus_editor_manufacturer_href_status')) {
+			if (version_compare(VERSION, '2.2.0', '<')) {
+				$this->user = new User($this->registry);
+			} else {
+				$this->user = new Cart\User($this->registry);
+			}
 			if ($this->user->isLogged()) {
 				$data['button_bus_editor_href'] = $this->language->get('button_edit');
 				$id = explode('_', (string)$this->request->get['manufacturer_id']);
 				$id = (int)array_pop($id);
-				$data['bus_editor_href'] = $this->url->link('extension/module/bus_editor', 'manufacturer=' . $id);
+				$data['bus_editor_href'] = $this->url->link((version_compare(VERSION, '2.2.0', '>=') ? 'extension/' : false) . 'module/bus_editor', 'manufacturer=' . $id);
 			}
 		}]]>
-			</add>
-		</operation>
-	</file>
-	<file path="catalog/controller/product/product.php">
-		<operation error="skip">
-			<search index="0">
-			<![CDATA[function index(]]>
-			</search>
-			<add position="after">
-			<![CDATA[		if ($this->config->get('bus_editor_product_href_status')) {
-			$this->user = new Cart\User($this->registry);
+            </add>
+        </operation>
+    </file>
+    <file path="catalog/controller/product/product.php">
+        <operation error="skip">
+            <search index="0">
+            <![CDATA[function index(]]>
+            </search>
+            <add position="after">
+            <![CDATA[		if ($this->config->get('bus_editor_product_href_status')) {
+			if (version_compare(VERSION, '2.2.0', '<')) {
+				$this->user = new User($this->registry);
+			} else {
+				$this->user = new Cart\User($this->registry);
+			}
 			if ($this->user->isLogged()) {
 				$data['button_bus_editor_href'] = $this->language->get('button_edit');
-				$data['bus_editor_href'] = $this->url->link('extension/module/bus_editor', 'product=' . $this->request->get['product_id']);
+				$data['bus_editor_href'] = $this->url->link((version_compare(VERSION, '2.2.0', '>=') ? 'extension/' : false) . 'module/bus_editor', 'product=' . $this->request->get['product_id']);
 			}
 		}]]>
-			</add>
-		</operation>
-	</file>
-	<!-- ↑ САЙТ КОНТРОЛЛЕРЫ ↑ -->
-	<!-- ↓ САЙТ ЯЗЫКОВЫЕ ФАЙЛЫ ↓ -->
-	<file path="catalog/language/{belarusian,be-by,by-by}/{belarusian,be-by,by-by}.php">
+            </add>
+        </operation>
+    </file>
+    <!-- ↑ САЙТ КОНТРОЛЛЕРЫ ↑ -->
+
+    <!-- ↓ САЙТ ЯЗЫКОВЫЕ ФАЙЛЫ ↓ -->
+    <file path="catalog/language/{belarusian,be-by,by-by}/{belarusian,be-by,by-by}.php">
         <operation error="skip">
             <search trim="false" index="0">
-			<![CDATA[?php]]>
+            <![CDATA[?php]]>
             </search>
             <add position="after">
-			<![CDATA[// Convenient Editor
+            <![CDATA[// Convenient Editor
 $_['error_bus_editor_href'] = 'ЖЭСТАЧАЙШЭ ЗАПРЫШЧАЮ!';
 // Convenient Editor
 ]]>
             </add>
         </operation>
     </file>
-	<file path="catalog/language/{english,en-gb}/{english,en-gb}.php">
+    <file path="catalog/language/{english,en-gb}/{english,en-gb}.php">
         <operation error="skip">
             <search trim="false" index="0">
-			<![CDATA[?php]]>
+            <![CDATA[?php]]>
             </search>
             <add position="after">
-			<![CDATA[// Convenient Editor
+            <![CDATA[// Convenient Editor
 $_['error_bus_editor_href'] = 'ЖЭСТАЧАЙШЭ ЗАПРЫШЧАЮ!';
 // Convenient Editor
 ]]>
             </add>
         </operation>
     </file>
-	<file path="catalog/language/{russian,ru-ru}/{russian,ru-ru}.php">
+    <file path="catalog/language/{russian,ru-ru}/{russian,ru-ru}.php">
         <operation error="skip">
             <search trim="false" index="0">
-			<![CDATA[?php]]>
+            <![CDATA[?php]]>
             </search>
             <add position="after">
-			<![CDATA[// Convenient Editor
+            <![CDATA[// Convenient Editor
 $_['error_bus_editor_href'] = 'ЖЭСТАЧАЙШЭ ЗАПРЫШЧАЮ!';
 // Convenient Editor
 ]]>
             </add>
         </operation>
     </file>
-	<file path="catalog/language/{ukrainian,uk-ua,ua-uk}/{ukrainian,uk-ua,ua-uk}.php">
+    <file path="catalog/language/{ukrainian,uk-ua,ua-uk}/{ukrainian,uk-ua,ua-uk}.php">
         <operation error="skip">
             <search trim="false" index="0">
-			<![CDATA[?php]]>
+            <![CDATA[?php]]>
             </search>
             <add position="after">
-			<![CDATA[// Convenient Editor
+            <![CDATA[// Convenient Editor
 $_['error_bus_editor_href'] = 'ЖЭСТАЧАЙШЭ ЗАПРЫШЧАЮ!';
 // Convenient Editor
 ]]>
             </add>
         </operation>
     </file>
-	<!-- ↑ САЙТ ЯЗЫКОВЫЕ ФАЙЛЫ ↑ -->
-	<!-- ↓ САЙТ ШАБЛОН ↓ -->
-	<file path="catalog/view/theme/*/template/blog/category.tpl">
-		<operation error="skip">
-			<search index="0" tabl="blog_category"><![CDATA[<?php echo $button_grid; ?>]]></search>
-			<add position="after" tabl="blog_category"><![CDATA[			<?php if (isset($bus_editor_href)) { ?><!--noindex--><button type="button" data-toggle="tooltip" class="btn btn-success" title="<?php echo $button_bus_editor_href; ?>" onclick="window.open('<?php echo $bus_editor_href; ?>', '_blank');"><i class="fa fa-pencil"></i></button><!--/noindex--><?php } ?>]]></add>
-		</operation>
-	</file>
-	<file path="catalog/view/theme/*/template/blog/article.tpl">
-		<operation error="skip">
-			<search index="0" tabl="blog_article"><![CDATA[<h1><?php echo $heading_title; ?></h1>]]></search>
-			<add position="before" tabl="blog_article"><![CDATA[			<?php if (isset($bus_editor_href)) { ?><!--noindex--><button type="button" data-toggle="tooltip" class="btn btn-success" title="<?php echo $button_bus_editor_href; ?>" onclick="window.open('<?php echo $bus_editor_href; ?>', '_blank');"><i class="fa fa-pencil"></i></button><!--/noindex--><?php } ?>]]></add>
-		</operation>
-	</file>
-	<file path="catalog/view/theme/*/template/product/category.tpl">
-		<operation error="skip">
-			<search index="0" tabl="category"><![CDATA[<?php echo $button_grid; ?>]]></search>
-			<add position="after" tabl="category"><![CDATA[			<?php if (isset($bus_editor_href)) { ?><!--noindex--><button type="button" data-toggle="tooltip" class="btn btn-success" title="<?php echo $button_bus_editor_href; ?>" onclick="window.open('<?php echo $bus_editor_href; ?>', '_blank');"><i class="fa fa-pencil"></i></button><!--/noindex--><?php } ?>]]></add>
-		</operation>
-	</file>
-	<file path="catalog/view/theme/*/template/information/information.tpl">
-		<operation error="skip">
-			<search index="0" tabl="information"><![CDATA[<h1><?php echo $heading_title; ?></h1>]]></search>
-			<add position="before" tabl="information"><![CDATA[			<?php if (isset($bus_editor_href)) { ?><!--noindex--><button type="button" data-toggle="tooltip" class="btn btn-success" title="<?php echo $button_bus_editor_href; ?>" onclick="window.open('<?php echo $bus_editor_href; ?>', '_blank');"><i class="fa fa-pencil"></i></button><!--/noindex--><?php } ?>]]></add>
-		</operation>
-	</file>
-	<file path="catalog/view/theme/*/template/product/manufacturer_info.tpl">
-		<operation error="skip">
-			<search index="0" tabl="manufacturer"><![CDATA[<?php echo $button_grid; ?>]]></search>
-			<add position="after" tabl="manufacturer"><![CDATA[			<?php if (isset($bus_editor_href)) { ?><!--noindex--><button type="button" data-toggle="tooltip" class="btn btn-success" title="<?php echo $button_bus_editor_href; ?>" onclick="window.open('<?php echo $bus_editor_href; ?>', '_blank');"><i class="fa fa-pencil"></i></button><!--/noindex--><?php } ?>]]></add>
-		</operation>
-	</file>
-	<file path="catalog/view/theme/*/template/product/product.tpl">
-		<operation error="skip">
-			<search index="0" tabl="product"><![CDATA[<?php echo $button_compare; ?>]]></search>
-			<add position="after" tabl="product"><![CDATA[			<?php if (isset($bus_editor_href)) { ?><!--noindex--><button type="button" data-toggle="tooltip" class="btn btn-success" title="<?php echo $button_bus_editor_href; ?>" onclick="window.open('<?php echo $bus_editor_href; ?>', '_blank');"><i class="fa fa-pencil"></i></button><!--/noindex--><?php } ?>]]></add>
-		</operation>
-	</file>
-	<!-- ↑ САЙТ ШАБЛОН ↑ -->
+    <!-- ↑ САЙТ ЯЗЫКОВЫЕ ФАЙЛЫ ↑ -->
+
+    <!-- ↓ САЙТ ШАБЛОН ↓ -->
+    <file path="catalog/view/theme/*/template/blog/category.tpl">
+        <operation error="skip">
+            <search index="0" tabl="blog_category"><![CDATA[<?php echo $button_grid; ?>]]></search>
+            <add position="after" tabl="blog_category"><![CDATA[            <?php if (isset($bus_editor_href)) { ?><!--noindex--><button type="button" data-toggle="tooltip" class="btn btn-success" title="<?php echo $button_bus_editor_href; ?>" onclick="window.open('<?php echo $bus_editor_href; ?>', '_blank');"><i class="fa fa-pencil"></i></button><!--/noindex--><?php } ?>]]></add>
+        </operation>
+    </file>
+    <file path="catalog/view/theme/*/template/blog/article.tpl">
+        <operation error="skip">
+            <search index="0" tabl="blog_article"><![CDATA[<h1><?php echo $heading_title; ?></h1>]]></search>
+            <add position="before" tabl="blog_article"><![CDATA[            <?php if (isset($bus_editor_href)) { ?><!--noindex--><button type="button" data-toggle="tooltip" class="btn btn-success" title="<?php echo $button_bus_editor_href; ?>" onclick="window.open('<?php echo $bus_editor_href; ?>', '_blank');"><i class="fa fa-pencil"></i></button><!--/noindex--><?php } ?>]]></add>
+        </operation>
+    </file>
+    <file path="catalog/view/theme/*/template/product/category.tpl">
+        <operation error="skip">
+            <search index="0" tabl="category"><![CDATA[<?php echo $button_grid; ?>]]></search>
+            <add position="after" tabl="category"><![CDATA[            <?php if (isset($bus_editor_href)) { ?><!--noindex--><button type="button" data-toggle="tooltip" class="btn btn-success" title="<?php echo $button_bus_editor_href; ?>" onclick="window.open('<?php echo $bus_editor_href; ?>', '_blank');"><i class="fa fa-pencil"></i></button><!--/noindex--><?php } ?>]]></add>
+        </operation>
+    </file>
+    <file path="catalog/view/theme/*/template/information/information.tpl">
+        <operation error="skip">
+            <search index="0" tabl="information"><![CDATA[<h1><?php echo $heading_title; ?></h1>]]></search>
+            <add position="before" tabl="information"><![CDATA[            <?php if (isset($bus_editor_href)) { ?><!--noindex--><button type="button" data-toggle="tooltip" class="btn btn-success" title="<?php echo $button_bus_editor_href; ?>" onclick="window.open('<?php echo $bus_editor_href; ?>', '_blank');"><i class="fa fa-pencil"></i></button><!--/noindex--><?php } ?>]]></add>
+        </operation>
+    </file>
+    <file path="catalog/view/theme/*/template/product/manufacturer_info.tpl">
+        <operation error="skip">
+            <search index="0" tabl="manufacturer"><![CDATA[<?php echo $button_grid; ?>]]></search>
+            <add position="after" tabl="manufacturer"><![CDATA[            <?php if (isset($bus_editor_href)) { ?><!--noindex--><button type="button" data-toggle="tooltip" class="btn btn-success" title="<?php echo $button_bus_editor_href; ?>" onclick="window.open('<?php echo $bus_editor_href; ?>', '_blank');"><i class="fa fa-pencil"></i></button><!--/noindex--><?php } ?>]]></add>
+        </operation>
+    </file>
+    <file path="catalog/view/theme/*/template/product/product.tpl">
+        <operation error="skip">
+            <search index="0" tabl="product"><![CDATA[<?php echo $button_compare; ?>]]></search>
+            <add position="after" tabl="product"><![CDATA[            <?php if (isset($bus_editor_href)) { ?><!--noindex--><button type="button" data-toggle="tooltip" class="btn btn-success" title="<?php echo $button_bus_editor_href; ?>" onclick="window.open('<?php echo $bus_editor_href; ?>', '_blank');"><i class="fa fa-pencil"></i></button><!--/noindex--><?php } ?>]]></add>
+        </operation>
+    </file>
+
+    <file path="catalog/view/theme/*/template/blog/category.twig">
+        <operation error="skip">
+            <search index="0" tabl="blog_category"><![CDATA[{{ button_grid }}]]></search>
+            <add position="after" tabl="blog_category"><![CDATA[            {% if (bus_editor_href is defined) %}<!--noindex--><button type="button" data-toggle="tooltip" class="btn btn-success" title="{{ button_bus_editor_href }}" onclick="window.open('{{ bus_editor_href }}', '_blank');"><i class="fa fa-pencil"></i></button><!--/noindex-->{% endif %}]]></add>
+        </operation>
+    </file>
+    <file path="catalog/view/theme/*/template/blog/article.twig">
+        <operation error="skip">
+            <search index="0" tabl="blog_article"><![CDATA[<h1>{{ heading_title }}</h1>]]></search>
+            <add position="before" tabl="blog_article"><![CDATA[            {% if (bus_editor_href is defined) %}<!--noindex--><button type="button" data-toggle="tooltip" class="btn btn-success" title="{{ button_bus_editor_href }}" onclick="window.open('{{ bus_editor_href }}', '_blank');"><i class="fa fa-pencil"></i></button><!--/noindex-->{% endif %}]]></add>
+        </operation>
+    </file>
+    <file path="catalog/view/theme/*/template/product/category.twig">
+        <operation error="skip">
+            <search index="0" tabl="category"><![CDATA[{{ button_grid }}]]></search>
+            <add position="after" tabl="category"><![CDATA[            {% if (bus_editor_href is defined) %}<!--noindex--><button type="button" data-toggle="tooltip" class="btn btn-success" title="{{ button_bus_editor_href }}" onclick="window.open('{{ bus_editor_href }}', '_blank');"><i class="fa fa-pencil"></i></button><!--/noindex-->{% endif %}]]></add>
+        </operation>
+    </file>
+    <file path="catalog/view/theme/*/template/information/information.twig">
+        <operation error="skip">
+            <search index="0" tabl="information"><![CDATA[<h1>{{ heading_title }}</h1>]]></search>
+            <add position="before" tabl="information"><![CDATA[            {% if (bus_editor_href is defined) %}<!--noindex--><button type="button" data-toggle="tooltip" class="btn btn-success" title="{{ button_bus_editor_href }}" onclick="window.open('{{ bus_editor_href }}', '_blank');"><i class="fa fa-pencil"></i></button><!--/noindex-->{% endif %}]]></add>
+        </operation>
+    </file>
+    <file path="catalog/view/theme/*/template/product/manufacturer_info.twig">
+        <operation error="skip">
+            <search index="0" tabl="manufacturer"><![CDATA[{{ button_grid }}]]></search>
+            <add position="after" tabl="manufacturer"><![CDATA[            {% if (bus_editor_href is defined) %}<!--noindex--><button type="button" data-toggle="tooltip" class="btn btn-success" title="{{ button_bus_editor_href }}" onclick="window.open('{{ bus_editor_href }}', '_blank');"><i class="fa fa-pencil"></i></button><!--/noindex-->{% endif %}]]></add>
+        </operation>
+    </file>
+    <file path="catalog/view/theme/*/template/product/product.twig">
+        <operation error="skip">
+            <search index="0" tabl="product"><![CDATA[{{ button_compare }}]]></search>
+            <add position="after" tabl="product"><![CDATA[            {% if (bus_editor_href is defined) %}<!--noindex--><button type="button" data-toggle="tooltip" class="btn btn-success" title="{{ button_bus_editor_href }}" onclick="window.open('{{ bus_editor_href }}', '_blank');"><i class="fa fa-pencil"></i></button><!--/noindex-->{% endif %}]]></add>
+        </operation>
+    </file>
+    <!-- ↑ САЙТ ШАБЛОН ↑ -->
 </modification>
 
 <!-- Аўтар: "БуслікДрэў" ( https://buslikdrev.by/ )
-© 2016-2021; BuslikDrev - Усе правы захаваныя.
+© 2016-2022; BuslikDrev - Усе правы захаваныя.
 Спецыяльна для сайта: "OpenCart.pro" ( https://opencart.pro/ ) -->
