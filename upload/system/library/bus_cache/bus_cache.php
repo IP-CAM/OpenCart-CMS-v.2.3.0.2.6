@@ -99,6 +99,7 @@ class Bus_Cache {
 			'pagespeed_css_critical'         => false,
 			'pagespeed_css_inline_transfer'  => false,
 			'pagespeed_css_events'           => false,
+			'pagespeed_css_style'            => false,
 			'pagespeed_js_min'               => false,
 			'pagespeed_js_min_download'      => false,
 			'pagespeed_js_min_exception'     => false,
@@ -106,6 +107,7 @@ class Bus_Cache {
 			'pagespeed_js_inline_event_time' => false,
 			'pagespeed_js_inline_transfer'   => false,
 			'pagespeed_js_events'            => false,
+			'pagespeed_js_script'            => false,
 			'debug'                          => false,
 		);
 		if (is_array($setting)) {
@@ -226,7 +228,7 @@ class Bus_Cache {
 
 			foreach ($rot_exceptions as $exception) {
 				$exception = utf8_strtolower($exception);
-				if (strrpos($route, $exception) !== false || isset($keyword) && strrpos($exception, $keyword) !== false) {
+				if (strpos($route, $exception) !== false || isset($keyword) && strpos($exception, $keyword) !== false) {
 					$setting['cache_status'] = true;
 				}
 			}
@@ -240,7 +242,7 @@ class Bus_Cache {
 
 			foreach ($rot_exceptions as $exception) {
 				$exception = utf8_strtolower($exception);
-				if (strrpos($route, $exception) !== false || isset($keyword) && strrpos($exception, $keyword) !== false) {
+				if (strpos($route, $exception) !== false || isset($keyword) && strpos($exception, $keyword) !== false) {
 					$setting['cache_status'] = false;
 				}
 			}
@@ -254,7 +256,7 @@ class Bus_Cache {
 
 			foreach ($rot_exceptions as $exception) {
 				$exception = utf8_strtolower($exception);
-				if (strrpos($route, $exception) !== false || isset($keyword) && strrpos($exception, $keyword) !== false) {
+				if (strpos($route, $exception) !== false || isset($keyword) && strpos($exception, $keyword) !== false) {
 					$setting['pagespeed_status'] = false;
 				}
 			}
@@ -448,9 +450,12 @@ class Bus_Cache {
 	}
 
 	public function output($output = '', $setting = array()) {
+		if (!$output || !$setting) {
+			return $output;
+		}
 		$setting_default = array(
 			'headers'                        => array(),
-			'server'                         => (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $setting['HTTP_HOST'] . '/',
+			'server'                         => (!empty($_SERVER['HTTPS']) ? (defined(HTTPS_SERVER) ? HTTPS_SERVER : false) : (defined(HTTP_SERVER) ? HTTP_SERVER : false)),
 			'config_logo'                    => false,
 			'theme'                          => false,
 			'route'                          => false,
@@ -486,6 +491,7 @@ class Bus_Cache {
 			'pagespeed_css_critical'         => false,
 			'pagespeed_css_inline_transfer'  => false,
 			'pagespeed_css_events'           => false,
+			'pagespeed_css_style'            => false,
 			'pagespeed_js_min'               => false,
 			'pagespeed_js_min_download'      => false,
 			'pagespeed_js_min_exception'     => false,
@@ -493,6 +499,7 @@ class Bus_Cache {
 			'pagespeed_js_inline_event_time' => false,
 			'pagespeed_js_inline_transfer'   => false,
 			'pagespeed_js_events'            => false,
+			'pagespeed_js_script'            => false,
 			'debug'                          => false,
 		);
 		if (is_array($setting)) {
@@ -539,14 +546,6 @@ class Bus_Cache {
 				if ($setting['pagespeed_css_min']) {
 					if ($setting['debug']) {
 						$this->getDebugTime = microtime(true);
-					}
-
-					if ($setting['pagespeed_css_style'] && $setting['theme'] && \is_file(DIR_TEMPLATE . $setting['theme'] . '/stylesheet/bus_cache/bus_cache_replace.css')) {
-						$setting['styles'][] = array(
-							'href'  => 'catalog/view/theme/' . $setting['theme'] . '/stylesheet/bus_cache/bus_cache_replace.css',
-							'rel'   => '',
-							'media' => ''
-						);
 					}
 
 					$styles = $setting['styles'];
@@ -774,10 +773,6 @@ class Bus_Cache {
 						$this->getDebugTime = microtime(true);
 					}
 
-					if ($setting['pagespeed_js_script'] && $setting['theme'] && \is_file(DIR_TEMPLATE . $setting['theme'] . '/stylesheet/bus_cache/bus_cache_replace.css')) {
-						$setting['scripts'][] = 'catalog/view/theme/' . $setting['theme'] . '/javascript/bus_cache/bus_cache_replace.js';
-					}
-
 					$scripts = $setting['scripts'];
 					$scripts_replace = '';
 					$setting['scripts'] = array();
@@ -928,6 +923,17 @@ class Bus_Cache {
 					$setting['headers'][] = 'Link: <' . $setting['server'] . 'image/cache/bus_cache/' . $name_md . '?time=' . $setting['time_save'] . '>; rel=preload; as=style' . (!empty($js['name_md']) ? ', <' . $setting['server'] . 'image/cache/bus_cache/' . $js['name_md'] . '?time=' . $setting['time_save'] . '>; rel=preload; as=script' : false);
 				}
 
+				// Добавляем свои стили
+				if ($setting['pagespeed_css_style'] && $setting['theme'] && \is_file(DIR_TEMPLATE . $setting['theme'] . '/stylesheet/bus_cache/bus_cache_replace.css')) {
+					$this->outputTransfer['css'][1] .= '<link href="' . $setting['server'] . 'catalog/view/theme/' . $setting['theme'] . '/stylesheet/bus_cache/bus_cache_replace.css" type="text/css" rel="stylesheet preload" media="screen" as="style" />' . PHP_EOL;
+				}
+
+				// Добавляем свои скрипты
+				if ($setting['pagespeed_js_script'] && $setting['theme'] && \is_file(DIR_TEMPLATE . $setting['theme'] . '/javascript/bus_cache/bus_cache_replace.js')) {
+					$this->outputTransfer['css'][1] .= '<link href="' . $setting['server'] . 'catalog/view/theme/' . $setting['theme'] . '/javascript/bus_cache/bus_cache_replace.js" rel="preload" as="script" />' . PHP_EOL;
+					$this->outputTransfer['js'][1] .= '<script src="' . $setting['server'] . 'catalog/view/theme/' . $setting['theme'] . '/javascript/bus_cache/bus_cache_replace.js" type="text/javascript"></script>' . PHP_EOL;
+				}
+
 				// Обработка inline кода
 				if ($setting['debug']) {
 					$this->getDebugTime = microtime(true);
@@ -967,7 +973,7 @@ class Bus_Cache {
 						if (stripos($matches[0], substr(strstr($result, '|'), 1)) !== false) {
 							$result = explode('|', $result);
 							$result[0] = utf8_strtolower($result[0]);
-							if ($result[0] == '#' || strrpos($inline['route'], $result[0]) !== false || strrpos($result[0], $inline['keyword']) !== false) {
+							if ($result[0] == '#' || strpos($inline['route'], $result[0]) !== false || strpos($result[0], $inline['keyword']) !== false) {
 								$js_inline_event = $result[1];
 							}
 						}
@@ -977,7 +983,7 @@ class Bus_Cache {
 						if (stripos($matches[0], substr(strstr($result, '|'), 1)) !== false) {
 							$result = explode('|', $result);
 							$result[0] = utf8_strtolower($result[0]);
-							if ($result[0] == '#' || strrpos($inline['route'], $result[0]) !== false || strrpos($result[0], $inline['keyword']) !== false) {
+							if ($result[0] == '#' || strpos($inline['route'], $result[0]) !== false || strpos($result[0], $inline['keyword']) !== false) {
 								$js_inline_exception = $result[1];
 							}
 						}
@@ -1264,7 +1270,7 @@ if ('busCache' in window) {
 						if (substr($replace, 0, 1) != ';') {
 							$replace = explode('|', $replace);
 							$replace[0] = utf8_strtolower($replace[0]);
-							if ($replace[0] == '#' || strrpos($route, $replace[0]) !== false || isset($keyword) && strrpos($replace[0], $keyword) !== false) {
+							if ($replace[0] == '#' || strpos($route, $replace[0]) !== false || isset($keyword) && strpos($replace[0], $keyword) !== false) {
 								if (isset($replace[1]) && isset($replace[2])) {
 									$pagespeed_replace_before[] = $replace[1];
 									$pagespeed_replace_after[] = $replace[2];

@@ -117,9 +117,9 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label" for="input-cache-onrot"><span title="<?php echo $help_cache_onrot; ?>" data-toggle="tooltip"><?php echo $entry_cache_onrot; ?></span></label>
+            <label class="col-sm-2 control-label" for="input-cache-onrot"><span title="<?php echo $help_cache_onrot; ?>" data-toggle="tooltip"><?php echo $entry_cache_onrot; ?> (в полной версии модуля)</span></label>
             <div class="col-sm-10">
-              <textarea name="cache_onrot" rows="5" placeholder="<?php echo $entry_cache_onrot; ?>" id="input-cache-onrot" class="form-control"><?php echo $cache_onrot; ?></textarea>
+              <textarea rows="5" placeholder="<?php echo $entry_cache_onrot; ?>" id="input-cache-onrot" class="form-control"><?php echo $cache_onrot; ?></textarea>
             </div>
           </div>
           <div class="form-group">
@@ -188,15 +188,6 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label" for="input-pagespeed-preload-logo"><span title="<?php echo $help_pagespeed_preload_logo; ?>" data-toggle="tooltip"><?php echo $entry_pagespeed_preload_logo; ?></span></label>
-            <div class="col-sm-10">
-              <select name="pagespeed_preload_logo" id="input-pagespeed-preload-logo" class="form-control">
-                <option value="1"<?php if ($pagespeed_preload_logo == 1) { ?> selected="selected"<?php } ?>><?php echo $text_yes; ?></option>
-                <option value="0"<?php if (!$pagespeed_preload_logo) { ?> selected="selected"<?php } ?>><?php echo $text_no; ?></option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
             <label class="col-sm-2 control-label" for="input-pagespeed-attribute-w-h"><span title="<?php echo $help_pagespeed_attribute_w_h; ?>" data-toggle="tooltip"><?php echo $entry_pagespeed_attribute_w_h; ?></span></label>
             <div class="col-sm-10">
               <select name="pagespeed_attribute_w_h" id="input-pagespeed-attribute-w-h" class="form-control">
@@ -241,7 +232,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label" for="input-pagespeed-css-min-download"><span title="<?php echo $help_pagespeed_css_min_download; ?>" data-toggle="tooltip"><?php echo $entry_pagespeed_css_min_download; ?></span></label>
+            <label class="col-sm-2 control-label" for="input-pagespeed-css-min-download"><span title="<?php echo $help_pagespeed_css_min_download; ?>" data-toggle="tooltip"><?php echo $entry_pagespeed_css_min_download; ?> (в полной версии модуля)</span></label>
             <div class="col-sm-10">
               <textarea name="pagespeed_css_min_download" rows="5" placeholder="<?php echo $entry_pagespeed_css_min_download; ?>" id="input-pagespeed-css-min-download" class="form-control"><?php echo $pagespeed_css_min_download; ?></textarea>
             </div>
@@ -273,13 +264,29 @@
             </div>
           </div>
           <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-pagespeed-css-critical"><span title="<?php echo $help_pagespeed_css_critical; ?>" data-toggle="tooltip"><?php echo $entry_pagespeed_css_critical; ?> (в полной версии модуля)</span></label>
+            <div class="col-sm-10">
+              <select id="input-pagespeed-css-critical" class="form-control">
+                <option value="0"<?php if (!$pagespeed_css_critical) { ?> selected="selected"<?php } ?>><?php echo $text_no; ?></option>
+                <option value="1"<?php if ($pagespeed_css_critical == 1) { ?> selected="selected"<?php } ?>><?php echo $text_yes; ?></option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
             <label class="col-sm-2 control-label" for="input-pagespeed-css-inline-transfer"><span title="<?php echo $help_pagespeed_css_inline_transfer; ?>" data-toggle="tooltip"><?php echo $entry_pagespeed_css_inline_transfer; ?></span></label>
             <div class="col-sm-10">
               <select name="pagespeed_css_inline_transfer" id="input-pagespeed-css-inline-transfer" class="form-control">
                 <option value="0"<?php if (!$pagespeed_css_inline_transfer) { ?> selected="selected"<?php } ?>><?php echo $text_no; ?></option>
                 <option value="1"<?php if ($pagespeed_css_inline_transfer == 1) { ?> selected="selected"<?php } ?>><?php echo $text_pagespeed_inline_transfer_1; ?></option>
                 <option value="2"<?php if ($pagespeed_css_inline_transfer == 2) { ?> selected="selected"<?php } ?>><?php echo $text_pagespeed_inline_transfer_2; ?></option>
+                <option value="3"<?php if ($pagespeed_css_inline_transfer == 3) { ?> selected="selected"<?php } ?>><?php echo $text_pagespeed_inline_transfer_3; ?> (в полной версии модуля)</option>
               </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-pagespeed-css-events"><span title="<?php echo $help_pagespeed_css_events; ?>" data-toggle="tooltip"><?php echo $entry_pagespeed_css_events; ?> (в полной версии модуля)</span></label>
+            <div class="col-sm-10">
+              <textarea rows="5" placeholder="<?php echo $entry_pagespeed_css_events; ?>" id="input-pagespeed-css-events" class="form-control"><?php echo $pagespeed_css_events; ?></textarea>
             </div>
           </div>
           <div class="form-group">
@@ -302,9 +309,9 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label" for="input-pagespeed-js-min-download"><span title="<?php echo $help_pagespeed_js_min_download; ?>" data-toggle="tooltip"><?php echo $entry_pagespeed_js_min_download; ?></span></label>
+            <label class="col-sm-2 control-label" for="input-pagespeed-js-min-download"><span title="<?php echo $help_pagespeed_js_min_download; ?>" data-toggle="tooltip"><?php echo $entry_pagespeed_js_min_download; ?> (в полной версии модуля)</span></label>
             <div class="col-sm-10">
-              <textarea name="pagespeed_js_min_download" rows="5" placeholder="<?php echo $entry_pagespeed_js_min_download; ?>" id="input-pagespeed-js-min-download" class="form-control"><?php echo $pagespeed_js_min_download; ?></textarea>
+              <textarea rows="5" placeholder="<?php echo $entry_pagespeed_js_min_download; ?>" id="input-pagespeed-js-min-download" class="form-control"><?php echo $pagespeed_js_min_download; ?></textarea>
             </div>
           </div>
           <div class="form-group">
@@ -333,6 +340,7 @@
                 <option value="0"<?php if (!$pagespeed_js_inline_transfer) { ?> selected="selected"<?php } ?>><?php echo $text_no; ?></option>
                 <option value="1"<?php if ($pagespeed_js_inline_transfer == 1) { ?> selected="selected"<?php } ?>><?php echo $text_pagespeed_inline_transfer_1; ?></option>
                 <option value="2"<?php if ($pagespeed_js_inline_transfer == 2) { ?> selected="selected"<?php } ?>><?php echo $text_pagespeed_inline_transfer_2; ?></option>
+                <option value="3"<?php if ($pagespeed_js_inline_transfer == 3) { ?> selected="selected"<?php } ?>><?php echo $text_pagespeed_inline_transfer_3; ?> (в полной версии модуля)</option>
               </select>
             </div>
           </div>

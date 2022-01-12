@@ -88,7 +88,7 @@ class ControllerExtensionModuleBusCache extends Controller {
 	private $name_arhive = 'Buslik Cache';
 	private $code = '01000024';
 	private $mame = 'Буслік Кэш - "Buslik Cache"';
-	private $version = '1.0.11';
+	private $version = '1.0.12';
 	private $author = 'BuslikDrev.by';
 	private $link = 'https://liveopencart.ru/buslikdrev';
 	private $version_oc = 2.2;
@@ -966,7 +966,7 @@ class ControllerExtensionModuleBusCache extends Controller {
 
 		if (isset($this->request->post['pagespeed_js_script'])) {
 			$data['pagespeed_js_script'] = $this->getFile('replace', 'js');
-		} elseif (!empty($module_info['script'])) {
+		} elseif (!empty($module_info['pagespeed_js_script'])) {
 			$data['pagespeed_js_script'] = $this->getFile('replace', 'js');
 		} else {
 			$data['pagespeed_js_script'] = false;
