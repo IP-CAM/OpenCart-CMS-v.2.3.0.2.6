@@ -390,7 +390,7 @@ class ControllerExtensionModuleBusTranslationEditor extends Controller {
 			if ($lang_codes && substr(str_replace('\\', '/', realpath($dir . $this->paths['language']['directory'] . '/' . $path)), 0, strlen($dir)) == $dir) {
 				$path_data = array();
 
-				$files = glob(rtrim($dir . '{' . implode(',', $lang_codes) . '}/' . $path, '/') . '/*', GLOB_NOSORT|GLOB_BRACE);
+				$files = glob(rtrim($dir . '{' . implode(',', $lang_codes) . '}/' . $path, '/') . '/*', GLOB_BRACE);
 
 				if ($files) {
 					foreach($files as $file) {
