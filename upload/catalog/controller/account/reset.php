@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2021.
+// *	@copyright	OPENCART.PRO 2011 - 2022.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -14,7 +14,7 @@ class ControllerAccountReset extends Controller {
 
 		$this->document->setRobots('nocache,noarchive,noindex,nofollow');
 
-		if (isset($this->request->get['code'])) {
+		if (isset($this->request->get['code']) && isset($this->session->data['forgotten_code']) && $this->session->data['forgotten_code'] == $this->request->get['code']) {
 			$code = $this->request->get['code'];
 		} else {
 			$code = '';
