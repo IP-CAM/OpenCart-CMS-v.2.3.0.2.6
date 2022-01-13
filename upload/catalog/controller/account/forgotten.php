@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2021.
+// *	@copyright	OPENCART.PRO 2011 - 2022.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -125,8 +125,6 @@ class ControllerAccountForgotten extends Controller {
 
 	protected function validate() {
 		if (!isset($this->request->post['email'])) {
-			$this->error['warning'] = $this->language->get('error_email');
-		} elseif (!$this->model_account_customer->getTotalCustomersByEmail($this->request->post['email'])) {
 			$this->error['warning'] = $this->language->get('error_email');
 		} else {
 			$customer_info = $this->model_account_customer->getCustomerByEmail($this->request->post['email']);
