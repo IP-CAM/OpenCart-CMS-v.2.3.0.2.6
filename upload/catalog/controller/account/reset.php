@@ -14,7 +14,7 @@ class ControllerAccountReset extends Controller {
 
 		$this->document->setRobots('nocache,noarchive,noindex,nofollow');
 
-		if (isset($this->request->get['code']) && isset($this->session->data['forgotten_code']) && $this->session->data['forgotten_code'] == $this->request->get['code']) {
+		if (isset($this->request->get['code'])) {
 			$code = $this->request->get['code'];
 		} else {
 			$code = '';
@@ -24,12 +24,20 @@ class ControllerAccountReset extends Controller {
 
 		$customer_info = $this->model_account_customer->getCustomerByCode($code);
 
+		if ($customer_info && !isset($this->session->data['forgotten_code']) || $customer_info && $this->session->data['forgotten_code'] != $code) {
+			$this->model_account_customer->editCode($customer_info['email'], '');
+
+			$customer_info = false;
+		}
+
 		if ($customer_info) {
 			$this->load->language('account/reset');
 
 			$this->document->setTitle($this->language->get('heading_title'));
 
 			if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+				unset($this->session->data['forgotten_code']);
+
 				$this->model_account_customer->editPassword($customer_info['email'], $this->request->post['password']);
 
 				if ($this->config->get('config_customer_activity')) {
