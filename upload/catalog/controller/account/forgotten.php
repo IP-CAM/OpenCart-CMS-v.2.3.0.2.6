@@ -24,6 +24,8 @@ class ControllerAccountForgotten extends Controller {
 
 			$code = token(40);
 
+			$this->session->data['forgotten_code'] = $code;
+
 			$this->model_account_customer->editCode($this->request->post['email'], $code);
 
 			$subject = sprintf($this->language->get('text_subject'), html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8'));
@@ -124,7 +126,7 @@ class ControllerAccountForgotten extends Controller {
 	}
 
 	protected function validate() {
-		if (!isset($this->request->post['email'])) {
+		if (!isset($this->request->post['email']) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
 			$this->error['warning'] = $this->language->get('error_email');
 		} else {
 			$customer_info = $this->model_account_customer->getCustomerByEmail($this->request->post['email']);
