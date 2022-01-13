@@ -88,7 +88,7 @@ class ControllerExtensionModuleBusTranslationEditor extends Controller {
 	private $name_arhive = 'Translation editor';
 	private $code = '01000061';
 	private $mame = 'Редактор перевода - "Translation editor"';
-	private $version = '1.0.2';
+	private $version = '1.0.4';
 	private $author = 'BuslikDrev.by';
 	private $link = 'https://liveopencart.ru/buslikdrev';
 	private $version_oc = 2.2;
@@ -748,7 +748,7 @@ class ControllerExtensionModuleBusTranslationEditor extends Controller {
 
 					$value[$language['code']] = str_replace(array("\r", "\n"), '', html_entity_decode($value[$language['code']], ENT_QUOTES));
 					if (stristr($data, '$_[' . $name . ']') !== false) {
-						$data = preg_replace('/\$_\[' . preg_quote($name, '/') . '\](.[\s\=]*)(.*?);(\n|\r|\r\n){1,2}/S', '$_[' . $name . ']$1' . $value[$language['code']] . ';' . "\r\n", $data);
+						$data = preg_replace('/\$_\[' . preg_quote($name, '/') . '\](.[\s\=]*)(.*?);(\n|\r|\r\n){0,2}/S', '$_[' . $name . ']$1' . $value[$language['code']] . ';' . "\r\n", $data);
 					} else {
 						$data = str_replace('<?php', '<?php' . "\r\n" . '$_[' . $name . '] = ' . $value[$language['code']] . ';', $data);
 					}
@@ -842,7 +842,7 @@ class ControllerExtensionModuleBusTranslationEditor extends Controller {
 					$data = file_get_contents($dir . $language['code'] . '/' . $path);
 
 					if (stristr($data, '$_[' . $name . ']') !== false) {
-						$data = preg_replace('/\$_\[' . preg_quote($name, '/') . '\](.[\s\=]*)(.*?);(\n|\r|\r\n){1,2}/S', '', $data);
+						$data = preg_replace('/\$_\[' . preg_quote($name, '/') . '\](.[\s\=]*)(.*?);(\n|\r|\r\n){0,2}/S', '', $data);
 					}
 
 					file_put_contents($dir . $language['code'] . '/' . $path, $data);
@@ -948,7 +948,7 @@ class ControllerExtensionModuleBusTranslationEditor extends Controller {
 		if (is_file($file)) {
 			$data = file_get_contents($file);
 
-			if (preg_match_all('/\$_\[(.[^\]]*?)](.[\s\=]*)(.*?);(\n|\r|\r\n){1,2}/S', $data, $matches)) {
+			if (preg_match_all('/\$_\[(.[^\]]*?)](.[\s\=]*)(.*?);(\n|\r|\r\n){0,2}/S', $data, $matches)) {
 				if (isset($matches[1]) && isset($matches[3])) {
 					foreach ($matches[1] as $key => $result) {
 						$_[] = array(
