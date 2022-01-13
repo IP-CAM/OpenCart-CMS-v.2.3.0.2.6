@@ -20,14 +20,18 @@ class ControllerAccountReset extends Controller {
 			$code = '';
 		}
 
-		$this->load->model('account/customer');
+		if ($code) {
+			$this->load->model('account/customer');
 
-		$customer_info = $this->model_account_customer->getCustomerByCode($code);
+			$customer_info = $this->model_account_customer->getCustomerByCode($code);
+		} else {
+			$customer_info = array();
+		}
 
 		if ($customer_info && !isset($this->session->data['forgotten_code']) || $customer_info && $this->session->data['forgotten_code'] != $code) {
 			$this->model_account_customer->editCode($customer_info['email'], '');
 
-			$customer_info = false;
+			$customer_info = array();
 		}
 
 		if ($customer_info) {
