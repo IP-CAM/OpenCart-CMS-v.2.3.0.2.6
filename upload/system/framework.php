@@ -48,7 +48,7 @@ if ($config->get('error_log')) {
 }
 
 // Error Handler Fix
-set_error_handler(function($code, $message, $file, $line) use($config) {
+set_error_handler(function($code, $message, $file, $line) use($log, $config) {
 	// error suppressed with @
 	if (error_reporting() === 0) {
 		return false;
@@ -72,8 +72,8 @@ set_error_handler(function($code, $message, $file, $line) use($config) {
 			break;
 	}
 
-	if ($this->config->get('error_log')) {
-		$this->log->write('PHP ' . $error . ':  ' . $message . ' in ' . $file . ' on line ' . $line);
+	if ($config->get('error_log')) {
+		$log->write('PHP ' . $error . ':  ' . $message . ' in ' . $file . ' on line ' . $line);
 	}
 
 	if ($config->get('error_display')) {
