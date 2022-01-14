@@ -1,6 +1,6 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2017.
-// *	@forum		http://forum.opencart.pro
+// *	@copyright	OPENCART.PRO 2011 - 2022.
+// *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
@@ -183,6 +183,43 @@ class ModelUpgrade1001 extends Model {
 					foreach ($lines as $line_id => $line) {
 						if (strpos($line, 'DIR_LOGS') !== false) {
 							$new_line = "define('DIR_MODIFICATION', '" . str_replace("\\", "/", DIR_SYSTEM) . 'modification/' . "');";
+							$output .= $new_line . "\n";
+							$output .= $line;
+						} else {
+							$output .= $line;
+						}
+					}
+
+					file_put_contents($file, $output);
+				}
+			}
+
+			// Update the config.php by adding a DIR_SESSION
+			$files = glob(DIR_OPENCART . '{config.php,admin/config.php}', GLOB_BRACE);
+
+			foreach ($files as $file) {
+				if (!is_writable($file)) {
+					exit(json_encode(array('error' => 'File is read only. Please adjust and try again: ' . $file)));
+				}
+
+				$upgrade = true;
+
+				$lines = file($file);
+
+				foreach ($lines as $line) {
+					if (strpos($line, 'DIR_SESSION') !== false) {
+						$upgrade = false;
+
+						break;
+					}
+				}
+
+				if ($upgrade) {
+					$output = '';
+
+					foreach ($lines as $line_id => $line) {
+						if (strpos($line, 'DIR_MODIFICATION') !== false) {
+							$new_line = "define('DIR_SESSION', '" . str_replace("\\", "/", DIR_SYSTEM) . 'session/' . "');";
 							$output .= $new_line . "\n";
 							$output .= $line;
 						} else {
