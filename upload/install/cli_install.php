@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2021.
+// *	@copyright	OPENCART.PRO 2011 - 2022.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -31,10 +31,10 @@ error_reporting(E_ALL);
 // DIR
 define('DIR_OPENCART', str_replace('\\', '/', realpath(dirname(__FILE__) . '/../')) . '/');
 define('DIR_APPLICATION', DIR_OPENCART . 'install/');
-define('DIR_SYSTEM', DIR_OPENCART . '/system/');
-define('DIR_DATABASE', DIR_SYSTEM . 'database/');
+define('DIR_SYSTEM', DIR_OPENCART . 'system/');
 define('DIR_LANGUAGE', DIR_APPLICATION . 'language/');
 define('DIR_TEMPLATE', DIR_APPLICATION . 'view/template/');
+define('DIR_DATABASE', DIR_SYSTEM . 'database/');
 define('DIR_CONFIG', DIR_SYSTEM . 'config/');
 define('DIR_MODIFICATION', DIR_SYSTEM . 'storage/modification/');
 define('DIR_SESSION', DIR_SYSTEM . 'storage/session/');
