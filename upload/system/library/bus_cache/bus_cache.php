@@ -60,15 +60,16 @@ class Bus_Cache {
 	private function start($cache_timer = 0) {
 		// загрузка данных
 		$this->config = $this->registry->get('config');
-		$server = (!empty($this->request->server['HTTPS']) ? $this->config->get('config_ssl') : $this->config->get('config_url'));
 		$store_id = (int)$this->config->get('config_store_id');
+		$setting = $this->config->get('bus_cache');
+		if (empty($setting['status']) || !isset($setting['store'][$store_id])) {
+			return false;
+		}
+		$this->request = $this->registry->get('request');
+		$server = (!empty($this->request->server['HTTPS']) ? $this->config->get('config_ssl') : $this->config->get('config_url'));
 		$language_id = (int)$this->config->get('config_language_id');
 		$customer_group_id = (int)$this->config->get('config_customer_group_id');
 		$maintenance = (int)$this->config->get('config_maintenance');
-		$setting = $this->config->get('bus_cache');
-		if (!isset($setting['store'][$store_id]) || empty($setting['status'])) {
-			return false;
-		}
 		$setting_default = array(
 			'config_logo'                    => $this->config->get('config_logo'),
 			'theme'                          => ($this->config->get('config_template') ? $this->config->get('config_template') : ($this->config->get('theme_' . str_replace('theme_', '', $this->config->get('config_theme')) . '_directory') ? $this->config->get('theme_' . str_replace('theme_', '', $this->config->get('config_theme')) . '_directory') : $this->config->get('config_theme'))),
@@ -119,7 +120,6 @@ class Bus_Cache {
 
 		// остальные данные
 		$this->session = $this->registry->get('session');
-		$this->request = $this->registry->get('request');
 		$this->db = $this->registry->get('db');
 		$this->response = $this->registry->get('response');
 		$this->cart = $this->registry->get('cart');
