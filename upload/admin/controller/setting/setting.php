@@ -1,6 +1,6 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2020.
-// *	@forum		http://forum.opencart.pro
+// *	@copyright	OPENCART.PRO 2011 - 2022.
+// *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
@@ -1195,7 +1195,7 @@ class ControllerSettingSetting extends Controller {
 
 		$data['config_session_engine'] = strtolower($data['config_session_engine']);
 
-		if ($data['config_session_engine'] == 'native' || $data['config_session_engine'] == 'native') {
+		if ($data['config_session_engine'] == 'native' || $data['config_session_engine'] == 'file') {
 			$data['config_session_count'] = (is_dir(DIR_SESSION) ? count(glob(DIR_SESSION . '*')) : 0);
 		} elseif ($data['config_session_engine'] == 'db') {
 			$data['config_session_count'] = $this->db->query("SELECT COUNT(session_id) AS total FROM `" . DB_PREFIX . "session`")->row['total'];
