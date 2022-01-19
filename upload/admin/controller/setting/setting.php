@@ -1196,7 +1196,7 @@ class ControllerSettingSetting extends Controller {
 		$data['config_session_engine'] = strtolower($data['config_session_engine']);
 
 		if ($data['config_session_engine'] == 'native' || $data['config_session_engine'] == 'file') {
-			$data['config_session_count'] = (is_dir(DIR_SESSION) ? count(glob(DIR_SESSION . '*')) : 0);
+			$data['config_session_count'] = (is_dir(DIR_SESSION) ? count(glob(DIR_SESSION . '*', GLOB_NOSORT)) : 0);
 		} elseif ($data['config_session_engine'] == 'db') {
 			$data['config_session_count'] = $this->db->query("SELECT COUNT(session_id) AS total FROM `" . DB_PREFIX . "session`")->row['total'];
 		} else {
