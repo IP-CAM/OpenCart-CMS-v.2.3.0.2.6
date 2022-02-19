@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2021.
+// *	@copyright	OPENCART.PRO 2011 - 2022.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -51,10 +51,10 @@ $_['session_length']          = 32;
 $_['session_lifetime']        = 0; // time session cookie
 $_['session_other_lifetime']  = (60 * 60 * 24 * 30); // time other cookie
 $_['session_maxlifetime']     = 1440;
-$_['session_path']            = '/';//!empty($_SERVER['PHP_SELF']) ? dirname($_SERVER['PHP_SELF']) : '/' . basename(HTTPS_SERVER);
+$_['session_path']            = '/'; //(!empty($_SERVER['PHP_SELF']) ? dirname($_SERVER['PHP_SELF']) : '/');
 $_['session_domain']          = '';
 $_['session_other_domain']    = (defined('HTTPS_SERVER') ? parse_url(HTTPS_SERVER, PHP_URL_HOST) : '');
-$_['session_secure']          = $_SERVER['HTTPS'];
+$_['session_secure']          = !empty($_SERVER['HTTPS']);
 $_['session_httponly']        = true;
 $_['session_other_httponly']  = false;
 $_['session_samesite']        = 'Strict';
