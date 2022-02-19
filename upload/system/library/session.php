@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2021.
+// *	@copyright	OPENCART.PRO 2011 - 2022.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -42,7 +42,7 @@ class Session {
 			if ($this->adaptor) {
 				$cookie_status_path = DIR_SESSION . $this->config->get('session_prefix') . md5($this->request->server['REMOTE_ADDR']);
 				if (!isset($this->request->cookie['cookie_status'])) {
-					setcookie('cookie_status', true, 0);
+					$this->setcookie('cookie_status', true, 0, '/');
 					if (!is_file($cookie_status_path)) {
 						file_put_contents($cookie_status_path, false);
 					} else {
@@ -89,7 +89,7 @@ class Session {
 						ini_set('session.entropy_length', $this->config->get('session_length'));
 						ini_set('session.hash_bits_per_character', $this->config->get('session_bits_per_char'));
 						// https://www.php.net/manual/ru/function.hash-algos.php
-						ini_set('session.hash_function', 0);
+						//ini_set('session.hash_function', 0);
 					}
 
 					session_set_save_handler($this->adaptor);
@@ -124,7 +124,7 @@ class Session {
 							$session_setting['entropy_length'] = $this->config->get('session_length');
 							$session_setting['hash_bits_per_character'] = $this->config->get('session_bits_per_char');
 							// https://www.php.net/manual/ru/function.hash-algos.php
-							$session_setting['hash_function'] = 0;
+							$session_setting['hash_function'] = ini_get('session.hash_function');
 						}
 						session_start($session_setting);
 					} else {
@@ -153,6 +153,7 @@ class Session {
 			return false;
 		}
 		if (!$session_id) {
+			//var_dump($this->request->cookie);
 			if (isset($this->request->cookie[$name])) {
 				$session_id = $this->request->cookie[$name];
 			} else {
@@ -184,6 +185,8 @@ class Session {
 					'sameparty' => $this->config->get('session_sameparty')
 				));
 			}
+
+			return $session_id;
 		} else {
 			$this->destroy($name);
 			header('Refresh: 1; URL=/');
@@ -258,46 +261,20 @@ class Session {
 				'sameparty' => $sameparty
 			));
 		} else {
-			$string = 'Set-Cookie: ' . rawurlencode($name) . '=' . rawurlencode($value);
+			$string = '';
 
-			if ($expires > time()) {
-				$string .= '; expires=' . gmdate('D, d M Y H:i:s \G\M\T', $expires);
-				$string .= '; Max-Age=' . ($expires - time());
-			}
-
-			if ($path) {
-				$string .= '; Path=' . $path;
-			}
-
-			if ($domain) {
-				$string .= '; Domain=' . $domain;
-			}
-
-			if ($secure) {
-				$string .= '; Secure';
-			}
-
-			if ($httponly) {
-				$string .= '; HttpOnly';
-			}
-
-			$samesite_s = strtolower($samesite);
-			if ($samesite_s == 'lax' || $samesite_s == 'strict' || $samesite_s == 'none') {
+			if ($samesite) {
 				$string .= '; SameSite=' . $samesite;
-			} else {
-				$string .= '; SameSite=' . $this->config->get('session_other_samesite');
 			}
 
 			//https://github.com/privacycg/first-party-sets
 			//https://www.chromestatus.com/feature/5280634094223360
-			if ($sameparty) {
+			if ($sameparty && $secure && strtolower($samesite) != 'strict') {
 				$string .= '; SameParty';
 				//header('Sec-First-Party-Set: owner="site.by", minVersion=1');
 			}
 
-			//https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie
-			header($string, false);
-			//setcookie($name, $value, $expires, $path, $domain, $secure, $httponly);
+			setcookie($name, $value, $expires, $path, $domain . $string, $secure, $httponly);
 		}
 	}
 
