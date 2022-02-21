@@ -1,7 +1,7 @@
 /* Chrome error off/block cookie "'Window': Access is denied for this document." */
 try {
 	window.localStorage.length;
-} catch {
+} catch (e) {
 	delete window.localStorage;
 	window.localStorage = {
 		'getItem':function(a) {},
