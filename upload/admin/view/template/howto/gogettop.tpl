@@ -13,7 +13,7 @@
   <div class="container-fluid">
     <div class="panel panel-default">
       <p><a href="https://gogettop.ru/?ref=16605" rel="noreferrer noopener" target="_blank"><strong>GoGetTop.ru</strong></a> на данный момент это лучший сервис по продвижению постоянными ссылками.<br />
-	 Первым делом нам необходимо зарегистрироваться для этого в правом верхнем углу нажимаем регистрация либо переходим по этой <a href="http://gogettop.ru/user/registration/?ref=16605" rel="noreferrer noopener" target="_blank"><strong>ссылке</strong></a>.
+	 Первым делом нам необходимо зарегистрироваться для этого в правом верхнем углу нажимаем регистрация либо переходим по этой <a href="https://gogettop.ru/user/registration/?ref=16605" rel="noreferrer noopener" target="_blank"><strong>ссылке</strong></a>.
 	 </p>
 	  <img src="view/image/howto/gogettop/gogettop_1.png" width="100%" />
 	  <p>Как показано ниже заполняем форму регистрации</p>
