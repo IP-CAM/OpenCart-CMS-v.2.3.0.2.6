@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2020.
+// *	@copyright	OPENCART.PRO 2011 - 2022.
 // *	@forum		http://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -15,7 +15,7 @@ class ControllerStartupSeoPro extends Controller {
 		'account/',
 		'affiliate/'
 	);
-	private $valide_routes = array(
+	private $valide_get_params = array(
 		'tracking',
 		'utm_source',
 		'utm_campaign',
@@ -147,6 +147,8 @@ class ControllerStartupSeoPro extends Controller {
 					$blog_category_id = $this->getPathByArticle($this->request->get['article_id']);
 					if ($blog_category_id) $this->request->get['blog_category_id'] = $blog_category_id;
 				}
+			} elseif (isset($this->request->get['blog_category_id']) && isset($this->request->get['search'])) {
+				$this->request->get['route'] = 'blog/search';
 			} elseif (isset($this->request->get['blog_category_id'])) {
 				$this->request->get['route'] = 'blog/category';
 			//blog
@@ -241,7 +243,6 @@ class ControllerStartupSeoPro extends Controller {
 				break;
 			//blog
 			case 'blog/article/review':
-			case 'product/product/proEdit':
 			case 'product/product/review':
 			case 'information/information/info':
 			case 'information/information/agree':
@@ -258,16 +259,20 @@ class ControllerStartupSeoPro extends Controller {
 
 		$queries = array();
 		foreach ($data as $key => $value) {
+			//var_dump($key);
 			switch ($key) {
 				case 'product_id':
 				case 'article_id':
 				case 'manufacturer_id':
 				case 'category_id':
+					if (isset($data['search'])) {
+						break;
+					}
 				case 'information_id':
 				case 'order_id':
 				case 'download_id':
 				case 'search':
-				case 'sub_category':
+					break;
 				case 'description':
 					$queries[] = $key . '=' . $value;
 					unset($data[$key]);
@@ -282,6 +287,9 @@ class ControllerStartupSeoPro extends Controller {
 					break;
 				//blog
 				case 'blog_category_id':
+					if (isset($data['search'])) {
+						break;
+					}
 					$blog_categories = explode('_', $value);
 					foreach ($blog_categories as $blog_category) {
 						$queries[] = 'blog_category_id=' . $blog_category;
@@ -296,9 +304,10 @@ class ControllerStartupSeoPro extends Controller {
 		if (empty($queries)) {
 			$queries[] = $route;
 		}
+
 		$rows = array();
 		foreach ($queries as $query) {
-			if(isset($this->cache_data['queries'][$query])) {
+			if (isset($this->cache_data['queries'][$query])) {
 				$rows[] = array('query' => $query, 'keyword' => $this->cache_data['queries'][$query]);
 			}
 		}
@@ -454,16 +463,22 @@ class ControllerStartupSeoPro extends Controller {
 	private function validate() {
 		//fix flat link for xml feed
 		if (isset($this->request->get['route'])) {
-			$break_routes = [
+			$break_routes = array(
 				'error/not_found',
 				'extension/feed/google_sitemap',
 				'extension/feed/google_base',
 				'extension/feed/sitemap_pro',
 				'extension/feed/yandex_feed'
-			];
+			);
 
-			if (in_array($this->request->get['route'], $break_routes)) 
+			$config_valide_break_routes = $this->config->get('config_valide_break_routes');
+			if ($config_valide_break_routes) {
+				$break_routes = explode("\r\n", $config_valide_break_routes);
+			}
+
+			if (in_array($this->request->get['route'], $break_routes)) {
 				return;
+			}
 		}
 
 		//Remove negative page count
