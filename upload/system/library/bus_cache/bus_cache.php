@@ -73,6 +73,8 @@ class Bus_Cache {
 		$setting_default = array(
 			'config_logo'                    => $this->config->get('config_logo'),
 			'theme'                          => ($this->config->get('config_template') ? $this->config->get('config_template') : ($this->config->get('theme_' . str_replace('theme_', '', $this->config->get('config_theme')) . '_directory') ? $this->config->get('theme_' . str_replace('theme_', '', $this->config->get('config_theme')) . '_directory') : $this->config->get('config_theme'))),
+			'route'                          => false,
+			'keyword'                        => false,
 
 			'status'                         => false,
 			'cache_status'                   => false,
@@ -111,6 +113,7 @@ class Bus_Cache {
 			'pagespeed_js_script'            => false,
 			'debug'                          => false,
 		);
+
 		if (is_array($setting)) {
 			foreach ($setting as $key => $result) {
 				$setting_default[$key] = $result;
@@ -228,7 +231,7 @@ class Bus_Cache {
 
 			foreach ($rot_exceptions as $exception) {
 				$exception = utf8_strtolower($exception);
-				if (strpos($route, $exception) !== false || isset($keyword) && strpos($exception, $keyword) !== false) {
+				if ($exception && strpos($route, $exception) !== false || $setting['keyword'] && strpos($exception, $setting['keyword']) !== false) {
 					$setting['cache_status'] = true;
 				}
 			}
@@ -242,7 +245,7 @@ class Bus_Cache {
 
 			foreach ($rot_exceptions as $exception) {
 				$exception = utf8_strtolower($exception);
-				if (strpos($route, $exception) !== false || isset($keyword) && strpos($exception, $keyword) !== false) {
+				if ($exception && strpos($route, $exception) !== false || $setting['keyword'] && strpos($exception, $setting['keyword']) !== false) {
 					$setting['cache_status'] = false;
 				}
 			}
@@ -256,7 +259,7 @@ class Bus_Cache {
 
 			foreach ($rot_exceptions as $exception) {
 				$exception = utf8_strtolower($exception);
-				if (strpos($route, $exception) !== false || isset($keyword) && strpos($exception, $keyword) !== false) {
+				if ($exception && strpos($route, $exception) !== false || $setting['keyword'] && strpos($exception, $setting['keyword']) !== false) {
 					$setting['pagespeed_status'] = false;
 				}
 			}
@@ -625,7 +628,7 @@ class Bus_Cache {
 
 					foreach($setting['styles'] as $style)  {
 						$her = strstr($style['href'], '//');
-						if (!$her || $her && strpos($style['href'], $setting['HTTP_HOST']) !== false) {
+						if (!$her || $her && $setting['HTTP_HOST'] && strpos($style['href'], $setting['HTTP_HOST']) !== false) {
 							$href = explode('?', str_replace(array('..', 'http://' . $setting['HTTP_HOST'] . '/', 'http://' . $setting['HTTP_HOST'] . '/', '//' . $setting['HTTP_HOST'] . '/'), '', $style['href']));
 							$href = $href[0];
 							$file = str_replace(basename(DIR_APPLICATION) . '/', '', DIR_APPLICATION) . $href;
@@ -732,7 +735,7 @@ class Bus_Cache {
 											);
 										}
 									} else {
-										if (strpos($href, $setting['server']) === false) {
+										if ($setting['server'] && strpos($href, $setting['server']) === false) {
 											$domain = parse_url($href, PHP_URL_HOST);
 											if ($domain) {
 												$domain = 'https://' . $domain . '/';
@@ -850,7 +853,7 @@ class Bus_Cache {
 
 					foreach($setting['scripts'] as $script)  {
 						$her = strstr($script['href'], '//');
-						if (!$her || $her && strpos($script['href'], $setting['HTTP_HOST']) !== false) {
+						if (!$her || $her && $setting['HTTP_HOST'] && strpos($script['href'], $setting['HTTP_HOST']) !== false) {
 							$href = explode('?', str_replace(array('..', 'http://' . $setting['HTTP_HOST'] . '/', 'http://' . $setting['HTTP_HOST'] . '/', '//' . $setting['HTTP_HOST'] . '/'), '', $script['href']));
 							$href = $href[0];
 							$file = str_replace(basename(DIR_APPLICATION) . '/', '', DIR_APPLICATION) . $href;
@@ -973,7 +976,7 @@ class Bus_Cache {
 						if (stripos($matches[0], substr(strstr($result, '|'), 1)) !== false) {
 							$result = explode('|', $result);
 							$result[0] = utf8_strtolower($result[0]);
-							if ($result[0] == '#' || strpos($inline['route'], $result[0]) !== false || strpos($result[0], $inline['keyword']) !== false) {
+							if ($result[0] == '#' || $result[0] && strpos($inline['route'], $result[0]) !== false || $inline['keyword'] && strpos($result[0], $inline['keyword']) !== false) {
 								$js_inline_event = $result[1];
 							}
 						}
@@ -983,7 +986,7 @@ class Bus_Cache {
 						if (stripos($matches[0], substr(strstr($result, '|'), 1)) !== false) {
 							$result = explode('|', $result);
 							$result[0] = utf8_strtolower($result[0]);
-							if ($result[0] == '#' || strpos($inline['route'], $result[0]) !== false || strpos($result[0], $inline['keyword']) !== false) {
+							if ($result[0] == '#' || $result[0] && strpos($inline['route'], $result[0]) !== false || $inline['keyword'] && strpos($result[0], $inline['keyword']) !== false) {
 								$js_inline_exception = $result[1];
 							}
 						}
@@ -1270,7 +1273,7 @@ if ('busCache' in window) {
 						if (substr($replace, 0, 1) != ';') {
 							$replace = explode('|', $replace);
 							$replace[0] = utf8_strtolower($replace[0]);
-							if ($replace[0] == '#' || strpos($route, $replace[0]) !== false || isset($keyword) && strpos($replace[0], $keyword) !== false) {
+							if ($replace[0] == '#' || $replace[0] && strpos($route, $replace[0]) !== false || $setting['keyword'] && strpos($replace[0], $setting['keyword']) !== false) {
 								if (isset($replace[1]) && isset($replace[2])) {
 									$pagespeed_replace_before[] = $replace[1];
 									$pagespeed_replace_after[] = $replace[2];
