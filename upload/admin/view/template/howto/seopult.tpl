@@ -12,7 +12,7 @@
   </div>
   <div class="container-fluid">
     <div class="panel panel-default">
-      <p>Прежде всего, вам нужно зарегистрироваться в системе перейдя по этой <a href="http://seopult.ru/ref/f8924f1b27c4ffd6/aHR0cDovL3Nlb3B1bHQucnUvcmVnaXN0ZXIuaHRtbD9zPXRodG9w" target="_blank">ссылке</a>
+      <p>Прежде всего, вам нужно зарегистрироваться в системе перейдя по этой <a href="https://seopult.ru/ref/f8924f1b27c4ffd6/aHR0cDovL3Nlb3B1bHQucnUvcmVnaXN0ZXIuaHRtbD9zPXRodG9w" rel="noreferrer noopener" target="_blank">ссылке</a>
 Как вы видите тут все просто заполняем поля и регистрируемся.</p>
 <img src="view/image/howto/seopult/register-scrin-1.png" width="958" height="440" />
 <p>После того как вы зарегистрировались вам необходимо пополнить баланс, я бы не рекомендовал пополнять сразу на много, во первых если вдруг вы не разбересь вы не потеряете много денег во вторых как я говорил в предыдущем посте вредно покупать сразу много ссылок.
