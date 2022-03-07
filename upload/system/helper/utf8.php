@@ -8,7 +8,7 @@ if (extension_loaded('mbstring')) {
 	mb_internal_encoding('UTF-8');
 
 	function utf8_strlen($string) {
-		if (!is_string($string)) {
+		if (is_string($string)) {
 			return mb_strlen($string);
 		} else {
 			return 0;
