@@ -40,7 +40,11 @@ if (extension_loaded('mbstring')) {
 	}
 } elseif (function_exists('iconv')) {
 	function utf8_strlen($string) {
-		return iconv_strlen($string, 'UTF-8');
+		if (is_string($string)) {
+			return iconv_strlen($string, 'UTF-8');
+		} else {
+			return 0;
+		}
 	}
 
 	function utf8_strpos($string, $needle, $offset = 0) {
