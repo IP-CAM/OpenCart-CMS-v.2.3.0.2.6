@@ -9,10 +9,9 @@ class Bus_Cache {
 	private $fileType = array(
 		'woff'  => array('type' => 'font/woff', 'as' => 'font'),
 		'woff2' => array('type' => 'font/woff2', 'as' => 'font'),
-		//'eot'   => array('type' => 'application/x-font-opentype', 'as' => 'font'),
-		//'eot'   => array('type' => 'application/vnd.ms-fontobject', 'as' => 'font'),
-		'otf'   => array('type' => 'application/x-font-truetype', 'as' => 'font'),
-		'ttf'   => array('type' => 'application/x-font-truetype', 'as' => 'font'),
+		'eot'   => array('type' => 'font/eot', 'as' => 'font'),
+		'otf'   => array('type' => 'font/otf', 'as' => 'font'),
+		'ttf'   => array('type' => 'font/woff', 'as' => 'font'),
 		'svg'   => array('type' => 'image/svg+xml', 'as' => 'image'),
 		'svgz'  => array('type' => 'image/svg+xml', 'as' => 'image'),
 		'png'   => array('type' => 'image/png', 'as' => 'image'),
@@ -331,34 +330,41 @@ class Bus_Cache {
 
 			foreach ($ses_exceptions as $exception) {
 				$exception = explode('|', $exception);
+				$count = 0;
 
+				// валидация
 				if (isset($this->session->data[$exception[0]])) {
-					$session[$exception[0]] = $this->session->data[$exception[0]];
-
+					$count = 1;
 					if (isset($exception[1]) && isset($this->session->data[$exception[0]][$exception[1]])) {
-						$session[$exception[0]] = array();
-						$session[$exception[0]][$exception[1]] = $this->session->data[$exception[0]][$exception[1]];
-
+						$count = 2;
 						if (isset($exception[2]) && isset($this->session->data[$exception[0]][$exception[1]][$exception[2]])) {
-							$session[$exception[0]][$exception[1]] = array();
-							$session[$exception[0]][$exception[1]][$exception[2]] = $this->session->data[$exception[0]][$exception[1]][$exception[2]];
-
+							$count = 3;
 							if (isset($exception[3]) && isset($this->session->data[$exception[0]][$exception[1]][$exception[2]][$exception[3]])) {
-								$session[$exception[0]][$exception[1]][$exception[2]] = array();
-								$session[$exception[0]][$exception[1]][$exception[2]][$exception[3]] = $this->session->data[$exception[0]][$exception[1]][$exception[2]][$exception[3]];
-
+								$count = 4;
 								if (isset($exception[4]) && isset($this->session->data[$exception[0]][$exception[1]][$exception[2]][$exception[3]][$exception[4]])) {
-									$session[$exception[0]][$exception[1]][$exception[2]][$exception[3]] = array();
-									$session[$exception[0]][$exception[1]][$exception[2]][$exception[3]][$exception[4]] = $this->session->data[$exception[0]][$exception[1]][$exception[2]][$exception[3]][$exception[4]];
-
+									$count = 5;
 									if (isset($exception[5]) && isset($this->session->data[$exception[0]][$exception[1]][$exception[2]][$exception[3]][$exception[4]][$exception[5]])) {
-										$session[$exception[0]][$exception[1]][$exception[2]][$exception[3]][$exception[4]] = array();
-										$session[$exception[0]][$exception[1]][$exception[2]][$exception[3]][$exception[4]][$exception[5]] = $this->session->data[$exception[0]][$exception[1]][$exception[2]][$exception[3]][$exception[4]][$exception[5]];
+										$count = 6;
 									}
 								}
 							}
 						}
 					}
+				}
+
+				// устанавливаем значение после валидации
+				if ($count == 1) {
+					$session[$exception[0]] = $this->session->data[$exception[0]];
+				} elseif ($count == 2) {
+					$session[$exception[0]][$exception[1]] = $this->session->data[$exception[0]][$exception[1]];
+				} elseif ($count == 3) {
+					$session[$exception[0]][$exception[1]][$exception[2]] = $this->session->data[$exception[0]][$exception[1]][$exception[2]];
+				} elseif ($count == 4) {
+					$session[$exception[0]][$exception[1]][$exception[2]][$exception[3]] = $this->session->data[$exception[0]][$exception[1]][$exception[2]][$exception[3]];
+				} elseif ($count == 5) {
+					$session[$exception[0]][$exception[1]][$exception[2]][$exception[3]][$exception[4]] = $this->session->data[$exception[0]][$exception[1]][$exception[2]][$exception[3]][$exception[4]];
+				} elseif ($count == 6) {
+					$session[$exception[0]][$exception[1]][$exception[2]][$exception[3]][$exception[4]][$exception[5]] = $this->session->data[$exception[0]][$exception[1]][$exception[2]][$exception[3]][$exception[4]][$exception[5]];
 				}
 			}
 
@@ -1370,7 +1376,6 @@ if ('busCache' in window) {
 
 	private function realUrlCSS($content, $server, $name) {
 		$styles = array();
-		$dir = str_replace(basename(DIR_APPLICATION) . '/', '', DIR_APPLICATION);
 
 		if (preg_match_all('/\b(' . str_replace('\|', '|', preg_quote($name, '/')) . '|\burl\(.[^\(\)]*?\))/S', $content, $matches)) {
 			if (isset($matches[0])) {
@@ -1386,23 +1391,26 @@ if ('busCache' in window) {
 							$css = $result;
 							$css_path = str_replace(basename($result), '', $result);
 						} else {
-							$domain = false;
 							$href = rtrim(str_replace(array('url(', '\'', '"'), '', $result), ')');
 							$hach = strstr($href, '?');
 							if (!$hach) {
 								$hach = strstr($href, '#');
 							}
+							$href = preg_replace('/[\?|\#].*/', '', $href);
+
 							if (strpos($href, '//') === false) {
-								$href = preg_replace('/[\?|\#].*/', '', $href);
-								$href_new = ltrim(str_replace(array(realpath($dir), $dir, '\\'), array('', '', '/'), realpath($dir . $css_path . $href)), '/');
+								$href_new = ltrim(str_replace(array('\\'), array('/'), $css_path . $href), '/');
 								$content = str_replace($href . $hach, $server . $href_new . $hach, $content);
+								$content = str_replace($server . $css_path . $server, $server, $content); // fix
 								$href = $server . $href_new;
+								$domain = false;
 							} else {
-								if (strpos($href, str_replace('https', '', $server)) === false) {
-									$domain = parse_url($href, PHP_URL_HOST);
-									if ($domain) {
-										$domain = parse_url($href, PHP_URL_SCHEME) . '://' . $domain . '/';
-									}
+								$domain = parse_url($href, PHP_URL_HOST);
+
+								if (strpos($server, $domain) === false) {
+									$domain = parse_url($href, PHP_URL_SCHEME) . '://' . $domain . '/';
+								} else {
+									$domain = false;
 								}
 							}
 
