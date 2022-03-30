@@ -79,7 +79,7 @@ if (!class_exists('Controller')) {
 	exit('ЗАПРЫШЧАЮ!');
 }
 
-if (version_compare(VERSION, '2.2.0', '<')) {
+if (version_compare(VERSION, '2.3.0', '<')) {
 	class ControllerModuleBusCache extends ControllerExtensionModuleBusCache {}
 }
 
@@ -88,16 +88,18 @@ class ControllerExtensionModuleBusCache extends Controller {
 	private $name_arhive = 'Buslik Cache';
 	private $code = '01000024';
 	private $mame = 'Буслік Кэш - "Buslik Cache"';
-	private $version = '1.0.12';
+	private $version = '1.0.13';
 	private $author = 'BuslikDrev.by';
 	private $link = 'https://liveopencart.ru/buslikdrev';
-	private $version_oc = 2.2;
+	private $version_oc = 2.3;
 	private $paths = array();
 
 	public function __construct($foo) {
 		parent::__construct($foo);
-		if (version_compare(VERSION, '3.0.0', '>=')) {
+		if (method_exists($this->language, 'set')) {
 			$this->language->set('bus_cache_version', $this->version);
+		}
+		if (version_compare(VERSION, '3.0.0', '>=')) {
 			$this->version_oc = 3;
 			$this->paths = array(
 				'controller' => array(
@@ -125,9 +127,8 @@ class ControllerExtensionModuleBusCache extends Controller {
 				),
 				'token' => 'user_token=' . $this->session->data['user_token']
 			);
-		} elseif (version_compare(VERSION, '2.2.0', '>=')) {
-			$this->language->set('bus_cache_version', $this->version);
-			$this->version_oc = 2.2;
+		} elseif (version_compare(VERSION, '2.3.0', '>=')) {
+			$this->version_oc = 2.3;
 			$this->paths = array(
 				'controller' => array(
 					'bus_cache' => 'extension/module/bus_cache',
@@ -356,8 +357,8 @@ class ControllerExtensionModuleBusCache extends Controller {
 
 					$module_info = $this->configGet();
 					$module_info['time_save'] = time();
-					$this->request->post['pagespeed_css_min_download'] = $module_info['pagespeed_css_min_download'];
-					$this->request->post['pagespeed_js_min_download'] = $module_info['pagespeed_js_min_download'];
+					//$this->request->post['pagespeed_css_min_download'] = $module_info['pagespeed_css_min_download'];
+					//$this->request->post['pagespeed_js_min_download'] = $module_info['pagespeed_js_min_download'];
 
 					$this->model_setting_setting->editSetting('bus_cache', array('bus_cache' => $module_info));
 				}
@@ -639,7 +640,7 @@ class ControllerExtensionModuleBusCache extends Controller {
 			'href' => $this->url->link('common/dashboard', $this->paths['token'], true)
 		);
 
-		if ($this->version_oc >= 2.2) {
+		if ($this->version_oc >= 2.3) {
 			$data['breadcrumbs'][] = array(
 				'text' => $this->language->get('text_extension'),
 				'href' => $this->url->link($this->paths['controller']['extension'], $this->paths['token'], true)
@@ -648,7 +649,7 @@ class ControllerExtensionModuleBusCache extends Controller {
 
 		$data['breadcrumbs'][] = array(
 			'text' => $this->language->get('text_module'),
-			'href' => $this->url->link($this->paths['controller']['extension'], $this->paths['token'] . ($this->version_oc >= 2.2 ? '&type=module' : false), true)
+			'href' => $this->url->link($this->paths['controller']['extension'], $this->paths['token'] . ($this->version_oc >= 2.3 ? '&type=module' : false), true)
 		);
 
 		$data['breadcrumbs'][] = array(
@@ -664,7 +665,7 @@ class ControllerExtensionModuleBusCache extends Controller {
 		} else {
 			$data['clear_pwa'] = false;
 		}
-		$data['cancel'] = $this->url->link($this->paths['controller']['extension'], $this->paths['token'] . ($this->version_oc >= 2.2 ? '&type=module' : false), true);
+		$data['cancel'] = $this->url->link($this->paths['controller']['extension'], $this->paths['token'] . ($this->version_oc >= 2.3 ? '&type=module' : false), true);
 
 		if (isset($this->request->post['status'])) {
 			$data['status'] = $this->request->post['status'];
@@ -1012,7 +1013,7 @@ class ControllerExtensionModuleBusCache extends Controller {
 		// посылыаем на йух
 		$this->load->language($this->paths['language']['bus_cache']);
 
-		if ($this->version_oc >= 2.2) {
+		if ($this->version_oc >= 2.3) {
 			if (!$this->user->hasPermission('modify', 'extension/extension/module')) {
 				$this->error['warning'] = $this->language->get('error_permission');
 			}
@@ -1187,7 +1188,7 @@ function successModule() {
 //--></script>
 HTML;
 
-			if ($this->version_oc >= 2.2) {
+			if ($this->version_oc >= 2.3) {
 				$this->response->addHeader('Content-Type: text/html; charset=utf-8');
 				$this->response->setOutput($text);
 				echo $this->response->getOutput();
@@ -1206,7 +1207,7 @@ HTML;
 		// посылыаем на йух
 		$this->load->language($this->paths['language']['bus_cache']);
 
-		if ($this->version_oc >= 2.2) {
+		if ($this->version_oc >= 2.3) {
 			if (!$this->user->hasPermission('modify', 'extension/extension/module')) {
 				$this->error['warning'] = $this->language->get('error_permission');
 			}
@@ -1393,7 +1394,7 @@ function uninstallFiles() {
 //--></script>
 HTML;
 
-			if ($this->version_oc >= 2.2) {
+			if ($this->version_oc >= 2.3) {
 				$this->response->addHeader('Content-Type: text/html; charset=utf-8');
 				$this->response->setOutput($text);
 				echo $this->response->getOutput();
@@ -1412,7 +1413,7 @@ HTML;
 		$this->load->language($this->paths['language']['bus_cache']);
 
 		// посылыаем на йух
-		if ($this->version_oc >= 2.2) {
+		if ($this->version_oc >= 2.3) {
 			if (!$this->user->hasPermission('modify', 'extension/extension/module') || !$this->user->hasPermission('modify', $this->paths['controller']['bus_cache'])) {
 				$this->error['warning'] = $this->language->get('error_permission');
 			}
@@ -1648,7 +1649,7 @@ HTML;
 
 	private function modification($message = false, $data = true, $speed = 2000) {
 		// посылыаем на йух
-		if ($this->version_oc >= 2.2) {
+		if ($this->version_oc >= 2.3) {
 			if (!$this->user->hasPermission('modify', 'extension/extension/module')) {
 				$this->error['warning'] = $this->language->get('error_permission');
 			}
