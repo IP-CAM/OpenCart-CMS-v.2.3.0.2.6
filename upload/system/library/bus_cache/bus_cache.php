@@ -521,7 +521,7 @@ class Bus_Cache {
 		if ($setting['status']) {
 			$cache_time = microtime(true);
 
-			if (stripos($output, '<!DOCTYPE html>') === false) {
+			if (stripos($output, '<!DOCTYPE html') === false) {
 				$setting['pagespeed_status'] = false;
 			}
 
@@ -1374,53 +1374,89 @@ if ('busCache' in window) {
 		return $output;
 	}
 
-	private function realUrlCSS($content, $server, $name) {
+	private function realUrlCSS($content, $server, $css = '') {
 		$styles = array();
 
-		if (preg_match_all('/\b(' . str_replace('\|', '|', preg_quote($name, '/')) . '|\burl\(.[^\(\)]*?\))/S', $content, $matches)) {
-			if (isset($matches[0])) {
-				$css = '';
+		if (preg_match_all('/\b(' . str_replace('\|', '|', preg_quote($css, '/')) . '|\burl\(.[^\(\)]*?\))/iS', $content, $matches)) {
+			if (!empty($matches[0])) {
+				$dir = substr(DIR_APPLICATION, 0, -iconv_strlen(basename(DIR_APPLICATION) . '/'));
+				$dir_len = iconv_strlen($dir, 'UTF-8');
+				$server_len = iconv_strlen($server, 'UTF-8');
 				$css_path = '';
-				if (strpos($name, '|') === false) {
-					$css = $name;
-					$css_path = str_replace(basename($name), '', $name);
-				}
-				foreach ($matches[0] as $result) {
-					if ($result) {
-						if (strpos($result, '.css') !== false && strpos($result, '.css)') === false) {
-							$css = $result;
-							$css_path = str_replace(basename($result), '', $result);
-						} else {
-							$href = rtrim(str_replace(array('url(', '\'', '"'), '', $result), ')');
-							$hach = strstr($href, '?');
-							if (!$hach) {
-								$hach = strstr($href, '#');
-							}
-							$href = preg_replace('/[\?|\#].*/', '', $href);
+				$do = array();
+				$posle = array();
 
-							if (strpos($href, '//') === false) {
-								$href_new = ltrim(str_replace(array('\\'), array('/'), $css_path . $href), '/');
-								$content = str_replace($href . $hach, $server . $href_new . $hach, $content);
-								$content = str_replace($server . $css_path . $server, $server, $content); // fix
-								$href = $server . $href_new;
-								$domain = false;
+				if ($css && strpos($css, '|') === false) {
+					if (strpos($css, '//') === false) {
+						$css_path = substr($css, 0, -(int)iconv_strlen(basename($css)));
+					} else {
+						$css_path = substr(substr($css, 0, -(int)iconv_strlen(basename($css))), $server_len);
+					}
+				}
+
+				foreach ($matches[0] as $orig) {
+					if ($orig && strpos($orig, 'data:') === false) {
+						$result = utf8_strtolower($orig);
+
+						if (stripos($result, 'url(') === false && stripos($result, '.css') !== false) {
+							$css = $result;
+							if (strpos($css, '//') === false) {
+								$css_path = substr($css, 0, -(int)iconv_strlen(basename($css)));
+							} else {
+								$css_path = substr(substr($css, 0, -(int)iconv_strlen(basename($css))), $server_len);
+							}
+						} else {
+							//$result = preg_replace('/\burl\([\"\'\s]{0,}(.[^\(\)]*?)[\"\'\s]{0,}\)/S', '$1', $result);
+							$result = str_replace(array('url(', ')', ' ', '"', "'"), '', $result);
+							$domain = '';
+							$href = '';
+							$hach = '';
+
+							if (strpos($result, '//') === false) {
+								$href = strstr($result, '?', true);
+								if (!$href) {
+									$href = strstr($result, '#', true);
+								}
+								if (!$href) {
+									$href = $result;
+								}
+
+								$href = str_replace('\\', '/', realpath($dir . $css_path . $href));
+
+								if (substr($href, 0, $dir_len) == $dir) {
+									$hach = strstr($result, '?');
+									if (!$hach) {
+										$hach = strstr($result, '#');
+									}
+									$href = $server . substr($href, $dir_len) . $hach;
+								} else {
+									$href = $server . $css_path . ltrim(str_replace(array('\\', './', '.../'), array('/', '../', '../'), $result), '/');
+								}
+
+								$do[] = $orig;
+								$posle[] = 'url(' . $href . ')';
 							} else {
 								$domain = parse_url($href, PHP_URL_HOST);
 
 								if (strpos($server, $domain) === false) {
 									$domain = parse_url($href, PHP_URL_SCHEME) . '://' . $domain . '/';
 								} else {
-									$domain = false;
+									$domain = '';
 								}
 							}
 
 							$styles[] = array(
 								'css'       => $css,
-								'href'      => $href . $hach,
 								'domain'    => $domain,
+								'href'      => $href,
+								'hach'      => $hach
 							);
 						}
 					}
+				}
+
+				if ($do) {
+					$content = str_replace($do, $posle, $content);
 				}
 			}
 		}
