@@ -272,7 +272,9 @@ class ControllerStartupSeoPro extends Controller {
 				case 'order_id':
 				case 'download_id':
 				case 'search':
-					break;
+					if (isset($data['search'])) {
+						break;
+					}
 				case 'description':
 					$queries[] = $key . '=' . $value;
 					unset($data[$key]);
