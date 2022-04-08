@@ -1,6 +1,6 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2020.
-// *	@forum		http://forum.opencart.pro
+// *	@copyright	OPENCART.PRO 2011 - 2022.
+// *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
@@ -242,7 +242,7 @@ class ModelLocalisationLanguage extends Model {
 
 	public function editLanguage($language_id, $data) {
 		$language_query = $this->db->query("SELECT `code` FROM " . DB_PREFIX . "language WHERE language_id = '" . (int)$language_id . "'");
-		
+
 		$this->db->query("UPDATE " . DB_PREFIX . "language SET name = '" . $this->db->escape($data['name']) . "', code = '" . $this->db->escape($data['code']) . "', locale = '" . $this->db->escape($data['locale']) . "', sort_order = '" . $this->db->escape($data['sort_order']) . "', status = '" . (int)$data['status'] . "' WHERE language_id = '" . (int)$language_id . "'");
 
 		if ($language_query->row['code'] != $data['code']) {
@@ -258,13 +258,18 @@ class ModelLocalisationLanguage extends Model {
 
 		$this->cache->delete('language');
 
+		/* PRO */
 		$this->db->query("DELETE FROM " . DB_PREFIX . "article_description WHERE language_id = '" . (int)$language_id . "'");
 		$this->cache->delete('article');
 		$this->db->query("DELETE FROM " . DB_PREFIX . "blog_category_description WHERE language_id = '" . (int)$language_id . "'");
 		$this->cache->delete('blog_category');
+		$this->db->query("DELETE FROM " . DB_PREFIX . "benefit_description WHERE language_id = '" . (int)$language_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "custommenu_description WHERE language_id = '" . (int)$language_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "custommenu_child_description WHERE language_id = '" . (int)$language_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "manufacturer_description WHERE language_id = '" . (int)$language_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "product_tab_desc WHERE language_id = '" . (int)$language_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "pro_seo_tag_description WHERE language_id = '" . (int)$language_id . "'");
+		/* PRO */
 
 		$this->db->query("DELETE FROM " . DB_PREFIX . "attribute_description WHERE language_id = '" . (int)$language_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "attribute_group_description WHERE language_id = '" . (int)$language_id . "'");
@@ -273,6 +278,8 @@ class ModelLocalisationLanguage extends Model {
 		$this->cache->delete('category');
 
 		$this->db->query("DELETE FROM " . DB_PREFIX . "customer_group_description WHERE language_id = '" . (int)$language_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "custom_field_description WHERE language_id = '" . (int)$language_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "custom_field_value_description WHERE language_id = '" . (int)$language_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "download_description WHERE language_id = '" . (int)$language_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "filter_description WHERE language_id = '" . (int)$language_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "filter_group_description WHERE language_id = '" . (int)$language_id . "'");
@@ -366,7 +373,7 @@ class ModelLocalisationLanguage extends Model {
 
 			return $query->rows;
 		} else {
-			$language_data = $this->cache->get('language');
+			$language_data = $this->cache->get('language.admin');
 
 			if (!$language_data) {
 				$language_data = array();
@@ -386,7 +393,7 @@ class ModelLocalisationLanguage extends Model {
 					);
 				}
 
-				$this->cache->set('language', $language_data);
+				$this->cache->set('language.admin', $language_data);
 			}
 
 			return $language_data;
