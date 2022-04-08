@@ -1325,7 +1325,7 @@
                   <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="<?php echo $help_seo_url_get_params_status; ?>"><?php echo $entry_seo_url_get_params_status; ?></span></label>
                   <div class="col-sm-10">
                     <label class="radio-inline">
-                      <?php if ($config_valide_get_params_status) { ?>
+                      <?php if ($config_seo_url_get_params_status) { ?>
                       <input type="radio" name="config_seo_url_get_params_status" value="1" checked="checked" />
                       <?php echo $text_yes; ?>
                       <?php } else { ?>
@@ -1334,7 +1334,7 @@
                       <?php } ?>
                     </label>
                     <label class="radio-inline">
-                      <?php if (!$config_valide_get_params_status) { ?>
+                      <?php if (!$config_seo_url_get_params_status) { ?>
                       <input type="radio" name="config_seo_url_get_params_status" value="0" checked="checked" />
                       <?php echo $text_no; ?>
                       <?php } else { ?>
