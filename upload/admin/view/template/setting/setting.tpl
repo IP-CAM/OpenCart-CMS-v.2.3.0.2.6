@@ -1318,7 +1318,7 @@
                 <div class="form-group">
                   <label class="col-sm-2 control-label" for="input-seo-url-break-routes"><span data-toggle="tooltip" title="<?php echo $help_seo_url_break_routes; ?>"><?php echo $entry_seo_url_break_routes; ?></span></label>
                   <div class="col-sm-10">
-                    <textarea name="config_seo_url_break_routes" rows="10" placeholder="<?php echo $entry_seo_url_break_routes; ?>" id="input-seo-url-break-routes" class="form-control"><?php echo $config_seo_url_break_routes; ?></textarea>
+                    <textarea name="config_seo_url_break_routes" rows="5" placeholder="<?php echo $entry_seo_url_break_routes; ?>" id="input-seo-url-break-routes" class="form-control"><?php echo $config_seo_url_break_routes; ?></textarea>
                   </div>
                 </div>
                 <div class="form-group">
@@ -1374,7 +1374,7 @@
                 <div class="form-group">
                   <label class="col-sm-2 control-label" for="input-action-not-found"><span data-toggle="tooltip" title="<?php echo $help_action_not_found; ?>"><?php echo $entry_action_not_found; ?></span></label>
                   <div class="col-sm-10">
-                    <textarea name="config_action_not_found" rows="10" placeholder="<?php echo $entry_action_not_found; ?>" id="input-action-not-found" class="form-control"><?php echo $config_action_not_found; ?></textarea>
+                    <textarea name="config_action_not_found" rows="5" placeholder="<?php echo $entry_action_not_found; ?>" id="input-action-not-found" class="form-control"><?php echo $config_action_not_found; ?></textarea>
                   </div>
                 </div>
                 <div class="form-group">
