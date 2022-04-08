@@ -162,6 +162,7 @@ class ControllerSettingSetting extends Controller {
 		$data['entry_mail_alert'] = $this->language->get('entry_mail_alert');
 		$data['entry_mail_alert_email'] = $this->language->get('entry_mail_alert_email');
 		$data['entry_alert_email'] = $this->language->get('entry_alert_email');
+		$data['entry_action_not_found'] = $this->language->get('entry_action_not_found');
 		$data['entry_secure'] = $this->language->get('entry_secure');
 		$data['entry_shared'] = $this->language->get('entry_shared');
 		$data['entry_session_engine'] = $this->language->get('entry_session_engine');
@@ -192,8 +193,9 @@ class ControllerSettingSetting extends Controller {
 		$data['entry_blog_full_path'] = $this->language->get('entry_blog_full_path');
 		$data['entry_manufacturers_full_path'] = $this->language->get('entry_manufacturers_full_path');
 		$data['entry_seo_url_postfix'] = $this->language->get('entry_seo_url_postfix');
-		$data['entry_valide_get_params_status'] = $this->language->get('entry_valide_get_params_status');
-		$data['entry_valide_get_params'] = $this->language->get('entry_valide_get_params');
+		$data['entry_seo_url_break_routes'] = $this->language->get('entry_seo_url_break_routes');
+		$data['entry_seo_url_get_params_status'] = $this->language->get('entry_seo_url_get_params_status');
+		$data['entry_seo_url_get_params'] = $this->language->get('entry_seo_url_get_params');
 		$data['entry_compression'] = $this->language->get('entry_compression');
 		$data['entry_error_display'] = $this->language->get('entry_error_display');
 		$data['entry_error_log'] = $this->language->get('entry_error_log');
@@ -250,6 +252,7 @@ class ControllerSettingSetting extends Controller {
 		$data['help_mail_smtp_password'] = $this->language->get('help_mail_smtp_password');
 		$data['help_mail_alert'] = $this->language->get('help_mail_alert');
 		$data['help_mail_alert_email'] = $this->language->get('help_mail_alert_email');
+		$data['help_action_not_found'] = $this->language->get('help_action_not_found');
 		$data['help_secure'] = $this->language->get('help_secure');
 		$data['help_shared'] = $this->language->get('help_shared');
 		$data['help_session_engine'] = $this->language->get('help_session_engine');
@@ -273,8 +276,9 @@ class ControllerSettingSetting extends Controller {
 		$data['help_blog_full_path'] = $this->language->get('help_blog_full_path');
 		$data['help_manufacturers_full_path'] = $this->language->get('help_manufacturers_full_path');
 		$data['help_seo_url_postfix'] = $this->language->get('help_seo_url_postfix');
-		$data['help_valide_get_params_status'] = $this->language->get('help_valide_get_params_status');
-		$data['help_valide_get_params'] = $this->language->get('help_valide_get_params');
+		$data['help_seo_url_break_routes'] = $this->language->get('help_seo_url_break_routes');
+		$data['help_seo_url_get_params_status'] = $this->language->get('help_seo_url_get_params_status');
+		$data['help_seo_url_get_params'] = $this->language->get('help_seo_url_get_params');
 		$data['help_file_max_size'] = $this->language->get('help_file_max_size');
 		$data['help_file_ext_allowed'] = $this->language->get('help_file_ext_allowed');
 		$data['help_file_mime_allowed'] = $this->language->get('help_file_mime_allowed');
@@ -1157,20 +1161,36 @@ class ControllerSettingSetting extends Controller {
 			$data['config_seo_url_postfix'] = $this->config->get('config_seo_url_postfix');
 		}
 
-		if (isset($this->request->post['config_valide_get_params_status'])) {
-			$data['config_valide_get_params_status'] = $this->request->post['config_valide_get_params_status'];
-		} elseif ($this->config->has('config_valide_get_params_status')) {
-			$data['config_valide_get_params_status'] = $this->config->get('config_valide_get_params_status');
+		if (isset($this->request->post['config_seo_url_break_routes'])) {
+			$data['config_seo_url_break_routes'] = $this->request->post['config_seo_url_break_routes'];
+		} elseif ($this->config->has('config_seo_url_break_routes')) {
+			$data['config_seo_url_break_routes'] = $this->config->get('config_seo_url_break_routes');
 		} else {
-			$data['config_valide_get_params_status'] = 1;
+			$data['config_seo_url_break_routes'] = "error/not_found\r\nextension/feed/google_sitemap\r\nextension/feed/google_base\r\nextension/feed/sitemap_pro\r\nextension/feed/yandex_feed";
 		}
 
-		if (isset($this->request->post['config_valide_get_params'])) {
-			$data['config_valide_get_params'] = $this->request->post['config_valide_get_params'];
-		} elseif ($this->config->has('config_valide_get_params')) {
-			$data['config_valide_get_params'] = $this->config->get('config_valide_get_params');
+		if (isset($this->request->post['config_seo_url_get_params_status'])) {
+			$data['config_seo_url_get_params_status'] = $this->request->post['config_seo_url_get_params_status'];
+		} elseif ($this->config->has('config_valide_get_params_status')) {
+			$data['config_seo_url_get_params_status'] = $this->config->get('config_seo_url_get_params_status');
 		} else {
-			$data['config_valide_get_params'] = "tracking\r\nutm_source\r\nutm_campaign\r\nutm_medium\r\ntype\r\nsource\r\nblock\r\nposition\r\nkeyword\r\nyclid\r\ngclid";
+			$data['config_seo_url_get_params_status'] = 1;
+		}
+
+		if (isset($this->request->post['config_seo_url_get_params'])) {
+			$data['config_seo_url_get_params'] = $this->request->post['config_seo_url_get_params'];
+		} elseif ($this->config->has('config_valide_get_params')) {
+			$data['config_seo_url_get_params'] = $this->config->get('config_valide_get_params');
+		} elseif ($this->config->has('config_seo_url_get_params')) {
+			$data['config_seo_url_get_params'] = $this->config->get('config_seo_url_get_params');
+		} else {
+			$data['config_seo_url_get_params'] = "tracking\r\nutm_source\r\nutm_campaign\r\nutm_medium\r\ntype\r\nsource\r\nblock\r\nposition\r\nkeyword\r\nyclid\r\ngclid";
+		}
+
+		if (isset($this->request->post['config_action_not_found'])) {
+			$data['config_action_not_found'] = $this->request->post['config_action_not_found'];
+		} else {
+			$data['config_action_not_found'] = $this->config->get('config_action_not_found');
 		}
 
 		if (isset($this->request->post['config_secure'])) {
