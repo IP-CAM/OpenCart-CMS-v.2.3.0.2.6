@@ -467,6 +467,14 @@ class ControllerStartupSeoPro extends Controller {
 			$this->request->get['route'] = $this->config->get('action_default');
 		}
 
+		$config_seo_url_hide_controller = $this->config->get('config_action_not_found');
+		if ($config_seo_url_hide_controller) {
+			$hide_controller = explode("\r\n", $config_seo_url_hide_controller);
+			if (in_array($this->request->get['route'], $hide_controller)) {
+				$this->request->get['route'] = $this->config->get('action_error');
+			}
+		}
+
 		//fix flat link for xml feed
 		$config_seo_url_break_routes = $this->config->get('config_seo_url_break_routes');
 		if ($config_seo_url_break_routes) {
