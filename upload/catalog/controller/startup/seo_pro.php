@@ -259,7 +259,6 @@ class ControllerStartupSeoPro extends Controller {
 
 		$queries = array();
 		foreach ($data as $key => $value) {
-			//var_dump($key);
 			switch ($key) {
 				case 'product_id':
 				case 'article_id':
