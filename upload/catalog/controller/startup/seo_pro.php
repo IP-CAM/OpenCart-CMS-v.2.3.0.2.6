@@ -463,8 +463,15 @@ class ControllerStartupSeoPro extends Controller {
 	//blog
 
 	private function validate() {
+		if (empty($this->request->get['route'])) {
+			$this->request->get['route'] = $this->config->get('action_default');
+		}
+
 		//fix flat link for xml feed
-		if (isset($this->request->get['route'])) {
+		$config_seo_url_break_routes = $this->config->get('config_seo_url_break_routes');
+		if ($config_seo_url_break_routes) {
+			$break_routes = explode("\r\n", $config_seo_url_break_routes);
+		} else {
 			$break_routes = array(
 				'error/not_found',
 				'extension/feed/google_sitemap',
@@ -472,15 +479,10 @@ class ControllerStartupSeoPro extends Controller {
 				'extension/feed/sitemap_pro',
 				'extension/feed/yandex_feed'
 			);
+		}
 
-			$config_valide_break_routes = $this->config->get('config_valide_break_routes');
-			if ($config_valide_break_routes) {
-				$break_routes = explode("\r\n", $config_valide_break_routes);
-			}
-
-			if (in_array($this->request->get['route'], $break_routes)) {
-				return;
-			}
+		if (in_array($this->request->get['route'], $break_routes)) {
+			return;
 		}
 
 		//Remove negative page count
@@ -489,10 +491,6 @@ class ControllerStartupSeoPro extends Controller {
 				unset($this->request->get['page']);
 			};
 		};
-
-		if (empty($this->request->get['route'])) {
-			$this->request->get['route'] = 'common/home';
-		}
 
 		if (isset($this->request->server['HTTP_X_REQUESTED_WITH']) && strtolower($this->request->server['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
 			return;
