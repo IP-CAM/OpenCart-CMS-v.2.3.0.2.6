@@ -1,6 +1,6 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2017.
-// *	@forum	http://forum.opencart.pro
+// *	@copyright	OPENCART.PRO 2011 - 2022.
+// *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
@@ -267,30 +267,31 @@ class ControllerAffiliateEdit extends Controller {
 	}
 
 	protected function validate() {
-		if ((utf8_strlen(trim($this->request->post['firstname'])) < 1) || (utf8_strlen(trim($this->request->post['firstname'])) > 32)) {
+		if (!isset($this->request->post['firstname']) || (utf8_strlen(trim($this->request->post['firstname'])) < 1) || (utf8_strlen(trim($this->request->post['firstname'])) > 32)) {
 			$this->error['firstname'] = $this->language->get('error_firstname');
 		}
 
-		if ((utf8_strlen(trim($this->request->post['lastname'])) < 1) || (utf8_strlen(trim($this->request->post['lastname'])) > 32)) {
+		if (!isset($this->request->post['lastname']) || (utf8_strlen(trim($this->request->post['lastname'])) < 1) || (utf8_strlen(trim($this->request->post['lastname'])) > 32)) {
 			$this->error['lastname'] = $this->language->get('error_lastname');
 		}
 
-		if ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
+		if (!isset($this->request->post['email']) || (utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
 			$this->error['email'] = $this->language->get('error_email');
 		}
 
-		if (($this->affiliate->getEmail() != $this->request->post['email']) && $this->model_affiliate_affiliate->getTotalAffiliatesByEmail($this->request->post['email'])) {
+		if (!empty($this->request->post['email']) && ($this->affiliate->getEmail() != $this->request->post['email']) && $this->model_affiliate_affiliate->getTotalAffiliatesByEmail($this->request->post['email'])) {
 			$this->error['warning'] = $this->language->get('error_exists');
 		}
 
-		if ((utf8_strlen($this->request->post['telephone']) < 3) || (utf8_strlen($this->request->post['telephone']) > 32)) {
+		if (!isset($this->request->post['telephone']) || (utf8_strlen($this->request->post['telephone']) < 3) || (utf8_strlen($this->request->post['telephone']) > 32)) {
 			$this->error['telephone'] = $this->language->get('error_telephone');
 		}
-		if ((utf8_strlen(trim($this->request->post['address_1'])) < 3) || (utf8_strlen(trim($this->request->post['address_1'])) > 128)) {
+
+		if (!isset($this->request->post['address_1']) || (utf8_strlen(trim($this->request->post['address_1'])) < 3) || (utf8_strlen(trim($this->request->post['address_1'])) > 128)) {
 			$this->error['address_1'] = $this->language->get('error_address_1');
 		}
 
-		if ((utf8_strlen(trim($this->request->post['city'])) < 2) || (utf8_strlen(trim($this->request->post['city'])) > 128)) {
+		if (!isset($this->request->post['city']) || (utf8_strlen(trim($this->request->post['city'])) < 2) || (utf8_strlen(trim($this->request->post['city'])) > 128)) {
 			$this->error['city'] = $this->language->get('error_city');
 		}
 
@@ -316,23 +317,25 @@ class ControllerAffiliateEdit extends Controller {
 	public function country() {
 		$json = array();
 
-		$this->load->model('localisation/country');
+		if (isset($this->request->get['country_id'])) {
+			$this->load->model('localisation/country');
 
-		$country_info = $this->model_localisation_country->getCountry($this->request->get['country_id']);
+			$country_info = $this->model_localisation_country->getCountry($this->request->get['country_id']);
 
-		if ($country_info) {
-			$this->load->model('localisation/zone');
+			if ($country_info) {
+				$this->load->model('localisation/zone');
 
-			$json = array(
-				'country_id'        => $country_info['country_id'],
-				'name'              => $country_info['name'],
-				'iso_code_2'        => $country_info['iso_code_2'],
-				'iso_code_3'        => $country_info['iso_code_3'],
-				'address_format'    => $country_info['address_format'],
-				'postcode_required' => $country_info['postcode_required'],
-				'zone'              => $this->model_localisation_zone->getZonesByCountryId($this->request->get['country_id']),
-				'status'            => $country_info['status']
-			);
+				$json = array(
+					'country_id'        => $country_info['country_id'],
+					'name'              => $country_info['name'],
+					'iso_code_2'        => $country_info['iso_code_2'],
+					'iso_code_3'        => $country_info['iso_code_3'],
+					'address_format'    => $country_info['address_format'],
+					'postcode_required' => $country_info['postcode_required'],
+					'zone'              => $this->model_localisation_zone->getZonesByCountryId($this->request->get['country_id']),
+					'status'            => $country_info['status']
+				);
+			}
 		}
 
 		$this->response->addHeader('Content-Type: application/json');
