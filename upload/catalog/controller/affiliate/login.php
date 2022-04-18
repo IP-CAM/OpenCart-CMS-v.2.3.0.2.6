@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2021.
+// *	@copyright	OPENCART.PRO 2011 - 2022.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -139,6 +139,10 @@ class ControllerAffiliateLogin extends Controller {
 			if ($affiliate_info && !$affiliate_info['approved']) {
 				$this->error['warning'] = $this->language->get('error_approved');
 			}
+		}
+
+		if (!isset($this->request->post['password'])) {
+			$this->error['warning'] = $this->language->get('error_login');
 		}
 
 		if (!$this->error) {
