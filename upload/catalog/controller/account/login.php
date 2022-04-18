@@ -207,6 +207,10 @@ class ControllerAccountLogin extends Controller {
 			}
 		}
 
+		if (!isset($this->request->post['password'])) {
+			$this->error['warning'] = $this->language->get('error_login');
+		}
+
 		if (!$this->error) {
 			if (!$this->customer->login($this->request->post['email'], $this->request->post['password'])) {
 				$this->error['warning'] = $this->language->get('error_login');
