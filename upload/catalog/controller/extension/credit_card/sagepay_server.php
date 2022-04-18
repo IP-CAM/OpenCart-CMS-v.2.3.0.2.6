@@ -1,6 +1,6 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2017.
-// *	@forum	http://forum.opencart.pro
+// *	@copyright	OPENCART.PRO 2011 - 2022.
+// *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
@@ -152,7 +152,11 @@ class ControllerExtensionCreditCardSagepayServer extends Controller {
 		$payment_data['Vendor'] = $this->config->get('sagepay_server_vendor');
 		$payment_data['VendorTxCode'] = 'server_card_' . strftime("%Y%m%d%H%M%S") . mt_rand(1, 999);
 		$payment_data['NotificationURL'] = $this->url->link('extension/credit_card/sagepay_server/callback', '', true);
-		$payment_data['Currency'] = $this->session->data['currency'];
+		if (isset($this->session->data['currency'])) {
+			$payment_data['Currency'] = $this->session->data['currency'];
+		} else {
+			$payment_data['Currency'] = false;
+		}
 
 		$response_data = $this->model_extension_payment_sagepay_server->sendCurl($url, $payment_data);
 

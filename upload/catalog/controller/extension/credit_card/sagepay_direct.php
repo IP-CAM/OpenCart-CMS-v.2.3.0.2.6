@@ -1,6 +1,6 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2017.
-// *	@forum	http://forum.opencart.pro
+// *	@copyright	OPENCART.PRO 2011 - 2022.
+// *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
@@ -270,12 +270,36 @@ class ControllerExtensionCreditCardSagepayDirect extends Controller {
 		$payment_data['ReferrerID'] = 'E511AF91-E4A0-42DE-80B0-09C981A3FB61';
 		$payment_data['TxType'] = 'TOKEN';
 		$payment_data['Vendor'] = $this->config->get('sagepay_direct_vendor');
-		$payment_data['Currency'] = $this->session->data['currency'];
-		$payment_data['CardHolder'] = $this->request->post['cc_owner'];
-		$payment_data['CardNumber'] = $this->request->post['cc_number'];
-		$payment_data['ExpiryDate'] = $this->request->post['cc_expire_date_month'] . substr($this->request->post['cc_expire_date_year'], 2);
-		$payment_data['CV2'] = $this->request->post['cc_cvv2'];
-		$payment_data['CardType'] = $this->request->post['cc_type'];
+		if (isset($this->session->data['currency'])) {
+			$payment_data['Currency'] = $this->session->data['currency'];
+		} else {
+			$payment_data['Currency'] = '';
+		}
+		if (isset($this->request->post['cc_owner'])) {
+			$payment_data['CardHolder'] = $this->request->post['cc_owner'];
+		} else {
+			$payment_data['CardHolder'] = '';
+		}
+		if (isset($this->request->post['cc_number'])) {
+			$payment_data['CardNumber'] = $this->request->post['cc_number'];
+		} else {
+			$payment_data['CardNumber'] = '';
+		}
+		if (isset($this->request->post['cc_expire_date_year'])) {
+			$payment_data['ExpiryDate'] = $this->request->post['cc_expire_date_month'] . substr($this->request->post['cc_expire_date_year'], 2);
+		} else {
+			$payment_data['ExpiryDate'] = '';
+		}
+		if (isset($this->request->post['cc_cvv2'])) {
+			$payment_data['CV2'] = $this->request->post['cc_cvv2'];
+		} else {
+			$payment_data['CV2'] = '';
+		}
+		if (isset($this->request->post['cc_type'])) {
+			$payment_data['CardType'] = $this->request->post['cc_type'];
+		} else {
+			$payment_data['CardType'] = '';
+		}
 
 		$response_data = $this->model_extension_payment_sagepay_direct->sendCurl($url, $payment_data);
 
