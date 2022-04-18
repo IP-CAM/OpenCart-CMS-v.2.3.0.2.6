@@ -397,14 +397,14 @@ class ControllerAccountRegister extends Controller {
 			$this->error['city'] = $this->language->get('error_city');
 		}
 
-		if (!isset($this->request->post['country_id']) || $this->request->post['country_id'] == '') {
+		if (empty($this->request->post['country_id'])) {
 			$this->error['country'] = $this->language->get('error_country');
 		} else {
 			$this->load->model('localisation/country');
 
 			$country_info = $this->model_localisation_country->getCountry($this->request->post['country_id']);
 
-			if ($country_info && $country_info['postcode_required'] && (utf8_strlen(trim($this->request->post['postcode'])) < 2 || utf8_strlen(trim($this->request->post['postcode'])) > 10)) {
+			if ($country_info && $country_info['postcode_required'] && (!isset($this->request->post['postcode']) || utf8_strlen(trim($this->request->post['postcode'])) < 2 || utf8_strlen(trim($this->request->post['postcode'])) > 10)) {
 				$this->error['postcode'] = $this->language->get('error_postcode');
 			}
 		}
