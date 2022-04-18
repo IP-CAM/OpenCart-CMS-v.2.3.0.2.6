@@ -433,12 +433,12 @@ class ControllerAccountRegister extends Controller {
             }
 		}
 
-		if (empty($this->request->post['password']) || (utf8_strlen($this->request->post['password']) < 4) || (utf8_strlen($this->request->post['password']) > 20)) {
+		if (!isset($this->request->post['password']) || (utf8_strlen($this->request->post['password']) < 4) || (utf8_strlen($this->request->post['password']) > 20)) {
 			$this->error['password'] = $this->language->get('error_password');
+		}
 
-			if (empty($this->request->post['confirm']) || $this->request->post['confirm'] != $this->request->post['password']) {
-				$this->error['confirm'] = $this->language->get('error_confirm');
-			}
+		if (isset($this->request->post['confirm']) && isset($this->request->post['password']) && $this->request->post['confirm'] != $this->request->post['password']) {
+			$this->error['confirm'] = $this->language->get('error_confirm');
 		}
 
 		// Captcha
