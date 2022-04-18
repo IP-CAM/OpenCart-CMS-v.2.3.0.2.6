@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2021.
+// *	@copyright	OPENCART.PRO 2011 - 2022.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -608,6 +608,7 @@ class ControllerAccountReturn extends Controller {
 		$this->load->language('account/return');
 
 		$this->document->setTitle($this->language->get('heading_title'));
+		$this->document->setRobots('nocache,noarchive,noindex,nofollow');
 
 		$data['breadcrumbs'] = array();
 
@@ -622,7 +623,6 @@ class ControllerAccountReturn extends Controller {
 		);
 
 		$data['heading_title'] = $this->language->get('heading_title');
-		$this->document->setRobots('nocache,noarchive,noindex,nofollow');
 
 		$data['text_message'] = $this->language->get('text_message');
 
