@@ -1,6 +1,6 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2017.
-// *	@forum	http://forum.opencart.pro
+// *	@copyright	OPENCART.PRO 2011 - 2022.
+// *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
@@ -394,6 +394,7 @@ class ModelExtensionPaymentSagePayDirect extends Model {
 	}
 
 	public function sendCurl($url, $payment_data, $i = null) {
+		$data = array('Status' => false, 'StatusDetail' => 'not server');
 		$curl = curl_init($url);
 
 		curl_setopt($curl, CURLOPT_PORT, 443);
@@ -421,6 +422,7 @@ class ModelExtensionPaymentSagePayDirect extends Model {
 				$data[trim($parts[0])] = trim($parts[1]);
 			}
 		}
+
 		return $data;
 	}
 
