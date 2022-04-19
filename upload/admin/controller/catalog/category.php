@@ -1,12 +1,11 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2020.
-// *	@forum		http://forum.opencart.pro
+// *	@copyright	OPENCART.PRO 2011 - 2022.
+// *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
 class ControllerCatalogCategory extends Controller {
 	private $error = array();
-	private $category_id = 0;
 	private $path = array();
 
 	public function index() {
@@ -252,15 +251,13 @@ class ControllerCatalogCategory extends Controller {
 
 		if (isset($this->request->get['path'])) {
 			if ($this->request->get['path'] != '') {
-					$this->path = explode('_', $this->request->get['path']);
-					$this->category_id = end($this->path);
-					$this->session->data['path'] = $this->request->get['path'];
+				$this->path = explode('_', $this->request->get['path']);
+				$this->session->data['path'] = $this->request->get['path'];
 			} else {
 				unset($this->session->data['path']);
 			}
 		} elseif (isset($this->session->data['path'])) {
-				$this->path = explode('_', $this->session->data['path']);
-				$this->category_id = end($this->path);
+			$this->path = explode('_', $this->session->data['path']);
  		}
 
 		$data['categories'] = $this->getCategories(0);
@@ -308,7 +305,8 @@ class ControllerCatalogCategory extends Controller {
 
 		$category_total = $this->model_catalog_category->getTotalCategories();
 
-		$data['results'] = $this->language->get('text_category_total') . ($category_total);
+		$data['results'] = $this->language->get('text_category_total') . $category_total;
+
 		$data['header'] = $this->load->controller('common/header');
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['footer'] = $this->load->controller('common/footer');
@@ -750,48 +748,47 @@ class ControllerCatalogCategory extends Controller {
 	}
 
 	private function getCategories($parent_id, $parent_path = '', $indent = '') {
-		$category_id = array_shift($this->path);
-		$output = array();
-		static $href_category = null;
-		static $href_action = null;
-		if ($href_category === null) {
-			$href_category = $this->url->link('catalog/category', 'token=' . $this->session->data['token'] . '&path=', true);
-			$href_action = $this->url->link('catalog/category/update', 'token=' . $this->session->data['token'] . '&category_id=', true);
+		if ($this->request->server['HTTPS']) {
+			$server = HTTPS_CATALOG;
+		} else {
+			$server = HTTP_CATALOG;
 		}
+
+		$category_id = array_shift($this->path);
+
+		$output = array();
+
 		$results = $this->model_catalog_category->getCategoriesByParentId($parent_id);
+
 		foreach ($results as $result) {
-			$path = $parent_path . $result['category_id'];
-			$href = ($result['children']) ? $href_category . $path : '';
-			$name = $result['name'];
 			if ($category_id == $result['category_id']) {
-				$name = '<b>' . $name . '</b>';
-				$data['breadcrumbs'][] = array(
-					'text'      => $result['name'],
-					'href'      => $href,
-					'separator' => ' :: '
-			);
+				$name = '<b>' . $result['name'] . '</b>';
 				$href = '';
+			} else {
+				$name = $result['name'];
+				if ($result['children']) {
+					$href = $this->url->link('catalog/category', 'token=' . $this->session->data['token'] . '&path=' . $parent_path . $result['category_id'], true);
+				} else {
+					$href = '';
+				}
 			}
+
 			$selected = isset($this->request->post['selected']) && in_array($result['category_id'], $this->request->post['selected']);
-			$action = array();
-			$action[] = array(
-				'text' => $this->language->get('text_edit'),
-				'href' => $href_action . $result['category_id']
-			);
+
 			$output[$result['category_id']] = array(
 				'category_id' => $result['category_id'],
 				'name'        => $name,
 				'sort_order'  => $result['sort_order'],
-				'noindex'     => $result['noindex'],
+				'noindex'     => ($result['noindex'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
 				'edit'        => $this->url->link('catalog/category/edit', 'token=' . $this->session->data['token'] . '&category_id=' . $result['category_id'], true),
 				'selected'    => $selected,
-				'action'      => $action,
 				'href'        => $href,
-				'href_shop'   => HTTP_CATALOG . 'index.php?route=product/category&path=' . ($result['category_id']),
+				'href_shop'   => $server . 'index.php?route=product/category&path=' . $result['category_id'],
 				'indent'      => $indent
 			);
+
 			if ($category_id == $result['category_id']) {
-				$output += $this->getCategories($result['category_id'], $path . '_', $indent . str_repeat('&nbsp;', 8));
+				$output += $this->getCategories($result['category_id'], $parent_path . $result['category_id'] . '_', $indent . str_repeat('&nbsp;', 8));
 			}
 		}
 
@@ -805,11 +802,13 @@ class ControllerCatalogCategory extends Controller {
 			if ($parent_name != '') {
 				$parent_name .= $this->language->get('text_separator');
 			}
+
 			foreach ($categories[$parent_id] as $category) {
 				$output[$category['category_id']] = array(
 					'category_id' => $category['category_id'],
 					'name'        => $parent_name . $category['name']
 				);
+
 				$output += $this->getAllCategories($categories, $category['category_id'], $parent_name . $category['name']);
 			}
 		}
