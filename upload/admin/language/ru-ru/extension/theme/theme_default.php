@@ -1,6 +1,6 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2020.
-// *	@forum		http://forum.opencart.pro
+// *	@copyright	OPENCART.PRO 2011 - 2022.
+// *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
@@ -36,8 +36,8 @@ $_['entry_height']                     = 'Высота';
 
 // Help
 $_['help_directory']                   = 'Указывайте это поле только для старых шаблонов которые совместимы с данной версией';
-$_['help_product_limit']               = 'Сколько элементов показывать на странице (товаров, категорий, итд)';
-$_['help_product_description_length']  = 'Количество знаков в описании товара в (категориях, производителях итд)';
+$_['help_product_limit']               = 'Сколько элементов показывать на странице (товаров, категорий, и т.д.)';
+$_['help_product_description_length']  = 'Количество знаков в описании товара в (категориях, производителях и т.д.)';
 
 // Error
 $_['error_permission']                 = 'У вас недостаточно прав для внесения изменений!';
