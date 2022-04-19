@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2021.
+// *	@copyright	OPENCART.PRO 2011 - 2022.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -336,8 +336,10 @@ class ControllerBlogArticle extends Controller {
 		}
 
 		$filter_sub_category = null;
+
 		if (isset($this->request->get['filter_category'])) {
 			$filter_category = $this->request->get['filter_category'];
+
 			if (!empty($filter_category) && isset($this->request->get['filter_sub_category'])) {
 				$filter_sub_category = true;
 			} elseif (isset($this->request->get['filter_sub_category'])) {
@@ -345,22 +347,28 @@ class ControllerBlogArticle extends Controller {
 			}
 		} else {
 			$filter_category = null;
+
 			if (isset($this->request->get['filter_sub_category'])) {
 				unset($this->request->get['filter_sub_category']);
 			}
 		}
 
 		$filter_category_name = null;
+
 		if (isset($filter_category)) {
-			if ($filter_category>0) {
+			if ($filter_category > 0) {
 				$this->load->model('blog/category');
+
 				$category = $this->model_blog_category->getCategory($filter_category);
+
 				if ($category) {
 					$filter_category_name = ($category['path']) ? $category['path'] . ' &gt; ' . $category['name'] : $category['name'];
 				} else {
 					$filter_category = null;
-					unset($this->request->get['filter_category']);
 					$filter_sub_category = null;
+
+					unset($this->request->get['filter_category']);
+
 					if (isset($this->request->get['filter_sub_category'])) {
 						unset($this->request->get['filter_sub_category']);
 					}
@@ -398,6 +406,12 @@ class ControllerBlogArticle extends Controller {
 			$page = $this->request->get['page'];
 		} else {
 			$page = 1;
+		}
+
+		if ($this->request->server['HTTPS']) {
+			$server = HTTPS_CATALOG;
+		} else {
+			$server = HTTP_CATALOG;
 		}
 
 		$url = '';
@@ -482,9 +496,9 @@ class ControllerBlogArticle extends Controller {
 				'article_id' => $result['article_id'],
 				'image'      => $image,
 				'name'       => $result['name'],
-				'status'     => ($result['status']) ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
-				'noindex'    => ($result['noindex']) ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
-				'href_shop'  => HTTP_CATALOG . 'index.php?route=blog/article&article_id=' . ($result['article_id']),
+				'status'     => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
+				'noindex'    => ($result['noindex'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
+				'href_shop'  => $server . 'index.php?route=blog/article&article_id=' . $result['article_id'],
 				'edit'       => $this->url->link('blog/article/edit', 'token=' . $this->session->data['token'] . '&article_id=' . $result['article_id'] . $url, true)
 			);
 		}
