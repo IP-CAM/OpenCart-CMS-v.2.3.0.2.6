@@ -1,6 +1,6 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2020.
-// *	@forum		http://forum.opencart.pro
+// *	@copyright	OPENCART.PRO 2011 - 2022.
+// *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
@@ -302,6 +302,7 @@ class ModelBlogCategory extends Model {
 
 	public function getCategoriesByParentId($parent_id = 0) {
 		$query = $this->db->query("SELECT *, (SELECT COUNT(parent_id) FROM " . DB_PREFIX . "blog_category WHERE parent_id = c.blog_category_id) AS children FROM " . DB_PREFIX . "blog_category c LEFT JOIN " . DB_PREFIX . "blog_category_description cd ON (c.blog_category_id = cd.blog_category_id) WHERE c.parent_id = '" . (int)$parent_id . "' AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY c.sort_order, cd.name");
+
 		return $query->rows;
 	}
 
@@ -321,5 +322,11 @@ class ModelBlogCategory extends Model {
 		}
 
 		return $category_data;
+	}
+
+	public function getCategoriesChildren($parent_id = 0) {
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "blog_category_path WHERE path_id = '" . (int)$parent_id . "'");
+
+		return $query->rows;
 	}
 }
