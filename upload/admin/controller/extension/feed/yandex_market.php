@@ -1,6 +1,6 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2020.
-// *	@forum		http://forum.opencart.pro
+// *	@copyright	OPENCART.PRO 2011 - 2022.
+// *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
@@ -396,7 +396,7 @@ class ControllerExtensionFeedYandexMarket extends Controller {
 			$data['yandex_market_from_charset'] = $this->config->get('yandex_market_from_charset');
 		}
 
-		$data['data_feed'] = HTTP_CATALOG . 'index.php?route=extension/feed/yandex_market' . ($this->config->get('yandex_market_secret_key') ? '&secret_key=' . $this->config->get('yandex_market_secret_key') : false);
+		$data['data_feed'] = ($this->request->server['HTTPS'] ? HTTPS_CATALOG : HTTP_CATALOG) . 'index.php?route=extension/feed/yandex_market' . ($this->config->get('yandex_market_secret_key') ? '&secret_key=' . $this->config->get('yandex_market_secret_key') : false);
 
 		$data['header'] = $this->load->controller('common/header');
 		$data['column_left'] = $this->load->controller('common/column_left');
@@ -410,34 +410,26 @@ class ControllerExtensionFeedYandexMarket extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-		if (!$this->request->post['yandex_market_image_width']) {
+		if (empty($this->request->post['yandex_market_image_width'])) {
 			$this->error['error_image_width'] = $this->language->get('error_image_width');
-		}
-
-		if (!$this->request->post['yandex_market_image_height']) {
-			$this->error['error_image_height'] = $this->language->get('error_image_height');
-		}
-
-		if ($this->request->post['yandex_market_image_width'] < 250) {
-			$this->error['error_image_width_min'] = $this->language->get('error_image_width_min');
-		}
-
-		if ($this->request->post['yandex_market_image_height'] < 250) {
-			$this->error['error_image_height_min'] = $this->language->get('error_image_height_min');
-		}
-
-		if ($this->request->post['yandex_market_image_width'] > 3500) {
-			$this->error['error_image_width_max'] = $this->language->get('error_image_width_max');
-		}
-
-		if ($this->request->post['yandex_market_image_height'] > 3500) {
-			$this->error['error_image_height_max'] = $this->language->get('error_image_height_max');
-		}
-
-		if (!$this->error) {
-			return TRUE;
 		} else {
-			return FALSE;
+			if ($this->request->post['yandex_market_image_width'] < 250) {
+				$this->error['error_image_width_min'] = $this->language->get('error_image_width_min');
+			} elseif ($this->request->post['yandex_market_image_width'] > 3500) {
+				$this->error['error_image_width_max'] = $this->language->get('error_image_width_max');
+			}
 		}
+
+		if (empty($this->request->post['yandex_market_image_height'])) {
+			$this->error['error_image_height'] = $this->language->get('error_image_height');
+		} else {
+			if ($this->request->post['yandex_market_image_height'] < 250) {
+				$this->error['error_image_height_min'] = $this->language->get('error_image_height_min');
+			} elseif ($this->request->post['yandex_market_image_height'] > 3500) {
+				$this->error['error_image_height_max'] = $this->language->get('error_image_height_max');
+			}
+		}
+
+		return !$this->error;
 	}
 }
