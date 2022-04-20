@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2021.
+// *	@copyright	OPENCART.PRO 2011 - 2022.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -181,8 +181,8 @@ class ControllerReportCustomerBlogSearch extends Controller {
 
 		$store_default = array(
 			'store_id' => 0,
-			'name'     => HTTP_CATALOG . ' - ' . $this->config->get('config_name') . ' ' . $this->language->get('text_default'),
-			'url'      => HTTP_CATALOG
+			'name'     => ($this->request->server['HTTPS'] ? HTTPS_CATALOG : HTTP_CATALOG) . ' - ' . $this->config->get('config_name') . ' ' . $this->language->get('text_default'),
+			'url'      => ($this->request->server['HTTPS'] ? HTTPS_CATALOG : HTTP_CATALOG)
 		);
 
 		$data['stores'][] = $store_default;
