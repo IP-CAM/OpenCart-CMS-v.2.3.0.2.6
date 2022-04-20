@@ -337,7 +337,7 @@
                     <td class="left">
                       <?php foreach ($seo_tag['store'] as $key => $store) { ?>
                       <?php if ($key) { ?>,<br /><?php } ?>
-                      <a href="<?php echo $store['url']; ?>index.php?route=<?php echo $seo_tag['query']; ?>" target="_blank"><?php echo $store['name']; ?></a>
+                      <a href="<?php echo $store['url']; ?>index.php?route=<?php echo $seo_tag['query']; ?>" rel="noreferrer noopener" target="_blank"><?php echo $store['name']; ?></a>
                       <?php } ?>
                     </td>
                     <td class="left"><?php echo $seo_tag['query']; ?></td>
