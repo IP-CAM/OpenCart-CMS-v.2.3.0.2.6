@@ -1,6 +1,6 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2020.
-// *	@forum		http://forum.opencart.pro
+// *	@copyright	OPENCART.PRO 2011 - 2022.
+// *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
@@ -202,6 +202,12 @@ class ControllerCatalogInformation extends Controller {
 			$page = 1;
 		}
 
+		if ($this->request->server['HTTPS']) {
+			$server = HTTPS_CATALOG;
+		} else {
+			$server = HTTP_CATALOG;
+		}
+
 		$url = '';
 
 		if (isset($this->request->get['sort'])) {
@@ -251,8 +257,8 @@ class ControllerCatalogInformation extends Controller {
 				'information_id' => $result['information_id'],
 				'title'          => $result['title'],
 				'sort_order'     => $result['sort_order'],
-				'noindex'        => $result['noindex'],
-				'href_shop'      => HTTP_CATALOG . 'index.php?route=information/information&information_id=' . ($result['information_id']),
+				'noindex'        => ($result['noindex'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
+				'href_shop'      => $server . 'index.php?route=information/information&information_id=' . $result['information_id'],
 				'edit'           => $this->url->link('catalog/information/edit', 'token=' . $this->session->data['token'] . '&information_id=' . $result['information_id'] . $url, true)
 			);
 		}

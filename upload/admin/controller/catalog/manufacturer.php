@@ -1,6 +1,6 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2020.
-// *	@forum		http://forum.opencart.pro
+// *	@copyright	OPENCART.PRO 2011 - 2022.
+// *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
@@ -134,6 +134,12 @@ class ControllerCatalogManufacturer extends Controller {
 			$page = 1;
 		}
 
+		if ($this->request->server['HTTPS']) {
+			$server = HTTPS_CATALOG;
+		} else {
+			$server = HTTP_CATALOG;
+		}
+
 		$url = '';
 
 		if (isset($this->request->get['sort'])) {
@@ -181,8 +187,8 @@ class ControllerCatalogManufacturer extends Controller {
 				'manufacturer_id' => $result['manufacturer_id'],
 				'name'            => $result['name'],
 				'sort_order'      => $result['sort_order'],
-				'noindex'         => $result['noindex'],
-				'href_shop'       => HTTP_CATALOG . 'index.php?route=product/manufacturer/info&manufacturer_id=' . ($result['manufacturer_id']),
+				'noindex'         => ($result['noindex'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
+				'href_shop'       => $server . 'index.php?route=product/manufacturer/info&manufacturer_id=' . $result['manufacturer_id'],
 				'edit'            => $this->url->link('catalog/manufacturer/edit', 'token=' . $this->session->data['token'] . '&manufacturer_id=' . $result['manufacturer_id'] . $url, true)
 			);
 		}

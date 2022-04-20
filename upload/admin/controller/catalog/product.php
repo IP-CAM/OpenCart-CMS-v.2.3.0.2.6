@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2021.
+// *	@copyright	OPENCART.PRO 2011 - 2022.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -665,6 +665,12 @@ class ControllerCatalogProduct extends Controller {
 			$page = 1;
 		}
 
+		if ($this->request->server['HTTPS']) {
+			$server = HTTPS_CATALOG;
+		} else {
+			$server = HTTP_CATALOG;
+		}
+
 		$url = '';
 
 		if (isset($this->request->get['filter_name'])) {
@@ -808,9 +814,9 @@ class ControllerCatalogProduct extends Controller {
 				'price'      => $result['price'],
 				'special'    => $special,
 				'quantity'   => $result['quantity'],
-				'status'     => $result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
-				'noindex'    => $result['noindex'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
-				'href_shop'  => HTTP_CATALOG . 'index.php?route=product/product&product_id=' . $result['product_id'],
+				'status'     => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
+				'noindex'    => ($result['noindex'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
+				'href_shop'  => $server . 'index.php?route=product/product&product_id=' . $result['product_id'],
 				'edit'       => $this->url->link('catalog/product/edit', 'token=' . $this->session->data['token'] . '&product_id=' . $result['product_id'] . $url, true)
 			);
 		}
