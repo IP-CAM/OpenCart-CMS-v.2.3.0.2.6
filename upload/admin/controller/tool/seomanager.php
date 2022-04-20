@@ -1,6 +1,6 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2020.
-// *	@forum		http://forum.opencart.pro
+// *	@copyright	OPENCART.PRO 2011 - 2022.
+// *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
@@ -8,6 +8,10 @@ class ControllerToolSeoManager extends Controller {
 	private $error = array();
 
 	public function index() {
+		// обновление с версии 2.3.0.2.5
+		$this->updateModule();
+		// обновление с версии 2.3.0.2.5
+
 		$this->load->language('tool/seomanager');
 
 		$this->load->model('tool/seomanager');
@@ -486,7 +490,11 @@ class ControllerToolSeoManager extends Controller {
 
 		$data['stores'] = array();
 
-		$store_default = array('store_id' => 0, 'name' => $this->config->get('config_name') . ' - ' . $this->language->get('text_default'), 'url' => HTTP_CATALOG);
+		$store_default = array(
+			'store_id' => 0,
+			'name' => ($this->request->server['HTTPS'] ? HTTPS_CATALOG : HTTP_CATALOG) . ' - ' . $this->config->get('config_name') . ' ' . $this->language->get('text_default'),
+			'url' => ($this->request->server['HTTPS'] ? HTTPS_CATALOG : HTTP_CATALOG)
+		);
 
 		$data['stores'][] = $store_default;
 
@@ -691,19 +699,6 @@ class ControllerToolSeoManager extends Controller {
 		$data['footer'] = $this->load->controller('common/footer');
 
 		$this->response->setOutput($this->load->view('tool/seomanager', $data));
-
-		// удалить в версии 2.3.0.2.7
-		$this->updateModule();
-
-		// создаём событие
-		$this->load->model('extension/event'); 
-
-		$code = $this->model_extension_event->getEvent('Seomanager', 'catalog/view/*/before', 'tool/seomanager/event');
-
-		if (!$code) {
-			$this->model_extension_event->addEvent('Seomanager', 'catalog/view/*/before', 'tool/seomanager/event', 1, 1001);
-		}
-		// удалить в версии 2.3.0.2.7
 	}
 
 	protected function validateForm() {
@@ -778,7 +773,7 @@ class ControllerToolSeoManager extends Controller {
 		return !$this->error;
 	}
 
-	// удалить в версии 2.3.0.2.7
+	// обновление с версии 2.3.0.2.5
 	private function updateModule() {
 		if ($this->config->get('seomanager_meta_title_bestseller') || $this->config->get('seomanager_meta_title_latest') || $this->config->get('seomanager_meta_title_mostviewed') || $this->config->get('seomanager_meta_title_special')) {
 			$this->load->model('localisation/language');
@@ -887,9 +882,18 @@ class ControllerToolSeoManager extends Controller {
 				$this->model_tool_seomanager->updateSeoTag($up);
 			}
 
+			// создаём событие
+			$this->load->model('extension/event'); 
+
+			$code = $this->model_extension_event->getEvent('Seomanager', 'catalog/view/*/before', 'tool/seomanager/event');
+
+			if (!$code) {
+				$this->model_extension_event->addEvent('Seomanager', 'catalog/view/*/before', 'tool/seomanager/event', 1, 1001);
+			}
+
 			$this->model_setting_setting->deleteSetting('seomanager');
 
-			$this->session->data['success'] = $this->language->get('success');			
+			$this->session->data['success'] = $this->language->get('success');
 		}
 	}
 }
