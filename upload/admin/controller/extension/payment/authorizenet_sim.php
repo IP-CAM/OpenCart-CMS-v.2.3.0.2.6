@@ -1,6 +1,6 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2017.
-// *	@forum	http://forum.opencart.pro
+// *	@copyright	OPENCART.PRO 2011 - 2022.
+// *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
@@ -108,7 +108,7 @@ class ControllerExtensionPaymentAuthorizeNetSim extends Controller {
 			$data['authorizenet_sim_test'] = $this->config->get('authorizenet_sim_test');
 		}
 
-		$data['callback'] = HTTP_CATALOG . 'index.php?route=extension/payment/authorizenet_sim/callback';
+		$data['callback'] = ($this->request->server['HTTPS'] ? HTTPS_CATALOG : HTTP_CATALOG) . 'index.php?route=extension/payment/authorizenet_sim/callback';
 
 		if (isset($this->request->post['authorizenet_sim_md5'])) {
 			$data['authorizenet_sim_md5'] = $this->request->post['authorizenet_sim_md5'];
