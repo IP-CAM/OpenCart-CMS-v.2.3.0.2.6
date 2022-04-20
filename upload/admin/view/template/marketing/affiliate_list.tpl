@@ -139,7 +139,7 @@
                     <?php } else { ?>
                     <button type="button" class="btn btn-success" disabled><i class="fa fa-thumbs-o-up"></i></button>
                     <?php } ?>
-                    <div class="btn-group" data-toggle="tooltip" title="<?php echo $button_login; ?>">
+                    <span class="collapsing" data-toggle="tooltip" title="<?php echo $button_login; ?>">
                       <button type="button" data-toggle="dropdown" class="btn btn-info dropdown-toggle"><i class="fa fa-lock"></i></button>
                       <ul class="dropdown-menu pull-right">
                         <li><a href="index.php?route=marketing/affiliate/login&token=<?php echo $token; ?>&affiliate_id=<?php echo $affiliate['affiliate_id']; ?>&store_id=0" rel="noreferrer noopener" target="_blank"><?php echo $text_default; ?></a></li>
@@ -147,7 +147,7 @@
                         <li><a href="index.php?route=marketing/affiliate/login&token=<?php echo $token; ?>&affiliate_id=<?php echo $affiliate['affiliate_id']; ?>&store_id=<?php echo $store['store_id']; ?>" rel="noreferrer noopener" target="_blank"><?php echo $store['name']; ?></a></li>
                         <?php } ?>
                       </ul>
-                    </div>
+                    </span>
                     <?php if ($affiliate['unlock']) { ; ?>
                     <a href="<?php echo $affiliate['unlock']; ?>" data-toggle="tooltip" title="<?php echo $button_unlock; ?>" class="btn btn-warning"><i class="fa fa-unlock"></i></a>
                     <?php } else { ?>
