@@ -85,7 +85,7 @@
       <ul class="dropdown-menu dropdown-menu-right">
         <li class="dropdown-header"><?php echo $text_store; ?></li>
         <?php foreach ($stores as $store) { ?>
-        <li><a href="<?php echo $store['href']; ?>" target="_blank"><?php echo $store['name']; ?></a></li>
+        <li><a href="<?php echo $store['href']; ?>" rel="noreferrer noopener" target="_blank"><?php echo $store['name']; ?></a></li>
         <?php } ?>
       </ul>
     </li>
