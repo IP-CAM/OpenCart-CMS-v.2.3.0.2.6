@@ -1,6 +1,6 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2017.
-// *	@forum	http://forum.opencart.pro
+// *	@copyright	OPENCART.PRO 2011 - 2022.
+// *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
@@ -95,7 +95,7 @@ class ControllerExtensionPaymentPayza extends Controller {
 			$data['payza_security'] = $this->config->get('payza_security');
 		}
 
-		$data['callback'] = HTTP_CATALOG . 'index.php?route=extension/payment/payza/callback';
+		$data['callback'] = ($this->request->server['HTTPS'] ? HTTPS_CATALOG : HTTP_CATALOG) . 'index.php?route=extension/payment/payza/callback';
 
 		if (isset($this->request->post['payza_total'])) {
 			$data['payza_total'] = $this->request->post['payza_total'];
