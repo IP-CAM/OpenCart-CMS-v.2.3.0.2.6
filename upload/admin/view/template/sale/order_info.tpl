@@ -22,7 +22,7 @@
             <tbody>
               <tr>
                 <td style="width: 1%;"><button data-toggle="tooltip" title="<?php echo $text_store; ?>" class="btn btn-info btn-xs"><i class="fa fa-shopping-cart fa-fw"></i></button></td>
-                <td><a href="<?php echo $store_url; ?>" target="_blank"><?php echo $store_name; ?></a></td>
+                <td><a href="<?php echo $store_url; ?>" rel="noreferrer noopener" target="_blank"><?php echo $store_name; ?></a></td>
               </tr>
               <tr>
                 <td><button data-toggle="tooltip" title="<?php echo $text_date_added; ?>" class="btn btn-info btn-xs"><i class="fa fa-calendar fa-fw"></i></button></td>
@@ -51,7 +51,7 @@
             <tr>
               <td style="width: 1%;"><button data-toggle="tooltip" title="<?php echo $text_customer; ?>" class="btn btn-info btn-xs"><i class="fa fa-user fa-fw"></i></button></td>
               <td><?php if ($customer) { ?>
-                <a href="<?php echo $customer; ?>" target="_blank"><?php echo $firstname; ?> <?php echo $lastname; ?></a>
+                <a href="<?php echo $customer; ?>" rel="noreferrer noopener" target="_blank"><?php echo $firstname; ?> <?php echo $lastname; ?></a>
                 <?php } else { ?>
                 <?php echo $firstname; ?> <?php echo $lastname; ?>
                 <?php } ?></td>
