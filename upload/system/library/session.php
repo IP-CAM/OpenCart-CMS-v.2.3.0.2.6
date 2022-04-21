@@ -152,8 +152,8 @@ class Session {
 		if (!$this->cookie_status) {
 			return false;
 		}
+
 		if (!$session_id) {
-			//var_dump($this->request->cookie);
 			if (isset($this->request->cookie[$name])) {
 				$session_id = $this->request->cookie[$name];
 			} else {
@@ -174,8 +174,8 @@ class Session {
 				$this->data = $this->adaptor->read($session_id);
 			}
 
-			if ($this->engine != 'native') {
-				$this->setcookie($name, $this->session_id, array(
+			if ($this->engine != 'native' || $this->engine == 'native' && $name != $this->config->get('session_name')) {
+				$this->setcookie($name, $session_id, array(
 					'expires'   => ($this->config->get('session_lifetime') ? time() + $this->config->get('session_lifetime') : 0),
 					'path'      => $this->config->get('session_path'),
 					'domain'    => $this->config->get('session_domain'),
@@ -196,7 +196,6 @@ class Session {
 		return $session_id;
 	}
 
-	// универсальное добавление куков
 	public function setcookie($name = null, $value = null, $expires = null, $path = null, $domain = null, $secure = null, $httponly = null, $samesite = null, $sameparty = null) {
 		if (isset($expires) && is_array($expires)) {
 			if (isset($expires['path'])) {
