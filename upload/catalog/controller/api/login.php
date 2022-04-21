@@ -17,8 +17,6 @@ class ControllerApiLogin extends Controller {
 			$api_info = $this->model_account_api->getApiByKey($this->request->post['key']);
 		} else {
 			$api_info = array();
-
-			$json['error']['key'] = $this->language->get('error_key');
 		}
 
 		if ($api_info) {
@@ -57,6 +55,8 @@ class ControllerApiLogin extends Controller {
 			} else {
 				$json['error']['key'] = $this->language->get('error_key');
 			}
+		} else {
+			$json['error']['key'] = $this->language->get('error_key');
 		}
 
 		if (isset($this->request->server['HTTP_ORIGIN'])) {
