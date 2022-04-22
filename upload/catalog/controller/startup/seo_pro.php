@@ -468,10 +468,24 @@ class ControllerStartupSeoPro extends Controller {
 
 		$config_seo_url_hide_controller = $this->config->get('config_action_not_found');
 		if ($config_seo_url_hide_controller) {
-			$hide_controller = explode("\r\n", $config_seo_url_hide_controller);
-			if (in_array($this->request->get['route'], $hide_controller)) {
+			if (strpos($config_seo_url_hide_controller, $this->request->get['route'] . "\r\n") !== false) {
 				$this->request->get['route'] = $this->config->get('action_error');
+			} elseif (strpos($config_seo_url_hide_controller, $this->request->get['route'] . "|") !== false) {
+				$hide_controller = explode("\r\n", $config_seo_url_hide_controller);
+				foreach ($hide_controller as $result) {
+					if (strpos($result, $this->request->get['route'] . '|') !== false && strpos($this->request->server['REQUEST_URI'], ltrim(strstr($result, '|'), '|')) !== false) {
+						$this->request->get['route'] = $this->config->get('action_error');
+					}
+				}
+			} elseif (strpos($config_seo_url_hide_controller, "#|") !== false) {
+				$hide_controller = explode("\r\n", $config_seo_url_hide_controller);
+				foreach ($hide_controller as $result) {
+					if (strpos($result, '#|') !== false && strpos($this->request->server['REQUEST_URI'], ltrim(strstr($result, '|'), '|')) !== false) {
+						$this->request->get['route'] = $this->config->get('action_error');
+					}
+				}
 			}
+			$this->config->set('config_action_not_found', false);
 		}
 
 		//fix flat link for xml feed
