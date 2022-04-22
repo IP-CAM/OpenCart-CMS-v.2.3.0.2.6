@@ -1,6 +1,6 @@
 <?php
 // *   Аўтар: "БуслікДрэў" ( https://buslikdrev.by/ )
-// *   © 2016-2021; BuslikDrev - Усе правы захаваныя.
+// *   © 2016-2022; BuslikDrev - Усе правы захаваныя.
 // *   Спецыяльна для сайта: "OpenCart.pro" ( https://opencart.pro/ )
 
 /*
@@ -86,7 +86,7 @@ class ControllerExtensionModuleBusMenu extends Controller {
 	private $name_arhive = 'blMenu';
 	private $code = '01000046';
 	private $mame = 'ЫМеню - "blMenu"';
-	private $version = '1.0.30';
+	private $version = '1.0.31';
 	private $author = 'BuslikDrev.by';
 	private $link = 'https://liveopencart.ru/buslikdrev';
 	private $version_oc = 2.2;
@@ -2014,24 +2014,28 @@ class ControllerExtensionModuleBusMenu extends Controller {
 		$this->response->setOutput($template);
 	}
 
-	private function catGroups($data = array(), $level_limit = 0) {
+	private function catGroups($data = array(), $level_limit = -1) {
 		$cats = array();
 		$status = false;
+		$permission = array('blog_category', 'category');
+		if (isset($data['submanufacturers_status'])) {
+			$permission[] = 'manufacturer';
+		}
 
-		if (!in_array($data['table'], array('blog_category', 'category')) || isset($data['submanufacturers_status']) && !in_array($data['table'], array('blog_category', 'category', 'manufacturer'))) {
-			$data['level_limit'] = 1;
+		if (in_array($data['table'], $permission)) {
+			if ($data['level_limit'] < 0) {
+				$data['level_limit'] = 0;
+			}
+			$status = true;
+		} else {
+			$data['level_limit'] = 0;
+			$status = false;
 		}
 
 		if (isset($data['level_limit']) && $data['level_limit'] > $level_limit) {
 			$status = true;
 		} else {
 			$status = false;
-		}
-
-		if (!isset($data['level_limit'])) {
-			if (in_array($data['table'], array('blog_category', 'category')) || isset($data['submanufacturers_status']) && in_array($data['table'], array('blog_category', 'category', 'manufacturer'))) {
-				$status = true;
-			}
 		}
 
 		if ($status) {
@@ -2072,14 +2076,8 @@ class ControllerExtensionModuleBusMenu extends Controller {
 	public function ajax() {
 		$json = false;
 
-		if (isset($this->request->post['token'])) {
-			$token = $this->request->post['token'];
-		} else {
-			$token = false;
-		}
-
-		if ($token != $this->paths['token'] && $this->validate()) {
-			exit('На йух иди! - hacking attempt');
+		if (!$this->validate()) {
+			exit;
 		}
 
 		if (isset($this->request->post['module_id'])) {
@@ -2089,29 +2087,29 @@ class ControllerExtensionModuleBusMenu extends Controller {
 		}
 
 		if (isset($this->request->post['row'])) {
-			$row = $this->request->post['row'];
+			$row = (int)$this->request->post['row'];
 			$id_all = false;
 		} else {
 			$row = 1;
 			$id_all = true;
 		}
 
-		if (isset($this->request->post['query'])) {
+		if (!empty($this->request->post['query'])) {
 			$query = $this->request->post['query'];
 		} else {
-			$query = 'category_id=0';
+			$query = 'other=0';
 		}
 
-		if (isset($this->request->post['type'])) {
+		if (!empty($this->request->post['type'])) {
 			$type = $this->request->post['type'];
 		} else {
 			$type = 'horizontal';
 		}
 
-		if (isset($this->request->post['level_limit']) && !empty($this->request->post['level_limit'])) {
+		if (!empty($this->request->post['level_limit'])) {
 			$level_limit = $this->request->post['level_limit'];
 		} else {
-			$level_limit = null;
+			$level_limit = 0;
 		}
 
 		if (isset($this->request->post['image_status']) && !empty($this->request->post['image_status'])) {
@@ -2196,7 +2194,9 @@ class ControllerExtensionModuleBusMenu extends Controller {
 			);
 			$queries = explode('=', $query);
 			$filter_data['table'] = str_replace('_id', '', $queries[0]);
-			$filter_data['id'] = (int)$queries[1];
+			if (!empty($queries[1])) {
+				$filter_data['id'] = (int)$queries[1];
+			}
 			if ($filter_data['table'] == 'blog_category') {
 				$filter_data['route'] = 'blog/category';
 			} elseif ($filter_data['table'] == 'article') {
@@ -2205,7 +2205,7 @@ class ControllerExtensionModuleBusMenu extends Controller {
 				$filter_data['route'] = 'information/information';
 			} elseif ($filter_data['table'] == 'manufacturer') {
 				$filter_data['route'] = 'product/manufacturer/info';
-			} else {
+			} elseif ($filter_data['table'] == 'category' || $filter_data['table'] == 'path') {
 				$filter_data['table'] = 'category';
 				$filter_data['route'] = 'product/' . $filter_data['table'];
 			}
