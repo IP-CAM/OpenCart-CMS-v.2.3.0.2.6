@@ -1619,9 +1619,7 @@ class ControllerCatalogProduct extends Controller {
 		// Categories
 		$this->load->model('catalog/category');
 
-		$categories = $this->model_catalog_category->getAllCategories();
-
-		$data['categories'] = $this->model_catalog_category->getCategories($categories);
+		$data['categories'] = $this->model_catalog_category->getCategories();
 
 		if (isset($this->request->post['main_category_id'])) {
 			$data['main_category_id'] = $this->request->post['main_category_id'];
