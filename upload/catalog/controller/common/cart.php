@@ -1,6 +1,6 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2020.
-// *	@forum		http://forum.opencart.pro
+// *	@copyright	OPENCART.PRO 2011 - 2022.
+// *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
@@ -23,7 +23,7 @@ class ControllerCommonCart extends Controller {
 		);
 
 		// Display prices
-		if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
+		if (($this->customer->isLogged() || !$this->config->get('config_customer_price')) && $this->cart->getProducts()) {
 			$sort_order = array();
 
 			$results = $this->model_extension_extension->getExtensions('total');
