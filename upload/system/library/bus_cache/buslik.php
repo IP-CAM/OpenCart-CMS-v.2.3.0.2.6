@@ -1,8 +1,7 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2021.
-// *	@forum		https://forum.opencart.pro
-// *	@source		See SOURCE.txt for source and other copyright.
-// *	@license	GNU General Public License version 3; see LICENSE.txt
+// *   Аўтар: "БуслікДрэў" ( https://buslikdrev.by/ )
+// *   © 2016-2022; BuslikDrev - Усе правы захаваныя.
+// *   Спецыяльна для сайта: "OpenCart.pro" ( https://opencart.pro/ )
 
 namespace Bus_Cache;
 class Buslik {
@@ -83,9 +82,10 @@ class Buslik {
 		}
 	}
 
-	// чистка всего кэша
 	public function flush($timer = 5) {
 		$status = false;
+
+		$this->delete('*');
 
 		return $status;
 	}

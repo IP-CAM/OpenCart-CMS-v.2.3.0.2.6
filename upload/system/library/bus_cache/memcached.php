@@ -1,8 +1,7 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2021.
-// *	@forum		https://forum.opencart.pro
-// *	@source		See SOURCE.txt for source and other copyright.
-// *	@license	GNU General Public License version 3; see LICENSE.txt
+// *   Аўтар: "БуслікДрэў" ( https://buslikdrev.by/ )
+// *   © 2016-2022; BuslikDrev - Усе правы захаваныя.
+// *   Спецыяльна для сайта: "OpenCart.pro" ( https://opencart.pro/ )
 
 //https://ospanel.io/forum/viewtopic.php?f=3&t=2191&start=10
 namespace Bus_Cache;
@@ -41,7 +40,6 @@ class Memcached {
 		$this->memcached->delete(CACHE_PREFIX . $key);
 	}
 
-	// чистка всего кэша
 	public function flush($timer = 5) {
 		$status = false;
 

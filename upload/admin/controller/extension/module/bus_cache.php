@@ -88,7 +88,7 @@ class ControllerExtensionModuleBusCache extends Controller {
 	private $name_arhive = 'Buslik Cache';
 	private $code = '01000024';
 	private $mame = 'Буслік Кэш - "Buslik Cache"';
-	private $version = '1.0.13';
+	private $version = '1.0.14';
 	private $author = 'BuslikDrev.by';
 	private $link = 'https://liveopencart.ru/buslikdrev';
 	private $version_oc = 2.3;
@@ -357,8 +357,12 @@ class ControllerExtensionModuleBusCache extends Controller {
 
 					$module_info = $this->configGet();
 					$module_info['time_save'] = time();
-					//$this->request->post['pagespeed_css_min_download'] = $module_info['pagespeed_css_min_download'];
-					//$this->request->post['pagespeed_js_min_download'] = $module_info['pagespeed_js_min_download'];
+					if (!empty($module_info['pagespeed_css_min_download'])) {
+						$this->request->post['pagespeed_css_min_download'] = $module_info['pagespeed_css_min_download'];
+					}
+					if (!empty($module_info['pagespeed_js_min_download'])) {
+						$this->request->post['pagespeed_js_min_download'] = $module_info['pagespeed_js_min_download'];
+					}
 
 					$this->model_setting_setting->editSetting('bus_cache', array('bus_cache' => $module_info));
 				}
@@ -413,8 +417,7 @@ class ControllerExtensionModuleBusCache extends Controller {
 						(new Bus_Cache\redis())->flush();
 						$text = "\n" . '<br>Redis cache delete';
 					} else {
-						$text = $this->deleteDir(DIR_CACHE . 'buslik[NAGIBATOR]');
-						$text .= $this->deleteDir(DIR_CACHE);
+						$text = $this->deleteDir(DIR_CACHE . '[NAGIBATOR]');
 					}
 				}
 			}
@@ -432,10 +435,6 @@ class ControllerExtensionModuleBusCache extends Controller {
 					if ($link && stristr($link, '//') && !\is_file($file)) {
 						$href = @get_headers($link);
 						if (!empty($href[0]) && strpos($href[0], '404') === false) {
-							/* $postdata = http_build_query(array(
-								'family'  => 'Open+Sans:400,400i,300,700',
-								'display' => 'swap'
-							)); */
 							if (!empty($this->request->server['HTTP_USER_AGENT'])) {
 								$user_agent = $this->request->server['HTTP_USER_AGENT'];
 							} else {
@@ -443,13 +442,15 @@ class ControllerExtensionModuleBusCache extends Controller {
 							}
 							$context  = stream_context_create(array('http' =>
 								array(
-									'method'  => "GET",
-									'header'  => 
-										"Content-Type: application/x-www-form-urlencoded\r\n" . "Referer: /\r\n" . "User-Agent: " . $user_agent,
-									//'content' => $postdata
+									'method'  => 'GET',
+									'header'  => "Content-Type: application/x-www-form-urlencoded\r\n" . "Referer: /\r\n" . "User-Agent: " . $user_agent,
+									/* 'content' => http_build_query(array(
+										'family'  => 'Open+Sans:400,400i,300,700',
+										'display' => 'swap'
+									)) */
 								)
 							));
-							$content = file_get_contents(str_replace('&amp;', '&', $link), false, $context);
+							$content = file_get_contents($link, false, $context);
 							//$content = fopen($link, 'r', false, $context);
 							if ($content) {
 								file_put_contents($file, $content);
@@ -460,39 +461,7 @@ class ControllerExtensionModuleBusCache extends Controller {
 			}
 
 			if (!empty($this->request->post['pagespeed_js_min_download'])) {
-				$js_links = str_replace(array("\r", "\n", '&amp;'), array('ЖЫДКЭШ', 'ЖЫДКЭШ', '&'), $this->request->post['pagespeed_js_min_download']);
-				$js_links = str_replace(array('ЖЫДКЭШЖЫДКЭШ'), 'ЖЫДКЭШ', $js_links);
-				$js_links = explode('ЖЫДКЭШ', $js_links);
-				foreach ($js_links as $link) {
-					$file = DIR_IMAGE . 'cache/bus_cache/download/' . md5($link) . '.js';
-					if ($link && stristr($link, '//') && !\is_file($file)) {
-						$href = @get_headers($link);
-						if (!empty($href[0]) && strpos($href[0], '404') === false) {
-							/* $postdata = http_build_query(array(
-								'family'  => 'Open+Sans:400,400i,300,700',
-								'display' => 'swap'
-							)); */
-							if (!empty($this->request->server['HTTP_USER_AGENT'])) {
-								$user_agent = $this->request->server['HTTP_USER_AGENT'];
-							} else {
-								$user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36';
-							}
-							$context  = stream_context_create(array('http' =>
-								array(
-									'method'  => "GET",
-									'header'  => 
-										"Content-Type: application/x-www-form-urlencoded\r\n" . "Referer: /\r\n" . "User-Agent: " . $user_agent,
-									//'content' => $postdata
-								)
-							));
-							$content = file_get_contents(str_replace('&amp;', '&', $link), false, $context);
-							//$content = fopen($link, 'r', false, $context);
-							if ($content) {
-								file_put_contents($file, $content);
-							}
-						}
-					}
-				}
+
 			}
 
 			if (isset($this->request->post['info'])) {
@@ -526,6 +495,31 @@ class ControllerExtensionModuleBusCache extends Controller {
 		}
 	}
 
+	private function fileSizeConvert($bytes = 0) {
+		$unit = array('b','kb','Mb','Gb','Tb','Pb');
+		return round($bytes/pow(1024, ($i=floor(log($bytes,1024)))), 2) . ' ' . $unit[$i];
+	}
+
+	// вывод всех названий и папок в массив
+	private function dirToArray($path) {
+		$result = array('total' => 0, 'size' => 0);
+
+		foreach ((is_dir($path) ? scandir($path) : array()) as $key => $file) {
+			if (!in_array($file, array(".", "..", 'index.html', '.htaccess'))) {
+				if (is_dir($path . DIRECTORY_SEPARATOR . $file)) {
+					$f = $this->dirToArray($path . DIRECTORY_SEPARATOR . $file);
+					$result['total'] += $f['total'];
+					$result['size'] += $f['size'];
+				} else {
+					$result['total']++;
+					$result['size'] += filesize($path . DIRECTORY_SEPARATOR . $file);
+				}
+			}
+		}
+
+		return $result;
+	}
+
 	public function index() {
 		foreach ($this->load->language($this->paths['language']['bus_cache']) as $key => $lang) {
 			$data[$key] = $lang;
@@ -533,6 +527,7 @@ class ControllerExtensionModuleBusCache extends Controller {
 
 		$data['heading_title'] = $this->language->get('heading_title');
 		$data['help_pagespeed_css_style'] = htmlspecialchars($this->language->get('help_pagespeed_css_style'));
+		$data['help_pagespeed_js_inline_exception'] = htmlspecialchars($this->language->get('help_pagespeed_js_inline_exception'));
 		$data['help_pagespeed_js_inline_event'] = htmlspecialchars($this->language->get('help_pagespeed_js_inline_event'));
 		$data['help_pagespeed_js_script'] = htmlspecialchars($this->language->get('help_pagespeed_js_script'));
 
@@ -723,12 +718,48 @@ class ControllerExtensionModuleBusCache extends Controller {
 			$data['cache_customer'] = false;
 		}
 
+		if (isset($this->request->post['cache_cart'])) {
+			$data['cache_cart'] = $this->request->post['cache_cart'];
+		} elseif (isset($module_info['cache_cart'])) {
+			$data['cache_cart'] = $module_info['cache_cart'];
+		} else {
+			$data['cache_cart'] = false;
+		}
+
+		if (isset($this->request->post['cache_cart_count'])) {
+			$data['cache_cart_count'] = $this->request->post['cache_cart_count'];
+		} elseif (isset($module_info['cache_cart_count'])) {
+			$data['cache_cart_count'] = $module_info['cache_cart_count'];
+		} else {
+			$data['cache_cart_count'] = 0;
+		}
+
 		if (isset($this->request->post['cache_oc'])) {
 			$data['cache_oc'] = $this->request->post['cache_oc'];
 		} elseif (isset($module_info['cache_oc'])) {
 			$data['cache_oc'] = $module_info['cache_oc'];
 		} else {
 			$data['cache_oc'] = false;
+		}
+
+		//$data['cache_controllers'] = array();
+
+		if (isset($this->request->post['cache_controller'])) {
+			$data['cache_controller'] = $this->request->post['cache_controller'];
+		} elseif (isset($module_info['cache_controller'])) {
+			$data['cache_controller'] = $module_info['cache_controller'];
+		} else {
+			$data['cache_controller'] = false;
+		}
+
+		//$data['cache_models'] = array();
+
+		if (isset($this->request->post['cache_model'])) {
+			$data['cache_model'] = $this->request->post['cache_model'];
+		} elseif (isset($module_info['cache_model'])) {
+			$data['cache_model'] = $module_info['cache_model'];
+		} else {
+			$data['cache_model'] = false;
 		}
 
 		//https://web-creator.ru/technologies/webdev/legacy/memcached
@@ -757,12 +788,28 @@ class ControllerExtensionModuleBusCache extends Controller {
 			$data['cache_expire'] = 3600;
 		}
 
-		if (isset($this->request->post['cache_device'])) {
-			$data['cache_device'] = $this->request->post['cache_device'];
-		} elseif (isset($module_info['cache_device'])) {
-			$data['cache_device'] = $module_info['cache_device'];
+		if (isset($this->request->post['cache_expire_controller'])) {
+			$data['cache_expire_controller'] = $this->request->post['cache_expire_controller'];
+		} elseif (isset($module_info['cache_expire_controller'])) {
+			$data['cache_expire_controller'] = $module_info['cache_expire_controller'];
 		} else {
-			$data['cache_device'] = false;
+			$data['cache_expire_controller'] = 3600;
+		}
+
+		if (isset($this->request->post['cache_expire_model'])) {
+			$data['cache_expire_model'] = $this->request->post['cache_expire_model'];
+		} elseif (isset($module_info['cache_expire_model'])) {
+			$data['cache_expire_model'] = $module_info['cache_expire_model'];
+		} else {
+			$data['cache_expire_model'] = 3600;
+		}
+
+		if (isset($this->request->post['cache_expire_all'])) {
+			$data['cache_expire_all'] = $this->request->post['cache_expire_all'];
+		} elseif (isset($module_info['cache_expire_all'])) {
+			$data['cache_expire_all'] = $module_info['cache_expire_all'];
+		} else {
+			$data['cache_expire_all'] = $data['cache_expire'];
 		}
 
 		if (isset($this->request->post['pagespeed_status'])) {
@@ -773,20 +820,20 @@ class ControllerExtensionModuleBusCache extends Controller {
 			$data['pagespeed_status'] = true;
 		}
 
+		if (isset($this->request->post['pagespeed_onrot'])) {
+			$data['pagespeed_onrot'] = $this->request->post['pagespeed_onrot'];
+		} elseif (isset($module_info['pagespeed_onrot'])) {
+			$data['pagespeed_onrot'] = $module_info['pagespeed_onrot'];
+		} else {
+			$data['pagespeed_onrot'] = false;
+		}
+
 		if (isset($this->request->post['pagespeed_rot'])) {
 			$data['pagespeed_rot'] = $this->request->post['pagespeed_rot'];
 		} elseif (isset($module_info['pagespeed_rot'])) {
 			$data['pagespeed_rot'] = $module_info['pagespeed_rot'];
 		} else {
 			$data['pagespeed_rot'] = false;
-		}
-
-		if (isset($this->request->post['pagespeed_preload_logo'])) {
-			$data['pagespeed_preload_logo'] = $this->request->post['pagespeed_preload_logo'];
-		} elseif (isset($module_info['pagespeed_preload_logo'])) {
-			$data['pagespeed_preload_logo'] = $module_info['pagespeed_preload_logo'];
-		} else {
-			$data['pagespeed_preload_logo'] = false;
 		}
 
 		if (isset($this->request->post['pagespeed_attribute_w_h'])) {
@@ -797,12 +844,32 @@ class ControllerExtensionModuleBusCache extends Controller {
 			$data['pagespeed_attribute_w_h'] = false;
 		}
 
-		if (isset($this->request->post['pagespeed_lazy_load'])) {
-			$data['pagespeed_lazy_load'] = $this->request->post['pagespeed_lazy_load'];
-		} elseif (isset($module_info['pagespeed_lazy_load'])) {
-			$data['pagespeed_lazy_load'] = $module_info['pagespeed_lazy_load'];
+		if (isset($this->request->post['pagespeed_device'])) {
+			$data['pagespeed_device'] = $this->request->post['pagespeed_device'];
+		} elseif (isset($module_info['pagespeed_device'])) {
+			$data['pagespeed_device'] = $module_info['pagespeed_device'];
 		} else {
-			$data['pagespeed_lazy_load'] = 1;
+			$data['pagespeed_device'] = false;
+		}
+
+		if (isset($this->request->post['pagespeed_lazy_load_images'])) {
+			$data['pagespeed_lazy_load_images'] = $this->request->post['pagespeed_lazy_load_images'];
+		} elseif (isset($module_info['pagespeed_lazy_load_images'])) {
+			$data['pagespeed_lazy_load_images'] = $module_info['pagespeed_lazy_load_images'];
+		} else {
+			$data['pagespeed_lazy_load_images'] = 1;
+		}
+
+		/* $data['pagespeed_lazy_load_htmls'] = array(
+			1 => array('route')
+		); */
+
+		if (isset($this->request->post['pagespeed_lazy_load_html'])) {
+			$data['pagespeed_lazy_load_html'] = $this->request->post['pagespeed_lazy_load_html'];
+		} elseif (isset($module_info['pagespeed_lazy_load_html'])) {
+			$data['pagespeed_lazy_load_html'] = $module_info['pagespeed_lazy_load_html'];
+		} else {
+			$data['pagespeed_lazy_load_html'] = false;
 		}
 
 		if (isset($this->request->post['pagespeed_replace'])) {
@@ -813,12 +880,28 @@ class ControllerExtensionModuleBusCache extends Controller {
 			$data['pagespeed_replace'] = false;
 		}
 
+		if (isset($this->request->post['pagespeed_html_replace'])) {
+			$data['pagespeed_html_replace'] = $this->request->post['pagespeed_html_replace'];
+		} elseif (isset($module_info['pagespeed_html_replace'])) {
+			$data['pagespeed_html_replace'] = $module_info['pagespeed_html_replace'];
+		} else {
+			$data['pagespeed_html_replace'] = $data['pagespeed_replace'];
+		}
+
 		if (isset($this->request->post['pagespeed_html_min'])) {
 			$data['pagespeed_html_min'] = $this->request->post['pagespeed_html_min'];
 		} elseif (isset($module_info['pagespeed_html_min'])) {
 			$data['pagespeed_html_min'] = $module_info['pagespeed_html_min'];
 		} else {
 			$data['pagespeed_html_min'] = 2;
+		}
+
+		if (isset($this->request->post['pagespeed_css_replace'])) {
+			$data['pagespeed_css_replace'] = $this->request->post['pagespeed_css_replace'];
+		} elseif (isset($module_info['pagespeed_css_replace'])) {
+			$data['pagespeed_css_replace'] = $module_info['pagespeed_css_replace'];
+		} else {
+			$data['pagespeed_css_replace'] = false;
 		}
 
 		if (isset($this->request->post['pagespeed_css_min'])) {
@@ -858,7 +941,7 @@ class ControllerExtensionModuleBusCache extends Controller {
 		} elseif (isset($module_info['pagespeed_css_min_font'])) {
 			$data['pagespeed_css_min_font'] = $module_info['pagespeed_css_min_font'];
 		} else {
-			$data['pagespeed_css_min_font'] = false;
+			$data['pagespeed_css_min_font'] = array();
 		}
 
 		if (isset($this->request->post['pagespeed_css_min_display'])) {
@@ -875,6 +958,22 @@ class ControllerExtensionModuleBusCache extends Controller {
 			$data['pagespeed_css_critical'] = $module_info['pagespeed_css_critical'];
 		} else {
 			$data['pagespeed_css_critical'] = false;
+		}
+
+		if (isset($this->request->post['pagespeed_css_critical_time'])) {
+			$data['pagespeed_css_critical_time'] = $this->request->post['pagespeed_css_critical_time'];
+		} elseif (isset($module_info['pagespeed_css_critical_time'])) {
+			$data['pagespeed_css_critical_time'] = $module_info['pagespeed_css_critical_time'];
+		} else {
+			$data['pagespeed_css_critical_time'] = 1;
+		}
+
+		if (isset($this->request->post['pagespeed_css_critical_elements'])) {
+			$data['pagespeed_css_critical_elements'] = $this->request->post['pagespeed_css_critical_elements'];
+		} elseif (isset($module_info['pagespeed_css_critical_elements'])) {
+			$data['pagespeed_css_critical_elements'] = $module_info['pagespeed_css_critical_elements'];
+		} else {
+			$data['pagespeed_css_critical_elements'] = "font-face\r\nkeyframes\r\n*\r\n::after, ::before\r\n]";
 		}
 
 		if (isset($this->request->post['pagespeed_css_inline_transfer'])) {
@@ -899,6 +998,14 @@ class ControllerExtensionModuleBusCache extends Controller {
 			$data['pagespeed_css_style'] = $this->getFile('replace', 'css');
 		} else {
 			$data['pagespeed_css_style'] = false;
+		}
+
+		if (isset($this->request->post['pagespeed_js_replace'])) {
+			$data['pagespeed_js_replace'] = $this->request->post['pagespeed_js_replace'];
+		} elseif (isset($module_info['pagespeed_js_replace'])) {
+			$data['pagespeed_js_replace'] = $module_info['pagespeed_js_replace'];
+		} else {
+			$data['pagespeed_js_replace'] = false;
 		}
 
 		if (isset($this->request->post['pagespeed_js_min'])) {
@@ -957,6 +1064,14 @@ class ControllerExtensionModuleBusCache extends Controller {
 			$data['pagespeed_js_inline_transfer'] = 0;
 		}
 
+		if (isset($this->request->post['pagespeed_js_inline_exception'])) {
+			$data['pagespeed_js_inline_exception'] = $this->request->post['pagespeed_js_inline_exception'];
+		} elseif (isset($module_info['pagespeed_js_inline_exception'])) {
+			$data['pagespeed_js_inline_exception'] = $module_info['pagespeed_js_inline_exception'];
+		} else {
+			$data['pagespeed_js_inline_exception'] = false;
+		}
+
 		if (isset($this->request->post['pagespeed_js_events'])) {
 			$data['pagespeed_js_events'] = $this->request->post['pagespeed_js_events'];
 		} elseif (!empty($module_info['pagespeed_js_events'])) {
@@ -972,6 +1087,37 @@ class ControllerExtensionModuleBusCache extends Controller {
 		} else {
 			$data['pagespeed_js_script'] = false;
 		}
+
+		$cache = new Cache('file', 600);
+		$files_cache = $cache->get('bus_cache.debug.total');
+
+		if (empty($files_cache)) {
+			$files_cache = $this->dirToArray(DIR_CACHE);
+
+			if ($files_cache) {
+				if (isset($files_cache['total'])) {
+					$files_cache['total'] = $files_cache['total']+1;
+				}
+				if (isset($files_cache['size'])) {
+					$files_cache['size'] = $files_cache['size']+22;
+				}
+				$cache->set('bus_cache.debug.total', $files_cache);
+			}
+		}
+
+		if (isset($files_cache['total'])) {
+			$data['cache_total'] = $files_cache['total'];
+		} else {
+			$data['cache_total'] = 0;
+		}
+
+		if (isset($files_cache['size'])) {
+			$data['cache_size'] = $this->fileSizeConvert($files_cache['size']);
+		} else {
+			$data['cache_size'] = 0;
+		}
+
+		$data['disc_free'] = $this->fileSizeConvert(disk_free_space('.'));
 
 		if (isset($this->request->post['debug'])) {
 			$data['debug'] = $this->request->post['debug'];
@@ -1511,13 +1657,13 @@ HTML;
 			);
 
 			$module_paths = array(
-				// 2.1 OpenCart
+				// 2.0 - 2.2 OpenCart
 				DIR_APPLICATION . 'controller/module/bus_cache.php',
 				//DIR_APPLICATION . 'model/module/bus_cache.php',
 				DIR_APPLICATION . 'view/template/module/bus_cache',
 				//DIR_CATALOG . 'controller/module/bus_cache.php',
 				//DIR_CATALOG . 'model/module/bus_cache.php',
-				// 2.3 и 3.0 OpenCart
+				// 2.3 - 3.1 OpenCart
 				DIR_APPLICATION . 'controller/extension/module/bus_cache.php',
 				//DIR_APPLICATION . 'model/extension/module/bus_cache.php',
 				DIR_APPLICATION . 'view/template/extension/module/bus_cache',
@@ -1526,8 +1672,6 @@ HTML;
 				//DIR_IMAGE . 'catalog/bus_cache[NAGIBATOR]',
 				//DIR_LOGS . 'bus_cache',
 				DIR_SYSTEM . 'library/bus_cache[NAGIBATOR]',
-				DIR_SYSTEM . 'library/bus_cube/bus_cache[NAGIBATOR]',
-				DIR_SYSTEM . 'library/bus_cube',
 				DIR_SYSTEM . 'library/bus_cache.ocmod.xml_',
 				DIR_SYSTEM . 'bus_cache.ocmod.xml',
 			);
@@ -1588,47 +1732,54 @@ HTML;
 		}
 	}
 
-	private function deleteDir($dirname, $nagibator = false) {
+	private function deleteDir($dirname, $nagibator_all = false) {
 		$this->load->language($this->paths['language']['bus_cache']);
 
 		$text = false;
-		$files = glob($dirname . '*');
+		$nagibator = false;
+
+		// мягко нагибаем
+		if (strpos($dirname, '[NAGIBATOR]') !== false) {
+			$dirname = str_replace('[NAGIBATOR]', '', $dirname);
+			$nagibator = true;
+		}
+
+		$files = glob($dirname . '*', GLOB_NOSORT);
 
 		if ($files) {
 			foreach ($files as $dirname) {
 				if (file_exists($dirname)) {
-					if (is_dir($dirname)){
+					if (is_dir($dirname)) {
 						$dir_del = true;
+
+						// нагибаем по иерархии
+						if ($nagibator || $nagibator_all) {
+							$text .= $this->deleteDir($dirname . DIRECTORY_SEPARATOR, true);
+						}
+
+						// проверяем пустая-ли папка
 						$dir = opendir($dirname);
 						while (($filename = readdir($dir)) !== false) {
-							if ($filename != "." && $filename != ".." && $filename != "index.html" && $filename != ".htaccess") {
+							if (!in_array($filename, array(".", ".."))) {
 								$dir_del = false;
-								if ($nagibator) {
-									$dir_del = true;
-									$file = $dirname . "/" . $filename;
-									$text .= $this->deleteDir($file, true);
-								}
 							}
 						}
 						closedir($dir);
 
+						// удаляем пустую папку
 						if ($dir_del) {
 							rmdir($dirname);
 							$text .= "\n" . '<br>' . $this->language->get('success_uninstall_folder') . $dirname;
 						}
 					} else {
 						$filename = basename($dirname);
-						if ($nagibator || $filename != "index.html" && $filename != ".htaccess") {
+						// удаляем файлы кроме index.html и .htaccess или все при явном нагибании
+						if ($nagibator_all || !in_array($filename, array('index.html', '.htaccess'))) {
 							@unlink($dirname);
 							$text .= "\n" . '<br>' . $this->language->get('success_uninstall_file') . $dirname;
 						}
 					}
 				}
-			}
-		} else {
-			if (stristr($dirname, '[NAGIBATOR]')) {
-				$dirname = str_replace('[NAGIBATOR]', '', $dirname);
-				$text .= $this->deleteDir($dirname, true);
 			}
 		}
 
