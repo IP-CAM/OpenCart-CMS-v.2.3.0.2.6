@@ -941,7 +941,7 @@ class ControllerExtensionModuleBusCache extends Controller {
 		} elseif (isset($module_info['pagespeed_css_min_font'])) {
 			$data['pagespeed_css_min_font'] = $module_info['pagespeed_css_min_font'];
 		} else {
-			$data['pagespeed_css_min_font'] = array();
+			$data['pagespeed_css_min_font'] = false;
 		}
 
 		if (isset($this->request->post['pagespeed_css_min_display'])) {
