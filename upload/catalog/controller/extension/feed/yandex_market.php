@@ -91,7 +91,7 @@ class ControllerExtensionFeedYandexMarket extends Controller {
 			$bus_type = $this->config->get('yandex_market_type'); // Тип предложений - "type"
 			$bus_name = $this->config->get('yandex_market_name'); // Название товара - "name"
 			$bus_model = $this->config->get('yandex_market_model'); // Код товара - "model"
-			$bus_vendorCode = $this->config->get('yandex_market_vendorCode'); // Артикул товара - "SKU"
+			$bus_vendorcode = $this->config->get('yandex_market_vendorcode'); // Артикул товара - "SKU"
 			$bus_barcode = $this->config->get('yandex_market_barcode'); // Штрих код производителя товара - "EAN или UPC"
 			$bus_image = $this->config->get('yandex_market_image'); // Статус товара без изображений
 			$bus_image_width = $this->config->get('yandex_market_image_width'); // Ширина изображения товара
@@ -140,8 +140,8 @@ class ControllerExtensionFeedYandexMarket extends Controller {
 				} else {
 					$data['vendor'] = '';
 				}
-				if (!empty($product[$bus_vendorCode])) {
-					$data['vendorCode'] = $product[$bus_vendorCode];
+				if (!empty($product[$bus_vendorcode])) {
+					$data['vendorCode'] = $product[$bus_vendorcode];
 				} else {
 					$data['vendorCode'] = '';
 				}
@@ -591,7 +591,7 @@ class ControllerExtensionFeedYandexMarket extends Controller {
 		}
 	}
 
-	function filterCategory($category) {
+	private function filterCategory($category) {
 		return isset($category['export']);
 	}
 }
