@@ -50,6 +50,9 @@
     </file>
     <!-- ↑ АДМИНКА КОНТРОЛЛЕРЫ ↑ -->
 
+    <!-- ↓ АДМИНКА МОДЕЛИ ↓ -->
+    <!-- ↑ АДМИНКА МОДЕЛИ ↑ -->
+
     <!-- ↓ САЙТ КОНТРОЛЛЕРЫ ↓ -->
     <file path="catalog/controller/common/header.php">
         <operation>
@@ -107,11 +110,7 @@
             <![CDATA[foreach ($this->pre_action as $pre_action) {]]>
             </search>
             <add position="after">
-            <![CDATA[			if (!defined('DIR_CATALOG') && ($pre_action->getBusId() == 'startup/maintenance' || $pre_action->getBusId() == 'common/maintenance' ? true : false)) {
-				if (!(php_sapi_name() === 'cli')) {
-					$this->registry->set('bus_cache', new Bus_Cache\Bus_Cache($this->registry, microtime(true)));
-				}
-			}]]>
+            <![CDATA[			(!defined('DIR_CATALOG') && substr(php_sapi_name(), 0, 3) != 'cli' && in_array($pre_action->getBusId(), array('startup/maintenance', 'common/maintenance')) ? $this->registry->set('bus_cache', new Bus_Cache\Bus_Cache($this->registry, microtime(true))) : false);]]>
             </add>
         </operation>
     </file>
@@ -121,11 +120,7 @@
             <![CDATA[foreach ($this->pre_action as $pre_action) {]]>
             </search>
             <add position="after">
-            <![CDATA[			if (!defined('DIR_CATALOG') && ($pre_action->getBusId() == 'startup/maintenance' || $pre_action->getBusId() == 'common/maintenance' ? true : false)) {
-				if (!(php_sapi_name() === 'cli')) {
-					$this->registry->set('bus_cache', new Bus_Cache\Bus_Cache($this->registry, microtime(true)));
-				}
-			}]]>
+            <![CDATA[			(!defined('DIR_CATALOG') && substr(php_sapi_name(), 0, 3) != 'cli' && in_array($pre_action->getBusId(), array('startup/maintenance', 'common/maintenance')) ? $this->registry->set('bus_cache', new Bus_Cache\Bus_Cache($this->registry, microtime(true))) : false);]]>
             </add>
         </operation>
     </file>
@@ -135,10 +130,7 @@
             <![CDATA[class Loader {]]>
             </search>
             <add position="before">
-            <![CDATA[if (!defined('BUS_CACHE_TIMER')) {
-	define('BUS_CACHE_TIMER', microtime(true));
-}
-]]>
+            <![CDATA[(!defined('BUS_CACHE_TIMER') ? define('BUS_CACHE_TIMER', microtime(true)) : false);]]>
             </add>
         </operation>
     </file>
@@ -148,9 +140,7 @@
             <![CDATA[if (class_exists($class)) {]]>
             </search>
             <add position="before">
-            <![CDATA[		if (strpos($class, 'Bus_Cache') !== false) {
-			$class = str_ireplace('Cache\\Bus_Cache', 'Bus_Cache', $class);
-		}]]>
+            <![CDATA[		$class = (strpos($class, 'Bus_Cache') !== false ? str_ireplace('Cache\\Bus_Cache', 'Bus_Cache', $class) : $class);]]>
             </add>
         </operation>
     </file>
@@ -168,7 +158,6 @@
 				$this->setBuslikCache[$key] = $result;
 			}
 		}
-		$this->setBuslikCache['headers'] = $this->headers;
 	}]]>
             </add>
         </operation>
@@ -177,9 +166,8 @@
             <![CDATA[if ($this->output) {]]>
             </search>
             <add position="after">
-            <![CDATA[			if (!defined('DIR_CATALOG') && !(php_sapi_name() === 'cli')) {
-				$this->output = (new Bus_Cache\Bus_Cache())->output($this->output, $this->setBuslikCache);
-			}]]>
+            <![CDATA[			$this->setBuslikCache['headers'] = $this->headers;
+			$this->output = (!defined('DIR_CATALOG') && substr(php_sapi_name(), 0, 3) != 'cli' ? (new Bus_Cache\Bus_Cache())->output($this->output, $this->setBuslikCache) : $this->output);]]>
             </add>
         </operation>
     </file>
