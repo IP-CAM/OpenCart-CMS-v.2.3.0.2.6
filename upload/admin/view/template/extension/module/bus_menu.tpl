@@ -1001,7 +1001,7 @@ span[data-toggle="tooltip"].awesome5:after{
 		/* s.type = 'text/css'; */
 		s.id = 'bus-menu-style';
 		s.rel = 'stylesheet';
-		s.href = '//' + window.location.host + '/catalog/view/javascript/font-awesome/' + version_icon + '/css/all.min.css';
+		s.href = 'view/javascript/buslikdrev/font-awesome/' + version_icon + '/css/all.min.css';
 		var ss = document.getElementsByTagName('link')[0];
 		ss.parentNode.insertBefore(s, ss);
 
@@ -1615,7 +1615,7 @@ $(document).ready(function() {
 				}
 
 				count(type);
-				//updateOutputChild(type);
+				updateOutputChild(type, true);
 				maxInputVars();
 				$('.tooltip').remove();
 				$('.dd-item input').each(function(index) {
@@ -1990,7 +1990,7 @@ $(document).ready(function() {
 	$('#cats-vertical .dd').nestable(dataArray).change(updateOutput);
 	$('#cats-cell .dd').nestable(dataArray).change(updateOutput);
 
-	function updateOutputChild(type) {
+	function updateOutputChild(type, collapse) {
 		// activate Nestable for list 1
 		//$('#input-cats-horizontal').nestable({group: 1}).on('change', updateOutput);
 		//dataArray['group'] = 1;
@@ -1999,7 +1999,9 @@ $(document).ready(function() {
 
 			updateOutput($('#cats-' + type + ' .dd').data('output', $('input[name="cats_' + type + '_data"]')));
 
-			$('#cats-' + type + ' .dd').nestable('collapseAll');
+			if (!collapse) {
+				$('#cats-' + type + ' .dd').nestable('collapseAll');
+			}
 		} else {
 			// output initial serialised data
 			updateOutput($('#cats-horizontal .dd').data('output', $('input[name="cats_horizontal_data"]')));
