@@ -86,7 +86,7 @@ class ControllerExtensionModuleBusMenu extends Controller {
 	private $name_arhive = 'blMenu';
 	private $code = '01000046';
 	private $mame = 'ЫМеню - "blMenu"';
-	private $version = '1.0.31';
+	private $version = '1.0.32';
 	private $author = 'BuslikDrev.by';
 	private $link = 'https://liveopencart.ru/buslikdrev';
 	private $version_oc = 2.2;
@@ -525,116 +525,118 @@ class ControllerExtensionModuleBusMenu extends Controller {
 
 		if (isset($cats_data)) {
 			foreach ($cats_data as $key => $cat) {
-				$result = $cats[$cat['id']];
+				if (!empty($cats[$cat['id']])) {
+					$result = $cats[$cat['id']];
 
-				$cats_data = array(
-					'row' => $cat['id']
-				);
+					$cats_data = array(
+						'row' => $cat['id']
+					);
 
-				if (!empty($result['query'])) {
-					$cats_data['query'] = $result['query'];
+					if (!empty($result['query'])) {
+						$cats_data['query'] = $result['query'];
 
-					if ($seo_now) {
-						$table = str_replace('_id', '', stristr($result['query'], '=', true));
+						if ($seo_now) {
+							$table = str_replace('_id', '', stristr($result['query'], '=', true));
 
-						if ($table == 'blog_category') {
-							$route = 'blog/category';
-						} elseif ($table == 'article') {
-							$route = 'blog/article';
-						} elseif ($table == 'information') {
-							$route = 'information/information';
-						} elseif ($table == 'manufacturer') {
-							$route = 'product/manufacturer/info';
-						} else {
-							if ($table == 'path') {
-								$table = 'category';
+							if ($table == 'blog_category') {
+								$route = 'blog/category';
+							} elseif ($table == 'article') {
+								$route = 'blog/article';
+							} elseif ($table == 'information') {
+								$route = 'information/information';
+							} elseif ($table == 'manufacturer') {
+								$route = 'product/manufacturer/info';
+							} else {
+								if ($table == 'path') {
+									$table = 'category';
+								}
+
+								$route = 'product/' . $table;
 							}
 
-							$route = 'product/' . $table;
+							foreach ($languages as $language) {
+								$result['link'][$language['language_id']] = $url->link($route, $result['query']);
+							}
+						} else {
+							unset($result['link']);
+						}
+					}
+
+					if (!empty($result['image'])) {
+						$cats_data['image'] = $result['image'];
+						$cats_data['image_position'] = $result['image_position'];
+					}
+
+					if (!empty($result['group_status'])) {
+						$cats_data['group_status'] = $result['group_status'];
+					}
+
+					if (!empty($result['image_status'])) {
+						$cats_data['image_status'] = $result['image_status'];
+					}
+
+					if (!empty($result['sticker'])) {
+						$cats_data['sticker'] = $result['sticker'];
+						$cats_data['sticker_position'] = $result['sticker_position'];
+					}
+
+					if (!empty($result['cover'])) {
+						$cats_data['cover'] = $result['cover'];
+						$cats_data['cover_position'] = $result['cover_position'];
+					}
+
+					foreach ($languages as $language) {
+						if (!empty($result['name'][$language['language_id']])) {
+							$cats_data['name'][$language['language_id']] = $result['name'][$language['language_id']];
 						}
 
-						foreach ($languages as $language) {
-							$result['link'][$language['language_id']] = $url->link($route, $result['query']);
+						if (!empty($result['link'][$language['language_id']])) {
+							$cats_data['link'][$language['language_id']] = $result['link'][$language['language_id']];
 						}
-					} else {
-						unset($result['link']);
-					}
-				}
 
-				if (!empty($result['image'])) {
-					$cats_data['image'] = $result['image'];
-					$cats_data['image_position'] = $result['image_position'];
-				}
+						if (!empty($result['title'][$language['language_id']])) {
+							$cats_data['title'][$language['language_id']] = $result['title'][$language['language_id']];
+						}
 
-				if (!empty($result['group_status'])) {
-					$cats_data['group_status'] = $result['group_status'];
-				}
-
-				if (!empty($result['image_status'])) {
-					$cats_data['image_status'] = $result['image_status'];
-				}
-
-				if (!empty($result['sticker'])) {
-					$cats_data['sticker'] = $result['sticker'];
-					$cats_data['sticker_position'] = $result['sticker_position'];
-				}
-
-				if (!empty($result['cover'])) {
-					$cats_data['cover'] = $result['cover'];
-					$cats_data['cover_position'] = $result['cover_position'];
-				}
-
-				foreach ($languages as $language) {
-					if (!empty($result['name'][$language['language_id']])) {
-						$cats_data['name'][$language['language_id']] = $result['name'][$language['language_id']];
+						if (!empty($result['desc'][$language['language_id']])) {
+							$cats_data['desc'][$language['language_id']] = $result['desc'][$language['language_id']];
+						}
 					}
 
-					if (!empty($result['link'][$language['language_id']])) {
-						$cats_data['link'][$language['language_id']] = $result['link'][$language['language_id']];
+					if (isset($result['column'])) {
+						$cats_data['column'] = $result['column'];
 					}
 
-					if (!empty($result['title'][$language['language_id']])) {
-						$cats_data['title'][$language['language_id']] = $result['title'][$language['language_id']];
+					if (!empty($result['column_lg'])) {
+						$cats_data['column_lg'] = $result['column_lg'];
 					}
 
-					if (!empty($result['desc'][$language['language_id']])) {
-						$cats_data['desc'][$language['language_id']] = $result['desc'][$language['language_id']];
+					if (!empty($result['column_md'])) {
+						$cats_data['column_md'] = $result['column_md'];
 					}
-				}
 
-				if (isset($result['column'])) {
-					$cats_data['column'] = $result['column'];
-				}
+					if (!empty($result['column_sm'])) {
+						$cats_data['column_sm'] = $result['column_sm'];
+					}
 
-				if (!empty($result['column_lg'])) {
-					$cats_data['column_lg'] = $result['column_lg'];
-				}
+					if (!empty($result['column_xs'])) {
+						$cats_data['column_xs'] = $result['column_xs'];
+					}
 
-				if (!empty($result['column_md'])) {
-					$cats_data['column_md'] = $result['column_md'];
-				}
+					if (!empty($cat['children'])) {
+						$cats_data['children'] = $this->children($cat['children'], $cats, $seo_now);
+					}
 
-				if (!empty($result['column_sm'])) {
-					$cats_data['column_sm'] = $result['column_sm'];
-				}
+					if (!empty($result['status'])) {
+						$cats_data['status'] = $result['status'];
+					}
 
-				if (!empty($result['column_xs'])) {
-					$cats_data['column_xs'] = $result['column_xs'];
-				}
+					$data[] = $cats_data;
 
-				if (!empty($cat['children'])) {
-					$cats_data['children'] = $this->children($cat['children'], $cats, $seo_now);
-				}
-
-				if (!empty($result['status'])) {
-					$cats_data['status'] = $result['status'];
-				}
-
-				$data[] = $cats_data;
-
-				// если необходимые данные для "своей ссылки" не заполнены, то не сохраняем в БД
-				if (empty($cats_data['query']) && empty($cats_data['image']) && empty($cats_data['name'])) {
-					unset($data[$key]);
+					// если необходимые данные для "своей ссылки" не заполнены, то не сохраняем в БД
+					if (empty($cats_data['query']) && empty($cats_data['image']) && empty($cats_data['name'])) {
+						unset($data[$key]);
+					}
 				}
 			}
 		}
