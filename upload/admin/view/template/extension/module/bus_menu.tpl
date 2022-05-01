@@ -1001,7 +1001,7 @@ span[data-toggle="tooltip"].awesome5:after{
 		/* s.type = 'text/css'; */
 		s.id = 'bus-menu-style';
 		s.rel = 'stylesheet';
-		s.href = 'view/javascript/buslikdrev/font-awesome/' + version_icon + '/css/all.min.css';
+		s.href = '//' + window.location.host + '/catalog/view/javascript/font-awesome/' + version_icon + '/css/all.min.css';
 		var ss = document.getElementsByTagName('link')[0];
 		ss.parentNode.insertBefore(s, ss);
 
