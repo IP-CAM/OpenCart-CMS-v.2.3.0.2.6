@@ -25,7 +25,7 @@ if ($config->get('pre_config') && isset($_GET['route'])) {
 			}
 		}
 	} else {
-		$pre_config_route = 'common/home';
+		$pre_config_route = $config->get('action_default');
 	}
 
 	if ($pre_config_route) {
