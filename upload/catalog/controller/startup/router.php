@@ -23,15 +23,21 @@ class ControllerStartupRouter extends Controller {
 			} elseif (strpos($config_seo_url_hide_controller, $this->request->get['route'] . "|") !== false) {
 				$hide_controller = explode("\r\n", $config_seo_url_hide_controller);
 				foreach ($hide_controller as $result) {
-					if (strpos($result, $this->request->get['route'] . '|') !== false && strpos($this->request->server['REQUEST_URI'], ltrim(strstr($result, '|'), '|')) !== false) {
-						$route = $this->config->get('action_error');
+					if (strpos($result, $this->request->get['route'] . '|') !== false) {
+						$result = ltrim(strstr($result, '|'), '|');
+						if ($result && strpos($this->request->server['REQUEST_URI'], $result) !== false) {
+							$route = $this->config->get('action_error');
+						}
 					}
 				}
 			} elseif (strpos($config_seo_url_hide_controller, "#|") !== false) {
 				$hide_controller = explode("\r\n", $config_seo_url_hide_controller);
 				foreach ($hide_controller as $result) {
-					if (strpos($result, '#|') !== false && strpos($this->request->server['REQUEST_URI'], ltrim(strstr($result, '|'), '|')) !== false) {
-						$route = $this->config->get('action_error');
+					if (strpos($result, '#|') !== false) {
+						$result = ltrim(strstr($result, '|'), '|');
+						if ($result && strpos($this->request->server['REQUEST_URI'], $result) !== false) {
+							$route = $this->config->get('action_error');
+						}
 					}
 				}
 			}
