@@ -7,12 +7,12 @@ if (version_compare(VERSION, '4.0.0', '>=')) {
 	//class ControllerModuleBusMenu extends ControllerExtensionModuleBusMenu {}
 }
 
-if (version_compare(VERSION, '2.2.0', '<')) {
+if (version_compare(VERSION, '2.3.0', '<')) {
 	class ControllerModuleBusMenu extends ControllerExtensionModuleBusMenu {}
 }
 
 class ControllerExtensionModuleBusMenu extends Controller {
-	private $version_oc = 2.2;
+	private $version_oc = 2.3;
 	private $paths = array();
 
 	public function __construct($foo) {
@@ -34,8 +34,8 @@ class ControllerExtensionModuleBusMenu extends Controller {
 					'bus_menu' => 'extension/module/bus_menu',
 				)
 			);
-		} elseif (version_compare(VERSION, '2.2.0', '>=')) {
-			$this->version_oc = 2.2;
+		} elseif (version_compare(VERSION, '2.3.0', '>=')) {
+			$this->version_oc = 2.3;
 			$this->paths = array(
 				'controller' => array(
 					'bus_menu' => 'extension/module/bus_menu',
@@ -407,7 +407,7 @@ class ControllerExtensionModuleBusMenu extends Controller {
 					'rating'     	   => $rating_count['rating_count'],
 					'text_rating'      => $rating_count['text_rating_count'],
 					'cat_id'           => $cat_id,
-					'name' 			   => (!$setting['name_status_1'] && $setting['image_status'] ? false : $name) . $cat_count . $product_count . $price_count,
+					'name' 			   => (!$setting['name_status_1'] && $setting['image_status'] ? false : html_entity_decode($name, ENT_QUOTES, 'UTF-8')) . $cat_count . $product_count . $price_count,
 					'href' 			   => $link
 				);
 
@@ -930,7 +930,7 @@ class ControllerExtensionModuleBusMenu extends Controller {
 			}
 		}
 
-		if ($this->version_oc >= 2.2) {
+		if ($this->version_oc >= 2.3) {
 			$template = $this->load->view($route, $data);
 		} else {
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/' . $route . '.tpl')) {
