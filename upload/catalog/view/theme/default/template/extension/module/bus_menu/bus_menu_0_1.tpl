@@ -152,7 +152,7 @@ $(document).ready(function() {
 		<?php } else { ?>
 		<li>
 		<?php } ?>
-		  <a <?php if (!$active) { ?>href="<?php echo $cat['href']; ?>"<?php } ?>>
+		  <a <?php if (!$active) { ?>href="<?php echo $cat['href']; ?>"<?php } ?> title="<?php echo $cat['title']; ?>">
 			<?php if ($cat['children']) { ?><i class="fa fa-chevron-down" aria-hidden="true"></i><?php } ?>
 			<?php if ($cat['sticker']) { ?><span class="sticker_position_<?php echo $cat['sticker_position'];?>"><img src="<?php echo $cat['sticker']; ?>" /></span><?php } ?>
 			<?php if ($cat['image'] && $cat['image_position'] == 1) { ?><img src="<?php echo $cat['image']; ?>" alt="<?php echo $cat['title']; ?>" title="<?php echo $cat['title']; ?>" /><?php } ?>
@@ -173,7 +173,7 @@ $(document).ready(function() {
                 <?php foreach ($cat['children'] as $cat2) { ?>
 				<?php $active2 = ($cat2['href'] == '' || $cat2['href'] == $nohost_url || $cat2['href'] == '/' . $nohost_url || $cat2['href'] == $host_url); ?>
                 <li class="bus-col-lg-<?php echo $cat['column_lg']; ?> bus-col-md-<?php echo $cat['column_md']; ?> bus-col-sm-<?php echo $cat['column_sm']; ?> bus-col-xs-<?php echo $cat['column_xs']; ?>">
-				  <a <?php if (!$active2) { ?>href="<?php echo $cat2['href']; ?>"<?php } ?>>
+				  <a <?php if (!$active2) { ?>href="<?php echo $cat2['href']; ?>"<?php } ?> title="<?php echo $cat2['title']; ?>">
 					<i class="fa fa-level-up visible-xs visible-sm" aria-hidden="true"></i>
 					<?php if ($cat2['sticker']) { ?><span class="sticker_position_<?php echo $cat2['sticker_position'];?>"><img src="<?php echo $cat2['sticker']; ?>" /></span><?php } ?>
 					<?php if ($cat2['image'] && $cat2['image_position'] == 1) { ?><img src="<?php echo $cat2['image']; ?>" alt="<?php echo $cat2['title']; ?>" title="<?php echo $cat2['title']; ?>" /><?php } ?>
@@ -189,7 +189,7 @@ $(document).ready(function() {
                         <?php foreach ($cat2['children'] as $cat3) { ?>
                         <?php $active3 = ($cat3['href'] == '' || $cat3['href'] == $nohost_url || $cat3['href'] == '/' . $nohost_url || $cat3['href'] == $host_url); ?>
                         <li>
-                          <a <?php if (!$active3) { ?>href="<?php echo $cat3['href']; ?>"<?php } ?>>
+                          <a <?php if (!$active3) { ?>href="<?php echo $cat3['href']; ?>"<?php } ?> title="<?php echo $cat3['title']; ?>">
                             &nbsp;-
                             <i class="fa fa-level-up visible-xs visible-sm" aria-hidden="true"></i>
                             <?php if ($cat3['sticker']) { ?><span class="sticker_position_<?php echo $cat3['sticker_position'];?>"><img src="<?php echo $cat3['sticker']; ?>" /></span><?php } ?>
@@ -206,7 +206,7 @@ $(document).ready(function() {
                                 <?php foreach ($cat3['children'] as $cat4) { ?>
                                 <?php $active4 = ($cat4['href'] == '' || $cat4['href'] == $nohost_url || $cat4['href'] == '/' . $nohost_url || $cat4['href'] == $host_url); ?>
                                 <li>
-                                  <a <?php if (!$active4) { ?>href="<?php echo $cat4['href']; ?>"<?php } ?>>
+                                  <a <?php if (!$active4) { ?>href="<?php echo $cat4['href']; ?>"<?php } ?> title="<?php echo $cat4['title']; ?>">
                                     &nbsp;&nbsp;&nbsp;-
                                     <i class="fa fa-level-up visible-xs visible-sm" aria-hidden="true"></i>
                                     <?php if ($cat4['sticker']) { ?><span class="sticker_position_<?php echo $cat4['sticker_position'];?>"><img src="<?php echo $cat4['sticker']; ?>" /></span><?php } ?>
@@ -223,7 +223,7 @@ $(document).ready(function() {
                                         <?php foreach ($cat4['children'] as $cat5) { ?>
                                         <?php $active5 = ($cat5['href'] == '' || $cat5['href'] == $nohost_url || $cat5['href'] == '/' . $nohost_url || $cat5['href'] == $host_url); ?>
                                         <li>
-                                          <a <?php if (!$active5) { ?>href="<?php echo $cat5['href']; ?>"<?php } ?>>
+                                          <a <?php if (!$active5) { ?>href="<?php echo $cat5['href']; ?>"<?php } ?> title="<?php echo $cat5['title']; ?>">
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-
                                             <i class="fa fa-level-up visible-xs visible-sm" aria-hidden="true"></i>
                                             <?php if ($cat5['sticker']) { ?><span class="sticker_position_<?php echo $cat5['sticker_position'];?>"><img src="<?php echo $cat5['sticker']; ?>" /></span><?php } ?>
@@ -240,7 +240,7 @@ $(document).ready(function() {
                                                 <?php foreach ($cat5['children'] as $cat6) { ?>
                                                 <?php $active6 = ($cat6['href'] == '' || $cat6['href'] == $nohost_url || $cat6['href'] == '/' . $nohost_url || $cat6['href'] == $host_url); ?>
                                                 <li>
-                                                  <a <?php if (!$active6) { ?>href="<?php echo $cat4['href']; ?>"<?php } ?>>
+                                                  <a <?php if (!$active6) { ?>href="<?php echo $cat6['href']; ?>"<?php } ?> title="<?php echo $cat6['title']; ?>">
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-
                                                     <i class="fa fa-level-up visible-xs visible-sm" aria-hidden="true"></i>
                                                     <?php if ($cat6['sticker']) { ?><span class="sticker_position_<?php echo $cat6['sticker_position'];?>"><img src="<?php echo $cat6['sticker']; ?>" /></span><?php } ?>
@@ -257,7 +257,7 @@ $(document).ready(function() {
                                                         <?php foreach ($cat6['children'] as $cat7) { ?>
                                                         <?php $active7 = ($cat7['href'] == '' || $cat7['href'] == $nohost_url || $cat7['href'] == '/' . $nohost_url || $cat7['href'] == $host_url); ?>
                                                         <li>
-                                                          <a <?php if (!$active7) { ?>href="<?php echo $cat7['href']; ?>"<?php } ?>>
+                                                          <a <?php if (!$active7) { ?>href="<?php echo $cat7['href']; ?>"<?php } ?> title="<?php echo $cat7['title']; ?>">
                                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-
                                                             <i class="fa fa-level-up visible-xs visible-sm" aria-hidden="true"></i>
                                                             <?php if ($cat7['sticker']) { ?><span class="sticker_position_<?php echo $cat7['sticker_position'];?>"><img src="<?php echo $cat7['sticker']; ?>" /></span><?php } ?>
@@ -274,7 +274,7 @@ $(document).ready(function() {
                                                                 <?php foreach ($cat7['children'] as $cat8) { ?>
                                                                 <?php $active8 = ($cat8['href'] == '' || $cat8['href'] == $nohost_url || $cat8['href'] == '/' . $nohost_url || $cat8['href'] == $host_url); ?>
                                                                 <li>
-                                                                  <a <?php if (!$active8) { ?>href="<?php echo $cat8['href']; ?>"<?php } ?>>
+                                                                  <a <?php if (!$active8) { ?>href="<?php echo $cat8['href']; ?>"<?php } ?> title="<?php echo $cat8['title']; ?>">
                                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-
                                                                     <i class="fa fa-level-up visible-xs visible-sm" aria-hidden="true"></i>
                                                                     <?php if ($cat8['sticker']) { ?><span class="sticker_position_<?php echo $cat8['sticker_position'];?>"><img src="<?php echo $cat8['sticker']; ?>" /></span><?php } ?>
@@ -291,7 +291,7 @@ $(document).ready(function() {
                                                                         <?php foreach ($cat8['children'] as $cat9) { ?>
                                                                         <?php $active4 = ($cat9['href'] == '' || $cat9['href'] == $nohost_url || $cat9['href'] == '/' . $nohost_url || $cat9['href'] == $host_url); ?>
                                                                         <li>
-                                                                          <a <?php if (!$active4) { ?>href="<?php echo $cat9['href']; ?>"<?php } ?>>
+                                                                          <a <?php if (!$active4) { ?>href="<?php echo $cat9['href']; ?>"<?php } ?> title="<?php echo $cat9['title']; ?>">
                                                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-
                                                                             <i class="fa fa-level-up visible-xs visible-sm" aria-hidden="true"></i>
                                                                             <?php if ($cat9['sticker']) { ?><span class="sticker_position_<?php echo $cat9['sticker_position'];?>"><img src="<?php echo $cat9['sticker']; ?>" /></span><?php } ?>
@@ -378,7 +378,7 @@ $(document).ready(function() {
         <?php foreach ($cats as $cat) { ?>
 		<?php $active = ($cat['href'] == '' || $cat['href'] == $nohost_url || $cat['href'] == '/' . $nohost_url || $cat['href'] == $host_url); ?>
         <li class="dropdown">
-		  <a <?php if (!$active) { ?>href="<?php echo $cat['href']; ?>"<?php } ?><?php if ($cat['children']) { ?> class="dropdown-toggle" data-toggle="dropdown"<?php } ?>>
+		  <a <?php if (!$active) { ?>href="<?php echo $cat['href']; ?>"<?php } ?> title="<?php echo $cat['title']; ?>" class="<?php if ($active) { ?>active <?php } ?><?php if ($cat['children']) { ?>dropdown-toggle <?php } ?>"<?php if ($cat['children']) { ?> data-toggle="dropdown"<?php } ?>>
 			<?php if ($cat['sticker']) { ?><span class="sticker_position_<?php echo $cat['sticker_position'];?>"><img src="<?php echo $cat['sticker']; ?>" /></span><?php } ?>
 			<?php if ($cat['image'] && $cat['image_position'] == 1) { ?><img src="<?php echo $cat['image']; ?>" alt="<?php echo $cat['title']; ?>" title="<?php echo $cat['title']; ?>" /><?php } ?>
 			<?php if ($cat['name']) { ?><span><?php echo $cat['name']; ?></span><?php } ?>
@@ -395,7 +395,7 @@ $(document).ready(function() {
 				<?php $active2 = ($cat2['href'] == '' || $cat2['href'] == $nohost_url || $cat2['href'] == '/' . $nohost_url || $cat2['href'] == $host_url); ?>
 				<div class="bus-col-lg-<?php echo $cat['column_lg']; ?> bus-col-md-<?php echo $cat['column_md']; ?> bus-col-sm-<?php echo $cat['column_sm']; ?> bus-col-xs-<?php echo $cat['column_xs']; ?>">
 				<li>
-				  <a <?php if (!$active2) { ?>href="<?php echo $cat2['href']; ?>"<?php } else { ?><?php if ($cat2['href'] != '') { ?> class="active"<?php } ?><?php } ?>>
+				  <a <?php if (!$active2) { ?>href="<?php echo $cat2['href']; ?>"<?php } ?> title="<?php echo $cat2['title']; ?>"<?php if ($active2) { ?> class="active"<?php } ?>>
 					<?php if ($cat2['sticker']) { ?><span class="sticker_position_<?php echo $cat2['sticker_position'];?>"><img src="<?php echo $cat2['sticker']; ?>" /></span><?php } ?>
 					<?php if ($cat2['image'] && $cat2['image_position'] == 1) { ?><img src="<?php echo $cat2['image']; ?>" alt="<?php echo $cat2['title']; ?>" title="<?php echo $cat2['title']; ?>" /><?php } ?>
 					<?php if ($cat2['name']) { ?><span><?php echo $cat2['name']; ?></span><?php } ?>
@@ -406,7 +406,7 @@ $(document).ready(function() {
 				  <?php foreach ($cat2['children'] as $cat3) { ?>
 				  <?php $active3 = ($cat3['href'] == '' || $cat3['href'] == $nohost_url || $cat3['href'] == '/' . $nohost_url || $cat3['href'] == $host_url); ?>
                   <li>
-					<a <?php if (!$active3) { ?>href="<?php echo $cat3['href']; ?>"<?php } else { ?><?php if ($cat3['href'] != '') { ?> class="active"<?php } ?><?php } ?>>
+					<a <?php if (!$active3) { ?>href="<?php echo $cat3['href']; ?>"<?php } ?> title="<?php echo $cat3['title']; ?>"<?php if ($active3) { ?> class="active"<?php } ?>>
 					  &nbsp;-
 					  <?php if ($cat3['sticker']) { ?><span class="sticker_position_<?php echo $cat3['sticker_position'];?>"><img src="<?php echo $cat3['sticker']; ?>" /></span><?php } ?>
 					  <?php if ($cat3['image'] && $cat3['image_position'] == 1) { ?><img src="<?php echo $cat3['image']; ?>" alt="<?php echo $cat3['title']; ?>" title="<?php echo $cat3['title']; ?>" /><?php } ?>
@@ -418,7 +418,7 @@ $(document).ready(function() {
 					<?php foreach ($cat3['children'] as $cat4) { ?>
 					<?php $active4 = ($cat4['href'] == '' || $cat4['href'] == $nohost_url || $cat4['href'] == '/' . $nohost_url || $cat4['href'] == $host_url); ?>
                     <li>
-					  <a <?php if (!$active4) { ?>href="<?php echo $cat4['href']; ?>"<?php } else { ?><?php if ($cat4['href'] != '') { ?> class="active"<?php } ?><?php } ?>>
+					  <a <?php if (!$active4) { ?>href="<?php echo $cat4['href']; ?>"<?php } ?> title="<?php echo $cat4['title']; ?>"<?php if ($active4) { ?> class="active"<?php } ?>>
 						&nbsp;&nbsp;&nbsp;-
 						<?php if ($cat4['sticker']) { ?><span class="sticker_position_<?php echo $cat4['sticker_position'];?>"><img src="<?php echo $cat4['sticker']; ?>" /></span><?php } ?>
 						<?php if ($cat4['image'] && $cat4['image_position'] == 1) { ?><img src="<?php echo $cat4['image']; ?>" alt="<?php echo $cat4['title']; ?>" title="<?php echo $cat4['title']; ?>" /><?php } ?>
@@ -430,7 +430,7 @@ $(document).ready(function() {
                       <?php foreach ($cat4['children'] as $cat5) { ?>
                       <?php $active5 = ($cat5['href'] == '' || $cat5['href'] == $nohost_url || $cat5['href'] == '/' . $nohost_url || $cat5['href'] == $host_url); ?>
                       <li>
-                        <a <?php if (!$active5) { ?>href="<?php echo $cat5['href']; ?>"<?php } else { ?><?php if ($cat5['href'] != '') { ?> class="active"<?php } ?><?php } ?>>
+                        <a <?php if (!$active5) { ?>href="<?php echo $cat5['href']; ?>"<?php } ?> title="<?php echo $cat5['title']; ?>"<?php if ($active5) { ?> class="active"<?php } ?>>
                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-
                           <?php if ($cat5['sticker']) { ?><span class="sticker_position_<?php echo $cat5['sticker_position'];?>"><img src="<?php echo $cat5['sticker']; ?>" /></span><?php } ?>
                           <?php if ($cat5['image'] && $cat5['image_position'] == 1) { ?><img src="<?php echo $cat5['image']; ?>" alt="<?php echo $cat5['title']; ?>" title="<?php echo $cat5['title']; ?>" /><?php } ?>
@@ -442,7 +442,7 @@ $(document).ready(function() {
                         <?php foreach ($cat5['children'] as $cat6) { ?>
                         <?php $active6 = ($cat6['href'] == '' || $cat6['href'] == $nohost_url || $cat6['href'] == '/' . $nohost_url || $cat6['href'] == $host_url); ?>
                         <li>
-					      <a <?php if (!$active6) { ?>href="<?php echo $cat6['href']; ?>"<?php } else { ?><?php if ($cat6['href'] != '') { ?> class="active"<?php } ?><?php } ?>>
+					      <a <?php if (!$active6) { ?>href="<?php echo $cat6['href']; ?>"<?php } ?> title="<?php echo $cat6['title']; ?>"<?php if ($active6) { ?> class="active"<?php } ?>>
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-
                             <?php if ($cat6['sticker']) { ?><span class="sticker_position_<?php echo $cat6['sticker_position'];?>"><img src="<?php echo $cat6['sticker']; ?>" /></span><?php } ?>
                             <?php if ($cat6['image'] && $cat6['image_position'] == 1) { ?><img src="<?php echo $cat6['image']; ?>" alt="<?php echo $cat6['title']; ?>" title="<?php echo $cat6['title']; ?>" /><?php } ?>
@@ -454,7 +454,7 @@ $(document).ready(function() {
                           <?php foreach ($cat6['children'] as $cat7) { ?>
                           <?php $active7 = ($cat7['href'] == '' || $cat7['href'] == $nohost_url || $cat7['href'] == '/' . $nohost_url || $cat7['href'] == $host_url); ?>
                           <li>
-                            <a <?php if (!$active7) { ?>href="<?php echo $cat7['href']; ?>"<?php } else { ?><?php if ($cat7['href'] != '') { ?> class="active"<?php } ?><?php } ?>>
+                            <a <?php if (!$active7) { ?>href="<?php echo $cat7['href']; ?>"<?php } ?> title="<?php echo $cat7['title']; ?>"<?php if ($active7) { ?> class="active"<?php } ?>>
                               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-
                               <?php if ($cat7['sticker']) { ?><span class="sticker_position_<?php echo $cat7['sticker_position'];?>"><img src="<?php echo $cat7['sticker']; ?>" /></span><?php } ?>
                               <?php if ($cat7['image'] && $cat7['image_position'] == 1) { ?><img src="<?php echo $cat7['image']; ?>" alt="<?php echo $cat7['title']; ?>" title="<?php echo $cat7['title']; ?>" /><?php } ?>
@@ -466,7 +466,7 @@ $(document).ready(function() {
                             <?php foreach ($cat7['children'] as $cat8) { ?>
                             <?php $active8 = ($cat8['href'] == '' || $cat8['href'] == $nohost_url || $cat8['href'] == '/' . $nohost_url || $cat8['href'] == $host_url); ?>
                             <li>
-                              <a <?php if (!$active8) { ?>href="<?php echo $cat8['href']; ?>"<?php } else { ?><?php if ($cat8['href'] != '') { ?> class="active"<?php } ?><?php } ?>>
+                              <a <?php if (!$active8) { ?>href="<?php echo $cat8['href']; ?>"<?php } ?> title="<?php echo $cat8['title']; ?>"<?php if ($active8) { ?> class="active"<?php } ?>>
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-
                                 <?php if ($cat8['sticker']) { ?><span class="sticker_position_<?php echo $cat8['sticker_position'];?>"><img src="<?php echo $cat8['sticker']; ?>" /></span><?php } ?>
                                 <?php if ($cat8['image'] && $cat8['image_position'] == 1) { ?><img src="<?php echo $cat8['image']; ?>" alt="<?php echo $cat8['title']; ?>" title="<?php echo $cat8['title']; ?>" /><?php } ?>
@@ -478,7 +478,7 @@ $(document).ready(function() {
                               <?php foreach ($cat8['children'] as $cat9) { ?>
                               <?php $active9 = ($cat9['href'] == '' || $cat9['href'] == $nohost_url || $cat9['href'] == '/' . $nohost_url || $cat9['href'] == $host_url); ?>
                               <li>
-                                <a <?php if (!$active9) { ?>href="<?php echo $cat9['href']; ?>"<?php } else { ?><?php if ($cat9['href'] != '') { ?> class="active"<?php } ?><?php } ?>>
+                                <a <?php if (!$active9) { ?>href="<?php echo $cat9['href']; ?>"<?php } ?> title="<?php echo $cat9['title']; ?>"<?php if ($active9) { ?> class="active"<?php } ?>>
                                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-
                                   <?php if ($cat9['sticker']) { ?><span class="sticker_position_<?php echo $cat9['sticker_position'];?>"><img src="<?php echo $cat9['sticker']; ?>" /></span><?php } ?>
                                   <?php if ($cat9['image'] && $cat9['image_position'] == 1) { ?><img src="<?php echo $cat9['image']; ?>" alt="<?php echo $cat9['title']; ?>" title="<?php echo $cat9['title']; ?>" /><?php } ?>
