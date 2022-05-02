@@ -77,7 +77,7 @@ if (version_compare(VERSION, '4.0.0', '>=')) {
 	//class ControllerModuleBusMenu extends ControllerExtensionModuleBusMenu {}
 }
 
-if (version_compare(VERSION, '2.2.0', '<')) {
+if (version_compare(VERSION, '2.3.0', '<')) {
 	class ControllerModuleBusMenu extends ControllerExtensionModuleBusMenu {}
 }
 
@@ -89,7 +89,7 @@ class ControllerExtensionModuleBusMenu extends Controller {
 	private $version = '1.0.32';
 	private $author = 'BuslikDrev.by';
 	private $link = 'https://liveopencart.ru/buslikdrev';
-	private $version_oc = 2.2;
+	private $version_oc = 2.3;
 	private $paths = array();
 
 	public function __construct($foo) {
@@ -123,9 +123,9 @@ class ControllerExtensionModuleBusMenu extends Controller {
 				),
 				'token' => 'user_token=' . $this->session->data['user_token']
 			);
-		} elseif (version_compare(VERSION, '2.2.0', '>=')) {
+		} elseif (version_compare(VERSION, '2.3.0', '>=')) {
 			$this->language->set('bus_menu_version', $this->version);
-			$this->version_oc = 2.2;
+			$this->version_oc = 2.3;
 			$this->paths = array(
 				'controller' => array(
 					'bus_menu' => 'extension/module/bus_menu',
@@ -253,7 +253,7 @@ class ControllerExtensionModuleBusMenu extends Controller {
 		}
 
 		if ($this->config->get('config_seo_url') && $seo_now) {
-			if (version_compare(VERSION, '2.2.0', '>=')) {
+			if (version_compare(VERSION, '2.3.0', '>=')) {
 				if (class_exists('VQMod')) {
 					require_once(VQMod::modCheck((DIR_CATALOG . 'controller/startup/' . $seo_type . '.php')));
 				} else {
@@ -272,7 +272,7 @@ class ControllerExtensionModuleBusMenu extends Controller {
 			}
 		}
 
-		if (version_compare(VERSION, '2.2.0', '>=')) {
+		if (version_compare(VERSION, '2.3.0', '>=')) {
 			$url = new Url($this->config->get('config_secure') ? HTTPS_CATALOG : HTTP_CATALOG, HTTPS_CATALOG);
 		} else {
 			$url = new Url($this->config->get('config_secure') ? HTTPS_CATALOG : HTTP_CATALOG, HTTPS_CATALOG);
@@ -482,7 +482,7 @@ class ControllerExtensionModuleBusMenu extends Controller {
 			$html .= '          <div id="cats-desc-' . $row . '" class="collapse">';
 			$html .= '            <ul class="nav nav-tabs language" id="language-' . $row . '">';
 			foreach ($setting['languages'] as $language) {
-				$html .= '              <li><a href="#language-' . $language['language_id']  . '-' . $row . '" data-toggle="tab"><img src="' . (version_compare(VERSION, '2.2.0.0', '<') ? 'view/image/flags/' . $language['image'] : 'language/' . $language['code'] . '/' . $language['code'] . '.png')  . '" title="' . $language['name']  . '" /> ' . $language['name']  . '</a></li>';
+				$html .= '              <li><a href="#language-' . $language['language_id']  . '-' . $row . '" data-toggle="tab"><img src="' . (version_compare(VERSION, '2.3.0.0', '<') ? 'view/image/flags/' . $language['image'] : 'language/' . $language['code'] . '/' . $language['code'] . '.png')  . '" title="' . $language['name']  . '" /> ' . $language['name']  . '</a></li>';
 			}
 			$html .= '            </ul>';
 			$html .= '            <div class="tab-content">';
@@ -1244,7 +1244,7 @@ class ControllerExtensionModuleBusMenu extends Controller {
 			'href' => $this->url->link('common/dashboard', $this->paths['token'], true)
 		);
 
-		if ($this->version_oc >= 2.2) {
+		if ($this->version_oc >= 2.3) {
 			$data['breadcrumbs'][] = array(
 				'text' => $this->language->get('text_extension'),
 				'href' => $this->url->link($this->paths['controller']['extension'], $this->paths['token'], true)
@@ -1253,7 +1253,7 @@ class ControllerExtensionModuleBusMenu extends Controller {
 
 		$data['breadcrumbs'][] = array(
 			'text' => $this->language->get('text_module'),
-			'href' => $this->url->link($this->paths['controller']['extension'], $this->paths['token'] . ($this->version_oc >= 2.2 ? '&type=module' : false), true)
+			'href' => $this->url->link($this->paths['controller']['extension'], $this->paths['token'] . ($this->version_oc >= 2.3 ? '&type=module' : false), true)
 		);
 
 		$data['breadcrumbs'][] = array(
@@ -2547,7 +2547,7 @@ class ControllerExtensionModuleBusMenu extends Controller {
 		$this->load->language($this->paths['language']['bus_menu']);
 
 		// посылыаем на йух
-		if ($this->version_oc >= 2.2) {
+		if ($this->version_oc >= 2.3) {
 			if (!$this->user->hasPermission('modify', 'extension/extension/module')) {
 				$this->error['warning'] = $this->language->get('error_permission');
 			}
@@ -2712,7 +2712,7 @@ function successModule() {
 //--></script>
 HTML;
 
-			if ($this->version_oc >= 2.2) {
+			if ($this->version_oc >= 2.3) {
 				$this->response->addHeader('Content-Type: text/html; charset=utf-8');
 				$this->response->setOutput($text);
 				echo $this->response->getOutput();
@@ -2731,7 +2731,7 @@ HTML;
 		$this->load->language($this->paths['language']['bus_menu']);
 
 		// посылыаем на йух
-		if ($this->version_oc >= 2.2) {
+		if ($this->version_oc >= 2.3) {
 			if (!$this->user->hasPermission('modify', 'extension/extension/module')) {
 				$this->error['warning'] = $this->language->get('error_permission');
 			}
@@ -2918,7 +2918,7 @@ function uninstallFiles() {
 //--></script>
 HTML;
 
-			if ($this->version_oc >= 2.2) {
+			if ($this->version_oc >= 2.3) {
 				$this->response->addHeader('Content-Type: text/html; charset=utf-8');
 				$this->response->setOutput($text);
 				echo $this->response->getOutput();
@@ -2937,7 +2937,7 @@ HTML;
 		$this->load->language($this->paths['language']['bus_menu']);
 
 		// посылыаем на йух
-		if ($this->version_oc >= 2.2) {
+		if ($this->version_oc >= 2.3) {
 			if (!$this->user->hasPermission('modify', 'extension/extension/module') || !$this->user->hasPermission('modify', $this->paths['controller']['bus_menu'])) {
 				$this->error['warning'] = $this->language->get('error_permission');
 			}
@@ -3171,7 +3171,7 @@ HTML;
 
 	private function modification($message = false, $data = true) {
 		// посылыаем на йух
-		if ($this->version_oc >= 2.2) {
+		if ($this->version_oc >= 2.3) {
 			if (!$this->user->hasPermission('modify', 'extension/extension/module')) {
 				$this->error['warning'] = $this->language->get('error_permission');
 			}

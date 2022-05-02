@@ -4,7 +4,7 @@
 // *   Спецыяльна для сайта: "OpenCart.pro" ( http://opencart.pro/ )
 
 // Heading
-$_['heading_title']                         = '<b>ЫМеню <span style="color:blue">Pro</span></b> v' . (isset($this->data['bus_menu_version']) ? $this->data['bus_menu_version'] : '1.0');
+$_['heading_title']                         = '<b>ЫМеню <span style="color:limegreen">Full</span></b> v' . (isset($this->data['bus_menu_version']) ? $this->data['bus_menu_version'] : '1.0');
 
 // Tab
 $_['tab_setting']                           = 'Налады';
@@ -204,7 +204,7 @@ $_['help_cats_sticker']                     = 'Выберыце стыкер. К
 $_['help_cats_sticker_position']            = 'Размяшчэнне стыкера ў назве спасылкі.';
 $_['help_cats_sticker_status']              = 'Статус стыкера';
 $_['help_cats_name']                        = 'Дайце назву спасылцы, напрыклад, кантакты.';
-$_['help_cats_link']                        = 'Пазначце ўнутраную або знешнюю спасылку. Напрыклад:<br>/contacts<br>або<br>https://buslikdrev.by/contacts';
+$_['help_cats_link']                        = 'Пазначце ўнутраную або знешнюю спасылку. Напрыклад: /contacts або https://buslikdrev.by/contacts';
 $_['help_cats_title']                       = 'Title отображется пры навядзенні на спасылку, таксама на выяву ў alt. Абмежавання колькасці сімвалаў няма.';
 $_['help_cats_desc']                        = 'Апісанне адлюстроўваецца пад спасылкай над падкатэгорыі. Калі поле пакінуць пустым, выводзіцца кароткае, калі няма кароткага, тады стандартнае апісанне. Толькі для тыпу: <Меню> і <Вітрына>.';
 $_['help_cats_column']                      = 'Колькасьць калёнак ў спісе і ў вітрыне катэгорый (толькі для катэгорый першай прыступкі).';

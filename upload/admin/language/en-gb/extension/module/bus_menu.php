@@ -4,7 +4,7 @@
 // *   Спецыяльна для сайта: "OpenCart.pro" ( http://opencart.pro/ )
 
 // Heading
-$_['heading_title']                         = '<b>blMenu <span style="color:blue">Pro</span></b> v' . (isset($this->data['bus_menu_version']) ? $this->data['bus_menu_version'] : '1.0');
+$_['heading_title']                         = '<b>blMenu <span style="color:limegreen">Full</span></b> v' . (isset($this->data['bus_menu_version']) ? $this->data['bus_menu_version'] : '1.0');
 
 // Tab
 $_['tab_setting']                           = 'Settings';
@@ -204,7 +204,7 @@ $_['help_cats_sticker']                     = 'Select a sticker. If not selected
 $_['help_cats_sticker_position']            = 'The location of the sticker in the link name.';
 $_['help_cats_sticker_status']              = 'Sticker status';
 $_['help_cats_name']                        = 'Give the name of the link, for example, contacts.';
-$_['help_cats_link']                        = 'Specify an internal or external link. For example:<br>/contacts<br>or<br>https://buslikdrev.by/contacts';
+$_['help_cats_link']                        = 'Specify an internal or external link. For example: /contacts or https://buslikdrev.by/contacts';
 $_['help_cats_title']                       = 'The title is displayed when you hover over a link, also on an image in alt. There is no limit to the number of characters.';
 $_['help_cats_desc']                        = 'The description is displayed under the link above the subcategories. If the field is left blank, a short description is displayed, if there is no short one, then the standard description. Only for the type: <Menu> and <Showcase>.';
 $_['help_cats_column']                      = 'The number of columns in the list and in the category showcase (only for categories of the first stage).';

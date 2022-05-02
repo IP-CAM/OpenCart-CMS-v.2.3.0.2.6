@@ -4,7 +4,7 @@
 // *   Спецыяльна для сайта: "OpenCart.pro" ( http://opencart.pro/ )
 
 // Heading
-$_['heading_title']                         = '<b>ЫМеню <span style="color:blue">Pro</span></b> v' . (isset($this->data['bus_menu_version']) ? $this->data['bus_menu_version'] : '1.0');
+$_['heading_title']                         = '<b>ЫМеню <span style="color:limegreen">Full</span></b> v' . (isset($this->data['bus_menu_version']) ? $this->data['bus_menu_version'] : '1.0');
 
 // Tab
 $_['tab_setting']                           = 'Налаштування';
@@ -204,7 +204,7 @@ $_['help_cats_sticker']                     = 'Выберите стикер. Е
 $_['help_cats_sticker_position']            = 'Расположение стикера в названии ссылки.';
 $_['help_cats_sticker_status']              = 'Статус стикера';
 $_['help_cats_name']                        = 'Дайте название ссылке, например, контакты.';
-$_['help_cats_link']                        = 'Укажите внутренюю или внешнюю ссылку. Например:<br>/contacts<br>или<br>https://buslikdrev.by/contacts';
+$_['help_cats_link']                        = 'Укажите внутренюю или внешнюю ссылку. Например: /contacts или https://buslikdrev.by/contacts';
 $_['help_cats_title']                       = 'Title отображется при наведении на ссылку, также на изображение в alt. Ограничения количества символов нет.';
 $_['help_cats_desc']                        = 'Описание отображается под ссылкой над подкатегориями. Если поле оставить пустым, выводится краткое, если нету краткого, тогда стандартное описание. Только для типа: <Меню> и <Витрина>.';
 $_['help_cats_column']                      = 'Количество столбцов в списке и в витрине категорий (только для категорий первой ступени).';
