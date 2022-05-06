@@ -466,7 +466,7 @@ class ControllerStartupSeoPro extends Controller {
 			$this->request->get['route'] = $this->config->get('action_default');
 		}
 
-		$config_seo_url_hide_controller = $this->config->get('config_action_not_found');
+		$config_action_not_found = $this->config->get('config_action_not_found');
 		if ($config_action_not_found) {
 			$config_action_route = $this->request->get['route'];
 			if (strpos($config_action_not_found, $config_action_route . "\r\n") !== false) {
