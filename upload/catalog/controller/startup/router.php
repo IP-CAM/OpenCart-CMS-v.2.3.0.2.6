@@ -16,26 +16,34 @@ class ControllerStartupRouter extends Controller {
 		// Sanitize the call
 		$route = preg_replace('/[^a-zA-Z0-9_\/]/', '', (string)$route);
 
-		$config_seo_url_hide_controller = $this->config->get('config_action_not_found');
-		if ($config_seo_url_hide_controller) {
-			if (strpos($config_seo_url_hide_controller, $this->request->get['route'] . "\r\n") !== false) {
+		$config_action_not_found = $this->config->get('config_action_not_found');
+		if ($config_action_not_found) {
+			$config_action_route = $this->request->get['route'];
+			if (strpos($config_action_not_found, $config_action_route . "\r\n") !== false) {
 				$route = $this->config->get('action_error');
-			} elseif (strpos($config_seo_url_hide_controller, $this->request->get['route'] . "|") !== false) {
-				$hide_controller = explode("\r\n", $config_seo_url_hide_controller);
-				foreach ($hide_controller as $result) {
-					if (strpos($result, $this->request->get['route'] . '|') !== false) {
-						$result = ltrim(strstr($result, '|'), '|');
-						if ($result && strpos($this->request->server['REQUEST_URI'], $result) !== false) {
-							$route = $this->config->get('action_error');
-						}
-					}
+			} elseif (strpos($config_action_not_found, $config_action_route . "|") !== false || strpos($config_action_not_found, "#|") !== false) {
+				if (strpos($config_action_not_found, $config_action_route . "|") === false) {
+					$config_action_route = '#';
 				}
-			} elseif (strpos($config_seo_url_hide_controller, "#|") !== false) {
-				$hide_controller = explode("\r\n", $config_seo_url_hide_controller);
-				foreach ($hide_controller as $result) {
-					if (strpos($result, '#|') !== false) {
-						$result = ltrim(strstr($result, '|'), '|');
-						if ($result && strpos($this->request->server['REQUEST_URI'], $result) !== false) {
+				foreach (explode("\r\n", $config_action_not_found) as $result) {
+					if (strpos($result, $config_action_route . '|') !== false) {
+						$explode = explode('|', $result);
+						if (!empty($explode[2])) {
+							$params = array();
+							$exceptions = array_flip(explode(',', $explode[2]));
+							$params_all = explode('&', parse_url($this->request->server['REQUEST_URI'], PHP_URL_QUERY));
+							foreach ($params_all as $result) {
+								$key = strstr($result, '=', true);
+								if (isset($exceptions[$key])) {
+									$params[$key] = 1;
+								} elseif (isset($exceptions[$result])) {
+									$params[$result] = 1;
+								}
+							}
+							if ($params_all[0] && count($params) != count($params_all)) {
+								$route = $this->config->get('action_error');
+							}
+						} elseif (!empty($explode[1]) && (!isset($explode[2]) && strpos($this->request->server['REQUEST_URI'], $explode[1]) !== false || isset($explode[2]) && ltrim($this->request->server['REQUEST_URI'], '/') == $explode[1])) {
 							$route = $this->config->get('action_error');
 						}
 					}
