@@ -150,7 +150,7 @@
           <div class="form-group">
             <label class="col-sm-2 control-label" for="input-cache-cart-count"><b style="color:red">(навінка)</b> <span title="<?php echo $help_cache_cart_count; ?>" data-toggle="tooltip"><?php echo $entry_cache_cart_count; ?></span></label>
             <div class="col-sm-10">
-              <input type="number" value="<?php echo $cache_cart_count; ?>" placeholder="<?php echo $entry_cache_cart_count; ?>" id="input-cache-cart-count" class="form-control" />
+              <input type="number" name="cache_cart_count" value="<?php echo $cache_cart_count; ?>" placeholder="<?php echo $entry_cache_cart_count; ?>" id="input-cache-cart-count" class="form-control" />
             </div>
           </div>
           <div class="form-group">
