@@ -207,9 +207,9 @@ class Bus_Cache {
 		}
 
 		// отключаем кэш, если товаров в корзине много
-		$cart = 0;
+		$cart = array();
 
-		if ($setting['cache_cart_count'] && $setting['cache_status']) {
+		if ($setting['cache_status']) {
 			$cart = $this->cart->getProducts();
 			if (count($cart) > $setting['cache_cart_count']) {
 				$setting['cache_status'] = false;
