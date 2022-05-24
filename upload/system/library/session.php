@@ -257,7 +257,7 @@ class Session {
 				'secure'    => $secure,
 				'httponly'  => $httponly,
 				'samesite'  => $samesite,
-				'sameparty' => $sameparty
+				//'sameparty' => $sameparty
 			));
 		} else {
 			$string = '';
