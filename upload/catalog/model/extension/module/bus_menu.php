@@ -3,7 +3,7 @@
 // *   © 2016-2022; BuslikDrev - Усе правы захаваныя.
 // *   Спецыяльна для сайта: "OpenCart.pro" ( https://opencart.pro/ )
 
-if (version_compare(VERSION, '2.2.0', '<')) {
+if (version_compare(VERSION, '2.3.0', '<')) {
 	class ModelModuleBusMenu extends ModelExtensionModuleBusMenu {}
 }
 
@@ -37,7 +37,7 @@ class ModelExtensionModuleBusMenu extends Model {
 				);
 			}
 
-			if ($setting['cache']) {
+			if ($setting['cache'] && $cache_data) {
 				$this->cache->set('seo_url.bus_menu.setting.' . (int)$module_id . '.' . $config_store_id, $cache_data);
 			}
 		}
@@ -87,7 +87,7 @@ class ModelExtensionModuleBusMenu extends Model {
 			}
 
 			$cache_data[$id] = $this->db->query("SELECT DISTINCT c." . $table . "_id," . $select . " cd.* FROM " . DB_PREFIX . $table . " c LEFT JOIN " . DB_PREFIX . $table . "_description cd ON (c." . $table . "_id = cd." . $table . "_id) LEFT JOIN " . DB_PREFIX . $table . "_to_store c2s ON (c." . $table . "_id = c2s." . $table . "_id)" . $where . " AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND c2s.store_id = '" . $config_store_id . "'")->row;
-			if ($setting['cache'] == 1) {
+			if ($setting['cache'] == 1 && $cache_data) {
 				$this->cache->set($table . '.' . 'bus_menu.getCat.' . (int)$this->config->get('config_language_id') . '.' . $config_store_id, $cache_data);
 			}
 		}
@@ -173,7 +173,7 @@ class ModelExtensionModuleBusMenu extends Model {
 			}
 
 			$cache_data = $this->db->query("SELECT c." . $table . "_id," . $select . " cd.* FROM " . DB_PREFIX . $table . " c LEFT JOIN " . DB_PREFIX . $table . "_description cd ON (c." . $table . "_id = cd." . $table . "_id) LEFT JOIN " . DB_PREFIX . $table . "_to_store c2s ON (c." . $table . "_id = c2s." . $table . "_id)" . $where . " AND cd.language_id = '" . $config_language_id . "' AND c2s.store_id = '" . $config_store_id . "' ORDER BY c.sort_order" . $limit)->rows;
-			if ($setting['cache'] == 1) {
+			if ($setting['cache'] == 1 && $cache_data) {
 				$this->cache->set($table . '.' . 'bus_menu.getCats.' . $id . '.' . $config_language_id . '.' . $config_store_id, $cache_data);
 			}
 		}
@@ -201,7 +201,7 @@ class ModelExtensionModuleBusMenu extends Model {
 			}
 
 			$cache_data = $this->db->query("SELECT *, cd.name, (SELECT GROUP_CONCAT(cp.path_id ORDER BY cp.level SEPARATOR '_') FROM " . DB_PREFIX . $table . "_path cp WHERE cp." . $table . "_id = c." . $table . "_id AND cp.path_id != cp." . $table . "_id GROUP BY cp." . $table . "_id) AS path FROM " . DB_PREFIX . $table . " c LEFT JOIN " . DB_PREFIX . $table . "_path cp ON (c." . $table . "_id = cp." . $table . "_id) LEFT JOIN " . DB_PREFIX . $table . "_description cd ON (c." . $table . "_id = cd." . $table . "_id) LEFT JOIN " . DB_PREFIX . $table . "_to_store c2s ON (c." . $table . "_id = c2s." . $table . "_id) WHERE c.status = '1' AND cd.language_id = '" . $config_language_id . "' AND c2s.store_id = '" . $config_store_id . "' AND cp.level <= " . $level . $id_now . " ORDER BY c.sort_order, LCASE(cd.name)" . $limit)->rows;
-			if ($setting['cache'] == 1) {
+			if ($setting['cache'] == 1 && $cache_data) {
 				$this->cache->set($table . '.' . 'bus_menu.getCatsLevel.' . $id . '.' . $level . '.' . $config_language_id . '.' . $config_store_id, $cache_data);
 			}
 		}
@@ -282,7 +282,7 @@ class ModelExtensionModuleBusMenu extends Model {
 			}
 
 			$cache_data[$id] = $this->db->query("SELECT " . $reviews_total . " AS reviews_total, " . $viewed_total . " AS viewed_total, " . $orders_total . " AS orders_total, " . $reviews_select . " AS reviews, " . $viewed_select . " AS viewed, " . $orders_select . " AS orders, round((" . $reviews_select . " + " . $viewed_select . " + " . $orders_select . ") / " . $fraction . ") AS rating_count FROM " . DB_PREFIX . "" . $search_table . "_to_" . $table . " p2m" . $reviews_join . $viewed_join . $orders_join . $rating_count_path_not . " WHERE p2m." . $table . "_id = '" . $id . "'")->row;
-			if ($setting['cache'] == 1) {
+			if ($setting['cache'] == 1 && $cache_data) {
 				$this->cache->set($table . '.' . 'bus_menu.getRatingCount.' . $config_store_id, $cache_data);
 			}
 		}
@@ -313,7 +313,7 @@ class ModelExtensionModuleBusMenu extends Model {
 				$cache_data[$id] = $this->db->query("SELECT IF(MIN(p.price)>0, MIN(p.price), 0) AS min_price, IF(MAX(p.price)>0, MAX(p.price), 0) AS max_price FROM " . DB_PREFIX . "product_to_category p2c LEFT JOIN " . DB_PREFIX . "product p ON (p.product_id = p2c.product_id AND p.status = '1') WHERE p2c.category_id = '" . $id . "' LIMIT 1")->row;
 			}
 
-			if ($setting['cache'] == 1) {
+			if ($setting['cache'] == 1 && $cache_data) {
 				$this->cache->set($table . '.' . 'bus_menu.getPriceCount.' . $config_store_id, $cache_data);
 			}
 		}
@@ -335,7 +335,7 @@ class ModelExtensionModuleBusMenu extends Model {
 
 		if (!isset($cache_data[$id])) {
 			$cache_data[$id] = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . $table . " c LEFT JOIN " . DB_PREFIX . $table . "_to_store c2s ON (c." . $table . "_id = c2s." . $table . "_id) WHERE c.parent_id = '" . $id . "' AND c2s.store_id = '" . $config_store_id . "' AND c.status = '1'")->row['total'];
-			if ($setting['cache'] == 1) {
+			if ($setting['cache'] == 1 && $cache_data) {
 				$this->cache->set($table . '.' . 'bus_menu.getCatCount.' . $config_store_id, $cache_data);
 			}
 		}
@@ -400,7 +400,7 @@ class ModelExtensionModuleBusMenu extends Model {
 				}
 
 				$cache_data[$data['filter_cat_id']] = $this->db->query($sql)->row['total'];
-				if ($setting['cache'] == 1) {
+				if ($setting['cache'] == 1 && $cache_data) {
 					$this->cache->set($table . '.' . 'bus_menu.getCount.' . $config_store_id, $cache_data);
 				}
 			}
