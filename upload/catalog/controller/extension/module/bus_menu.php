@@ -555,7 +555,7 @@ class ControllerExtensionModuleBusMenu extends Controller {
 
 		$cats_vertical_status = (isset($setting['cats_vertical_status']) ? $setting['cats_vertical_status'] : false);
 
-		if	($cats_vertical_status) {
+		if ($cats_vertical_status) {
 			if (isset($cats_vertical_route)) {
 				$setting_cats['cats_vertical_route'] = $cats_vertical_route;
 			} else {
@@ -614,6 +614,7 @@ class ControllerExtensionModuleBusMenu extends Controller {
 		}
 
 		if (!$data && $ajax) {
+			$data = array();
 			// формируем данные по-умолчанию
 			$setting['server'] = ($this->request->server['HTTPS'] ? $this->config->get('config_ssl') : $this->config->get('config_url'));
 			$setting['module_id'] = (isset($setting['module_id']) ? $setting['module_id'] : $module_id);
