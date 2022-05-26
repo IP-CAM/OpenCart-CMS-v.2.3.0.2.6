@@ -645,13 +645,6 @@ span[data-toggle="tooltip"].awesome5:after{
                 <option value="1"<?php if ($design == 1) { ?> selected="selected"<?php } ?>><?php echo $text_design_1; ?></option>
                 <option value="2"<?php if ($design == 2) { ?> selected="selected"<?php } ?>><?php echo $text_design_2; ?></option>
                 <option value="3"<?php if ($design == 3) { ?> selected="selected"<?php } ?>><?php echo $text_design_3; ?></option>
-                <option value="4"<?php if ($design == 4) { ?> selected="selected"<?php } ?>><?php echo $text_design_4; ?></option>
-                <option value="5"<?php if ($design == 5) { ?> selected="selected"<?php } ?>><?php echo $text_design_5; ?></option>
-                <option value="6"<?php if ($design == 6) { ?> selected="selected"<?php } ?>><?php echo $text_design_6; ?></option>
-                <option value="7"<?php if ($design == 7) { ?> selected="selected"<?php } ?>><?php echo $text_design_7; ?></option>
-                <option value="8"<?php if ($design == 8) { ?> selected="selected"<?php } ?>><?php echo $text_design_8; ?></option>
-                <option value="9"<?php if ($design == 9) { ?> selected="selected"<?php } ?>><?php echo $text_design_9; ?></option>
-                <option value="10"<?php if ($design == 10) { ?> selected="selected"<?php } ?>><?php echo $text_design_10; ?></option>
                 <option value="0"<?php if (!$design) { ?> selected="selected"<?php } ?>><?php echo $text_design_not; ?></option>
                 <option value="own"<?php if ($design == 'own') { ?> selected="selected"<?php } ?>><?php echo $text_design_own; ?></option>
               </select>
