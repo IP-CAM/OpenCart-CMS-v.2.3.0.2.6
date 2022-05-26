@@ -559,7 +559,7 @@ class ControllerExtensionModuleBusMenu extends Controller {
 			if (isset($cats_vertical_route)) {
 				$setting_cats['cats_vertical_route'] = $cats_vertical_route;
 			} else {
-				if	(isset($bus_menu_cats_vertical['route'])) {
+				if (isset($bus_menu_cats_vertical['route'])) {
 					if (is_array($bus_menu_cats_vertical['route'][$store_id])) {
 						if (isset($this->request->get['route'])) {
 							$route = (string)$this->request->get['route'];
@@ -582,6 +582,9 @@ class ControllerExtensionModuleBusMenu extends Controller {
 		$data = array();
 		if ($setting['cache'] == 3) {
 			$data = $this->cache->get('seo_url.bus_menu.module.' . $module_id . '.' . md5($setting_cats['cats_vertical_route'] . $id_request . $webp . $currency . $language_id . $store_id));
+			if (!$data) {
+				$data = array();
+			}
 		}
 
 		// условие запуска ajax
@@ -614,7 +617,6 @@ class ControllerExtensionModuleBusMenu extends Controller {
 		}
 
 		if (!$data && $ajax) {
-			$data = array();
 			// формируем данные по-умолчанию
 			$setting['server'] = ($this->request->server['HTTPS'] ? $this->config->get('config_ssl') : $this->config->get('config_url'));
 			$setting['module_id'] = (isset($setting['module_id']) ? $setting['module_id'] : $module_id);
@@ -756,6 +758,7 @@ class ControllerExtensionModuleBusMenu extends Controller {
 			$cats_cache = array(false);
 			if ($setting['cache'] == 2) {
 				$cats_cache = $this->cache->get('seo_url.bus_menu.cats.' . $module_id . '.' . md5($id_request . $webp . $currency . $language_id . $store_id));
+
 				if (!empty($cats_cache[0])) {
 					$data['cats'] = $cats_cache[0];
 				}
@@ -764,7 +767,7 @@ class ControllerExtensionModuleBusMenu extends Controller {
 				}
 			}
 
-			if (!$data['cats'] &&  isset($cats_cache[0]) && json_encode($cats_cache[0]) != '[]') {
+			if (!$data['cats']) {
 				if	($cats_vertical_status) {
 					if ($setting['cats_vertical_reverse']) {
 						if (!empty($setting_cats['cats_vertical'])) {
