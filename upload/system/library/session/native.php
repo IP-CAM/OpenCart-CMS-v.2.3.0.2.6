@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2021.
+// *	@copyright	OPENCART.PRO 2011 - 2022.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -10,39 +10,46 @@ class Native extends \SessionHandler {
 		$this->config = $registry->get('config');
 	}
 
-	public function create_sid() {
-		return parent::create_sid();
+	#[\ReturnTypeWillChange]
+	public function create_sid() /* : string */ {
+		return (string)parent::create_sid();
 	}
 
-	public function validate_sid($session_id) {
+	/* public function validate_sid(string $session_id) {
 		return parent::validate_sid($session_id);
 	}
 
-	public function update_timestamp($session_id, $data = array()) {
+	public function update_timestamp(string $session_id, string $data) {
 		return parent::update_timestamp($session_id, $data);
+	} */
+
+	#[\ReturnTypeWillChange]
+	public function open($path, $session_id) /* : bool */ {
+		return (bool)parent::open($path, $session_id);
 	}
 
-	public function open($path, $session_id) {
-		return parent::open($path, $session_id);
+	#[\ReturnTypeWillChange]
+	public function close() /* : bool */ {
+		return (bool)parent::close();
 	}
 
-	public function close() {
-		return parent::close();
+	#[\ReturnTypeWillChange]
+	public function read(string $session_id) /* : string|false */ {
+		return (string)parent::read($session_id);
 	}
 
-	public function read($session_id) {
-		return parent::read($session_id);
+	#[\ReturnTypeWillChange]
+	public function write(string $session_id, string $data) /* : bool */ {
+		return (bool)parent::write($session_id, $data);
 	}
 
-	public function write($session_id, $data = array()) {
-		return parent::write($session_id, $data);
+	#[\ReturnTypeWillChange]
+	public function destroy(string $session_id) /* : bool */ {
+		return (bool)parent::destroy($session_id);
 	}
 
-	public function destroy($session_id) {
-		return parent::destroy($session_id);
-	}
-
-	public function gc($maxlifetime = 0) {
-		return parent::gc($maxlifetime);
+	#[\ReturnTypeWillChange]
+	public function gc(int $maxlifetime = 0) /* : int|false */ {
+		return (int)parent::gc($maxlifetime);
 	}
 }
