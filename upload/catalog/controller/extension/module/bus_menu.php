@@ -1,7 +1,7 @@
 <?php
-// *   Аўтар: "БуслікДрэў" ( http://buslikdrev.by/ )
-// *   © 2016-2021; BuslikDrev - Усе правы захаваныя.
-// *   Спецыяльна для сайта: "OpenCart.pro" ( http://opencart.pro/ )
+// *   Аўтар: "БуслікДрэў" ( https://buslikdrev.by/ )
+// *   © 2016-2022; BuslikDrev - Усе правы захаваныя.
+// *   Спецыяльна для сайта: "OpenCart.pro" ( https://opencart.pro/ )
 
 if (version_compare(VERSION, '4.0.0', '>=')) {
 	//class ControllerModuleBusMenu extends ControllerExtensionModuleBusMenu {}
@@ -491,10 +491,10 @@ class ControllerExtensionModuleBusMenu extends Controller {
 
 		$setting = $this->{$this->paths['model']['bus_menu_path']}->getModule($module_id);
 
-		$setting_cats['cats_horizontal'] = $setting['cats']['cats_horizontal'];
-		$setting_cats['cats_vertical'] = $setting['cats']['cats_vertical'];
-		$setting_cats['cats_cell'] = $setting['cats']['cats_cell'];
-		$setting = $setting['setting'];
+		$setting_cats['cats_horizontal'] = (!empty($setting['cats']['cats_horizontal']) ? $setting['cats']['cats_horizontal'] : array());
+		$setting_cats['cats_vertical'] = (!empty($setting['cats']['cats_vertical']) ? $setting['cats']['cats_vertical'] : array());
+		$setting_cats['cats_cell'] = (!empty($setting['cats']['cats_cell']) ? $setting['cats']['cats_cell'] : array());
+		$setting = (!empty($setting['setting']) ? $setting['setting'] : array());
 		$setting['filter_status'] = true;
 
 		if (empty($setting['status'])) {
@@ -579,7 +579,7 @@ class ControllerExtensionModuleBusMenu extends Controller {
 			}
 		}
 
-		$data = false;
+		$data = array();
 		if ($setting['cache'] == 3) {
 			$data = $this->cache->get('seo_url.bus_menu.module.' . $module_id . '.' . md5($setting_cats['cats_vertical_route'] . $id_request . $webp . $currency . $language_id . $store_id));
 		}
@@ -613,7 +613,7 @@ class ControllerExtensionModuleBusMenu extends Controller {
 			}
 		}
 
-		if (!$data && json_encode($data) != '[]' && $ajax) {
+		if (!$data && $ajax) {
 			// формируем данные по-умолчанию
 			$setting['server'] = ($this->request->server['HTTPS'] ? $this->config->get('config_ssl') : $this->config->get('config_url'));
 			$setting['module_id'] = (isset($setting['module_id']) ? $setting['module_id'] : $module_id);
