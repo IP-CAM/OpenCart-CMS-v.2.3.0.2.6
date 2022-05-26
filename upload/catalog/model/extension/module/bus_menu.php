@@ -1,7 +1,7 @@
 <?php
-// *   Аўтар: "БуслікДрэў" ( http://buslikdrev.by/ )
-// *   © 2016-2021; BuslikDrev - Усе правы захаваныя.
-// *   Спецыяльна для сайта: "OpenCart.pro" ( http://opencart.pro/ )
+// *   Аўтар: "БуслікДрэў" ( https://buslikdrev.by/ )
+// *   © 2016-2022; BuslikDrev - Усе правы захаваныя.
+// *   Спецыяльна для сайта: "OpenCart.pro" ( https://opencart.pro/ )
 
 if (version_compare(VERSION, '2.2.0', '<')) {
 	class ModelModuleBusMenu extends ModelExtensionModuleBusMenu {}
@@ -11,13 +11,13 @@ class ModelExtensionModuleBusMenu extends Model {
 	// вывод настроек модуля
 	public function getModule($module_id = 0, $setting = array('cache' => 0)) {
 		$config_store_id = (int)$this->config->get('config_store_id');
-		$cache_data = false;
+		$cache_data = array();
 
 		if ($setting['cache']) {
 			$cache_data = $this->cache->get('seo_url.bus_menu.setting.' . (int)$module_id . '.' . $config_store_id);
 		}
 
-		if (!$cache_data && json_encode($cache_data) != '[]') {
+		if (!$cache_data) {
 			/* if ($module_id) { */
 				$sql = " WHERE bmts.store_id = '" . $config_store_id . "' AND bm.module_id = '" . (int)$module_id . "'";
 			/* } else {
