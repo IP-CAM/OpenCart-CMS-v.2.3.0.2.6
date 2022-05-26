@@ -1,9 +1,9 @@
 <?php
-// *   Аўтар: "БуслікДрэў" ( http://buslikdrev.by/ )
-// *   © 2016-2020; BuslikDrev - Усе правы захаваныя.
-// *   Спецыяльна для сайта: "OpenCart.pro" ( http://opencart.pro/ )
+// *   Аўтар: "БуслікДрэў" ( https://buslikdrev.by/ )
+// *   © 2016-2022; BuslikDrev - Усе правы захаваныя.
+// *   Спецыяльна для сайта: "OpenCart.pro" ( https://opencart.pro/ )
 
-if (version_compare(VERSION, '2.2.0', '<')) {
+if (version_compare(VERSION, '2.3.0', '<')) {
 	class ModelModuleBusMenu extends ModelExtensionModuleBusMenu {}
 }
 
@@ -40,13 +40,13 @@ class ModelExtensionModuleBusMenu extends Model {
 
 	// вывод настроек модуля
 	public function getModule($module_id = 0, $setting = array('cache' => 0)) {
-		$cache_data = false;
+		$cache_data = array();
 
 		if ($setting['cache']) {
 			$cache_data = $this->cache->get('seo_url.bus_menu.setting_admin.' . (int)$module_id . '.' . (int)$this->config->get('config_store_id'));
 		}
 
-		if (!$cache_data && json_encode($cache_data) != '[]') {
+		if (!$cache_data) {
 			$query = $this->db->query("SELECT module_id, setting, cats FROM " . DB_PREFIX . "bus_menu WHERE module_id = '" . (int)$module_id . "'");
 
 			if ($query->row) {
@@ -61,7 +61,7 @@ class ModelExtensionModuleBusMenu extends Model {
 				);
 			}
 
-			if ($setting['cache']) {
+			if ($setting['cache'] && $cache_data) {
 				$this->cache->set('seo_url.bus_menu.setting_admin.' . (int)$module_id . '.' . (int)$this->config->get('config_store_id'), $cache_data);
 			}
 		}
@@ -280,7 +280,7 @@ class ModelExtensionModuleBusMenu extends Model {
 
 			$cache_data[$id] = $this->db->query("SELECT c." . $table . "_id," . $select . " cd.* FROM " . DB_PREFIX . $table . " c LEFT JOIN " . DB_PREFIX . $table . "_description cd ON (c." . $table . "_id = cd." . $table . "_id) LEFT JOIN " . DB_PREFIX . $table . "_to_store c2s ON (c." . $table . "_id = c2s." . $table . "_id)" . $where . " AND cd.language_id = '" . $config_language_id . "' AND c2s.store_id = '" . $config_store_id . "'" . $sort . $order . $limit)->rows;
 
-			if ($data['cache'] == 1) {
+			if ($data['cache'] == 1 && $cache_data) {
 				$this->cache->set($table . '.' . 'bus_menu.getCats.' . (!$id ? $id . '.' : false) . $config_language_id . '.' . $config_store_id, $cache_data);
 			}
 		}
