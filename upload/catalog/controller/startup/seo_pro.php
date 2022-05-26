@@ -481,7 +481,7 @@ class ControllerStartupSeoPro extends Controller {
 						if (!empty($explode[2])) {
 							$params = array();
 							$exceptions = array_flip(explode(',', $explode[2]));
-							$params_all = explode('&', parse_url($this->request->server['REQUEST_URI'], PHP_URL_QUERY));
+							$params_all = explode('&', (string)parse_url($this->request->server['REQUEST_URI'], PHP_URL_QUERY));
 							foreach ($params_all as $result) {
 								$key = strstr($result, '=', true);
 								if (isset($exceptions[$key])) {
