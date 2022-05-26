@@ -71,7 +71,7 @@ class Bus_Cache {
 		'pagespeed_css_min_links'         => false,
 		'pagespeed_css_min_download'      => false,
 		'pagespeed_css_min_exception'     => false,
-		'pagespeed_css_min_font'          => array(),
+		'pagespeed_css_min_font'          => false,
 		'pagespeed_css_min_display'       => false,
 		'pagespeed_css_min_url'           => false,
 		'pagespeed_css_critical'          => false,
@@ -217,7 +217,7 @@ class Bus_Cache {
 		}
 
 		// отключаем кэш, если магазин на обслуживании
-		if (!$setting['config_maintenance'] && !$setting['debug']) {
+		if ($setting['config_maintenance'] && !$setting['debug']) {
 			$setting['cache_status'] = false;
 		}
 
@@ -584,7 +584,7 @@ class Bus_Cache {
 					foreach($setting['styles'] as $style) {
 						$her = strstr($style['href'], '//');
 						if (!$her || $her && $setting['HTTP_HOST'] && strpos($style['href'], $setting['HTTP_HOST']) !== false) {
-							$href = explode('?', str_replace(array('..', 'http://' . $setting['HTTP_HOST'] . '/', 'http://' . $setting['HTTP_HOST'] . '/', '//' . $setting['HTTP_HOST'] . '/'), '', $style['href']));
+							$href = explode('?', str_replace(array('..', 'https://' . $setting['HTTP_HOST'] . '/', 'http://' . $setting['HTTP_HOST'] . '/', '://' . $setting['HTTP_HOST'] . '/'), '', $style['href']));
 							$href = $href[0];
 							$file = $dir . $href;
 						} else {
@@ -807,7 +807,7 @@ class Bus_Cache {
 					foreach($setting['scripts'] as $script)  {
 						$her = strstr($script['href'], '//');
 						if (!$her || $her && $setting['HTTP_HOST'] && strpos($script['href'], $setting['HTTP_HOST']) !== false) {
-							$href = explode('?', str_replace(array('..', 'http://' . $setting['HTTP_HOST'] . '/', 'http://' . $setting['HTTP_HOST'] . '/', '//' . $setting['HTTP_HOST'] . '/'), '', $script['href']));
+							$href = explode('?', str_replace(array('..', 'https://' . $setting['HTTP_HOST'] . '/', 'http://' . $setting['HTTP_HOST'] . '/', '://' . $setting['HTTP_HOST'] . '/'), '', $script['href']));
 							$href = $href[0];
 							$file = $dir . $href;
 						} else {
