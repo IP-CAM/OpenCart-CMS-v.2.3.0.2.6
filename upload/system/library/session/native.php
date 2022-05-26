@@ -15,11 +15,11 @@ class Native extends \SessionHandler {
 		return (string)parent::create_sid();
 	}
 
-	/* public function validate_sid(string $session_id) {
+	/* public function validate_sid($session_id) {
 		return parent::validate_sid($session_id);
 	}
 
-	public function update_timestamp(string $session_id, string $data) {
+	public function update_timestamp($session_id, $data = '')) {
 		return parent::update_timestamp($session_id, $data);
 	} */
 
@@ -34,22 +34,22 @@ class Native extends \SessionHandler {
 	}
 
 	#[\ReturnTypeWillChange]
-	public function read(string $session_id) /* : string|false */ {
+	public function read($session_id) /* : string|false */ {
 		return (string)parent::read($session_id);
 	}
 
 	#[\ReturnTypeWillChange]
-	public function write(string $session_id, string $data) /* : bool */ {
+	public function write($session_id, $data = '') /* : bool */ {
 		return (bool)parent::write($session_id, $data);
 	}
 
 	#[\ReturnTypeWillChange]
-	public function destroy(string $session_id) /* : bool */ {
+	public function destroy($session_id) /* : bool */ {
 		return (bool)parent::destroy($session_id);
 	}
 
 	#[\ReturnTypeWillChange]
-	public function gc(int $maxlifetime = 0) /* : int|false */ {
+	public function gc($maxlifetime = 0) /* : int|false */ {
 		return (int)parent::gc($maxlifetime);
 	}
 }
