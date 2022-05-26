@@ -86,7 +86,7 @@ class ControllerExtensionModuleBusMenu extends Controller {
 	private $name_arhive = 'blMenu';
 	private $code = '01000046';
 	private $mame = 'ЫМеню - "blMenu"';
-	private $version = '1.0.32';
+	private $version = '1.0.33';
 	private $author = 'BuslikDrev.by';
 	private $link = 'https://liveopencart.ru/buslikdrev';
 	private $version_oc = 2.3;
@@ -482,7 +482,7 @@ class ControllerExtensionModuleBusMenu extends Controller {
 			$html .= '          <div id="cats-desc-' . $row . '" class="collapse">';
 			$html .= '            <ul class="nav nav-tabs language" id="language-' . $row . '">';
 			foreach ($setting['languages'] as $language) {
-				$html .= '              <li><a href="#language-' . $language['language_id']  . '-' . $row . '" data-toggle="tab"><img src="' . (version_compare(VERSION, '2.3.0.0', '<') ? 'view/image/flags/' . $language['image'] : 'language/' . $language['code'] . '/' . $language['code'] . '.png')  . '" title="' . $language['name']  . '" /> ' . $language['name']  . '</a></li>';
+				$html .= '              <li><a href="#language-' . $language['language_id']  . '-' . $row . '" data-toggle="tab"><img src="' . (version_compare(VERSION, '2.2.0.0', '<') ? 'view/image/flags/' . $language['image'] : 'language/' . $language['code'] . '/' . $language['code'] . '.png')  . '" title="' . $language['name']  . '" /> ' . $language['name']  . '</a></li>';
 			}
 			$html .= '            </ul>';
 			$html .= '            <div class="tab-content">';
