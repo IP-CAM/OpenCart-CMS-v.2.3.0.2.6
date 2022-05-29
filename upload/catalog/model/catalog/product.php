@@ -1,6 +1,6 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2020.
-// *	@forum		http://forum.opencart.pro
+// *	@copyright	OPENCART.PRO 2011 - 2022.
+// *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
@@ -50,7 +50,7 @@ class ModelCatalogProduct extends Model {
 				'height'           => $query->row['height'],
 				'length_class_id'  => $query->row['length_class_id'],
 				'subtract'         => $query->row['subtract'],
-				'rating'           => round($query->row['rating']),
+				'rating'           => (int)$query->row['rating'],
 				'reviews'          => $query->row['reviews'] ? $query->row['reviews'] : 0,
 				'minimum'          => $query->row['minimum'],
 				'sort_order'       => $query->row['sort_order'],
