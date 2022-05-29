@@ -1,6 +1,6 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2020.
-// *	@forum		http://forum.opencart.pro
+// *	@copyright	OPENCART.PRO 2011 - 2022.
+// *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
@@ -23,7 +23,7 @@ class ModelBlogArticle extends Model {
 				'meta_description' => $query->row['meta_description'],
 				'meta_keyword'     => $query->row['meta_keyword'],
 				'image'            => $query->row['image'],
-				'rating'           => round($query->row['rating']),
+				'rating'           => (int)$query->row['rating'],
 				'reviews'          => $query->row['reviews'],
 				'sort_order'       => $query->row['sort_order'],
 				'article_review'   => $query->row['article_review'],
