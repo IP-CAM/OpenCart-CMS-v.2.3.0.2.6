@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2021.
+// *	@copyright	OPENCART.PRO 2011 - 2022.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -16,23 +16,25 @@ class ControllerExtensionModuleSlideshow extends Controller {
 
 		$results = $this->model_design_banner->getBanner($setting['banner_id']);
 
-		if ($results) {
-			foreach ($results as $result) {
-				if (is_file(DIR_IMAGE . $result['image'])) {
-					$data['banners'][] = array(
-						'title' => $result['title'],
-						'link'  => $result['link'],
-						'image' => $this->model_tool_image->resize($result['image'], $setting['width'], $setting['height'])
-					);
-				}
+		foreach ($results as $result) {
+			if (is_file(DIR_IMAGE . $result['image'])) {
+				$data['banners'][] = array(
+					'title' => $result['title'],
+					'link'  => $result['link'],
+					'image' => $this->model_tool_image->resize($result['image'], $setting['width'], $setting['height'])
+				);
 			}
+		}
 
+		if ($data['banners']) {
 			$data['module'] = $module++;
 
 			$this->document->addStyle('catalog/view/javascript/jquery/owl-carousel/owl.carousel.css');
 			$this->document->addScript('catalog/view/javascript/jquery/owl-carousel/owl.carousel.min.js');
 
 			return $this->load->view('extension/module/slideshow', $data);
+		} else {
+			return false;
 		}
 	}
 }
