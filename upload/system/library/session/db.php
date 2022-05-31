@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2021.
+// *	@copyright	OPENCART.PRO 2011 - 2022.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -37,7 +37,7 @@ final class DB {
 			if ($this->config->get('session_prefix')) {
 				$session_id = substr_replace($session_id, $this->config->get('session_prefix'), (int)($this->config->get('session_length')/100*20), 0);
 			}
-			$this->db->query("REPLACE INTO `" . DB_PREFIX . "session` SET `session_id` = '" . $this->db->escape($session_id) . "', `data` = '" . $this->db->escape($data ? json_encode($data) : '') . "', `expire` = '" . $this->db->escape(date('Y-m-d H:i:s', time() + $this->config->get('session_maxlifetime'))) . "'");
+			$this->db->query("REPLACE INTO `" . DB_PREFIX . "session` SET `session_id` = '" . $this->db->escape($session_id) . "', `data` = '" . $this->db->escape($data ? json_encode($data) : '') . "', `expire` = '" . $this->db->escape(date('Y-m-d H:i:s', time() + $this->config->get('session_lifetime'))) . "'");
 
 			return true;
 		} else {
@@ -58,7 +58,7 @@ final class DB {
 		$total = 0;
 
 		if (round(rand(1, $this->config->get('session_divisor') / $this->config->get('session_probability'))) == 1) {
-			$query = $this->db->query("DELETE FROM `" . DB_PREFIX . "session` WHERE `expire` < '" . $this->db->escape(date('Y-m-d H:i:s', time() + $maxlifetime)) . "'");
+			$query = $this->db->query("DELETE FROM `" . DB_PREFIX . "session` WHERE `expire` < '" . $this->db->escape(date('Y-m-d H:i:s', time())) . "' OR `expire` > '" . $this->db->escape(date('Y-m-d H:i:s', time() + $maxlifetime)) . "'");
 
 			if ($query) {
 				$query = $this->db->query("SELECT ROW_COUNT() AS total")->row['total'];
