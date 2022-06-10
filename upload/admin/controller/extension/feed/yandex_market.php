@@ -320,7 +320,7 @@ class ControllerExtensionFeedYandexMarket extends Controller {
 
 		$this->load->model('catalog/category');
 
-		$data['categories'] = $this->model_catalog_category->getCategories(0);
+		$data['categories'] = $this->model_catalog_category->getCategories();
 
 		if (isset($this->request->post['yandex_market_categories'])) {
 			$data['yandex_market_categories'] = $this->request->post['yandex_market_categories'];
@@ -332,7 +332,7 @@ class ControllerExtensionFeedYandexMarket extends Controller {
 
 		$this->load->model('catalog/manufacturer');
 
-		$data['manufacturers'] = $this->model_catalog_manufacturer->getManufacturers(0);
+		$data['manufacturers'] = $this->model_catalog_manufacturer->getManufacturers();
 
 		if (isset($this->request->post['yandex_market_manufacturers'])) {
 			$data['yandex_market_manufacturers'] = $this->request->post['yandex_market_manufacturers'];
