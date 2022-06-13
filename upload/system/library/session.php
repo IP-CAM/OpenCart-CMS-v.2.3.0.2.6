@@ -26,6 +26,9 @@ class Session {
 			if ($this->config->get('session_lifetime') > $this->config->get('session_maxlifetime')) {
 				$this->config->set('session_maxlifetime', (int)$this->config->get('session_lifetime'));
 			}
+			if (!$this->config->get('session_maxlifetime')) {
+				$this->config->set('session_maxlifetime', 1440);
+			}
 
 			$prefix_count = iconv_strlen($this->config->get('session_prefix'));
 			if ($engine == 'native' || $engine == 'file') {
