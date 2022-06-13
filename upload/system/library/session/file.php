@@ -74,7 +74,7 @@ class File {
 		}
 	}
 
-	public function gc($maxlifetime = 0) {
+	public function gc($maxlifetime = 1440) {
 		$total = 0;
 
 		if (round(rand(1, $this->config->get('session_divisor') / $this->config->get('session_probability'))) == 1) {

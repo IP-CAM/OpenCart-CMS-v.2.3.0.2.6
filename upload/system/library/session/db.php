@@ -37,7 +37,12 @@ final class DB {
 			if ($this->config->get('session_prefix')) {
 				$session_id = substr_replace($session_id, $this->config->get('session_prefix'), (int)($this->config->get('session_length')/100*20), 0);
 			}
-			$this->db->query("REPLACE INTO `" . DB_PREFIX . "session` SET `session_id` = '" . $this->db->escape($session_id) . "', `data` = '" . $this->db->escape($data ? json_encode($data) : '') . "', `expire` = '" . $this->db->escape(date('Y-m-d H:i:s', time() + $this->config->get('session_lifetime'))) . "'");
+			if ($this->config->get('session_lifetime')) {
+				$session_lifetime = $this->config->get('session_lifetime');
+			} else {
+				$session_lifetime = $this->config->get('session_maxlifetime');
+			}
+			$this->db->query("REPLACE INTO `" . DB_PREFIX . "session` SET `session_id` = '" . $this->db->escape($session_id) . "', `data` = '" . $this->db->escape($data ? json_encode($data) : '') . "', `expire` = '" . $this->db->escape(date('Y-m-d H:i:s', time() + $session_lifetime)) . "'");
 
 			return true;
 		} else {
@@ -54,7 +59,7 @@ final class DB {
 		return true;
 	}
 
-	public function gc($maxlifetime = 0) {
+	public function gc($maxlifetime = 1440) {
 		$total = 0;
 
 		if (round(rand(1, $this->config->get('session_divisor') / $this->config->get('session_probability'))) == 1) {
