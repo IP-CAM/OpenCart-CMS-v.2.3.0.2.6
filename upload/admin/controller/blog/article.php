@@ -839,9 +839,7 @@ class ControllerBlogArticle extends Controller {
 		// Categories
 		$this->load->model('blog/category');
 
-		$categories = $this->model_blog_category->getAllCategories();
-
-		$data['categories'] = $this->model_blog_category->getCategories($categories);
+		$data['categories'] = $this->model_blog_category->getCategories();
 
 		if (isset($this->request->post['main_blog_category_id'])) {
 			$data['main_blog_category_id'] = $this->request->post['main_blog_category_id'];
