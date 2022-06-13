@@ -140,30 +140,6 @@ class ControllerExtensionFeedYandexMarket extends Controller {
 			$data['error_image_height'] = '';
 		}
 
-		if (isset($this->error['error_image_width_min'])) {
-			$data['error_image_width_min'] = $this->error['error_image_width_min'];
-		} else {
-			$data['error_image_width_min'] = '';
-		}
-
-		if (isset($this->error['error_image_height_min'])) {
-			$data['error_image_height_min'] = $this->error['error_image_height_min'];
-		} else {
-			$data['error_image_height_min'] = '';
-		}
-
-		if (isset($this->error['error_image_width_max'])) {
-			$data['error_image_width_max'] = $this->error['error_image_width_max'];
-		} else {
-			$data['error_image_width_max'] = '';
-		}
-
-		if (isset($this->error['error_image_height_max'])) {
-			$data['error_image_height_max'] = $this->error['error_image_height_max'];
-		} else {
-			$data['error_image_height_max'] = '';
-		}
-
 		$data['breadcrumbs'] = array();
 
 		$data['breadcrumbs'][] = array(
@@ -414,9 +390,9 @@ class ControllerExtensionFeedYandexMarket extends Controller {
 			$this->error['error_image_width'] = $this->language->get('error_image_width');
 		} else {
 			if ($this->request->post['yandex_market_image_width'] < 250) {
-				$this->error['error_image_width_min'] = $this->language->get('error_image_width_min');
+				$this->error['error_image_width'] = $this->language->get('error_image_width_min');
 			} elseif ($this->request->post['yandex_market_image_width'] > 3500) {
-				$this->error['error_image_width_max'] = $this->language->get('error_image_width_max');
+				$this->error['error_image_width'] = $this->language->get('error_image_width_max');
 			}
 		}
 
@@ -424,9 +400,9 @@ class ControllerExtensionFeedYandexMarket extends Controller {
 			$this->error['error_image_height'] = $this->language->get('error_image_height');
 		} else {
 			if ($this->request->post['yandex_market_image_height'] < 250) {
-				$this->error['error_image_height_min'] = $this->language->get('error_image_height_min');
+				$this->error['error_image_height'] = $this->language->get('error_image_height_min');
 			} elseif ($this->request->post['yandex_market_image_height'] > 3500) {
-				$this->error['error_image_height_max'] = $this->language->get('error_image_height_max');
+				$this->error['error_image_height'] = $this->language->get('error_image_height_max');
 			}
 		}
 
