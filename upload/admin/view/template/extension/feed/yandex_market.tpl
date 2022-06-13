@@ -243,18 +243,6 @@
               <?php if ($error_image_height) { ?>
               <div class="text-danger"><?php echo $error_image_height; ?></div>
               <?php } ?>
-              <?php if ($error_image_width_min) { ?>
-              <div class="text-danger"><?php echo $error_image_width_min; ?></div>
-              <?php } ?>
-              <?php if ($error_image_height_min) { ?>
-              <div class="text-danger"><?php echo $error_image_height_min; ?></div>
-              <?php } ?>
-              <?php if ($error_image_width_max) { ?>
-              <div class="text-danger"><?php echo $error_image_width_max; ?></div>
-              <?php } ?>
-              <?php if ($error_image_height_max) { ?>
-              <div class="text-danger"><?php echo $error_image_height_max; ?></div>
-              <?php } ?>
             </div>
           </div>
           <div class="form-group">
