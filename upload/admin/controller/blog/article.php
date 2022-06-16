@@ -989,21 +989,23 @@ class ControllerBlogArticle extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-		foreach ($this->request->post['article_description'] as $language_id => $value) {
-			if ((utf8_strlen($value['name']) < 3) || (utf8_strlen($value['name']) > 255)) {
-				$this->error['name'][$language_id] = $this->language->get('error_name');
-			}
+		if (isset($this->request->post['article_description']) && in_array($this->request->post['article_description'])) {
+			foreach ($this->request->post['article_description'] as $language_id => $value) {
+				if (!isset($value['name']) || (utf8_strlen($value['name']) < 2) || (utf8_strlen($value['name']) > 255)) {
+					$this->error['name'][$language_id] = $this->language->get('error_name');
+				}
 
-			if ((utf8_strlen($value['meta_title']) < 0) || (utf8_strlen($value['meta_title']) > 255)) {
-				$this->error['meta_title'][$language_id] = $this->language->get('error_meta_title');
-			}
+				if (!isset($value['meta_h1']) || (utf8_strlen($value['meta_h1']) < 0) || (utf8_strlen($value['meta_h1']) > 255)) {
+					$this->error['meta_h1'][$language_id] = $this->language->get('error_meta_h1');
+				}
 
-			if ((utf8_strlen($value['meta_h1']) < 0) || (utf8_strlen($value['meta_h1']) > 255)) {
-				$this->error['meta_h1'][$language_id] = $this->language->get('error_meta_h1');
+				if (!isset($value['meta_title']) || (utf8_strlen($value['meta_title']) < 0) || (utf8_strlen($value['meta_title']) > 255)) {
+					$this->error['meta_title'][$language_id] = $this->language->get('error_meta_title');
+				}
 			}
 		}
 
-		if (utf8_strlen($this->request->post['keyword']) > 0) {
+		if (!empty($this->request->post['keyword'])) {
 			$this->load->model('catalog/url_alias');
 
 			$url_alias_info = $this->model_catalog_url_alias->getUrlAlias($this->request->post['keyword']);
@@ -1063,7 +1065,7 @@ class ControllerBlogArticle extends Controller {
 			if (isset($this->request->get['limit'])) {
 				$limit = $this->request->get['limit'];
 			} else {
-				$limit = 5;
+				$limit = $this->config->get('configblog_limit_admin');
 			}
 
 			$filter_data = array(
