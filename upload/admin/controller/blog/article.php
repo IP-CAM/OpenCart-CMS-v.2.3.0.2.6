@@ -475,8 +475,8 @@ class ControllerBlogArticle extends Controller {
 			'filter_noindex'      => $filter_noindex,
 			'sort'                => $sort,
 			'order'               => $order,
-			'start'               => ($page - 1) * $this->config->get('config_limit_admin'),
-			'limit'               => $this->config->get('config_limit_admin')
+			'start'               => ($page - 1) * $this->config->get('configblog_limit_admin'),
+			'limit'               => $this->config->get('configblog_limit_admin')
 		);
 
 		$this->load->model('tool/image');
@@ -591,12 +591,12 @@ class ControllerBlogArticle extends Controller {
 		$pagination = new Pagination();
 		$pagination->total = $article_total;
 		$pagination->page = $page;
-		$pagination->limit = $this->config->get('config_limit_admin');
+		$pagination->limit = $this->config->get('configblog_limit_admin');
 		$pagination->url = $this->url->link('blog/article', 'token=' . $this->session->data['token'] . $url . '&page={page}', true);
 
 		$data['pagination'] = $pagination->render();
 
-		$data['results'] = sprintf($this->language->get('text_pagination'), ($article_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($article_total - $this->config->get('config_limit_admin'))) ? $article_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $article_total, ceil($article_total / $this->config->get('config_limit_admin')));
+		$data['results'] = sprintf($this->language->get('text_pagination'), ($article_total) ? (($page - 1) * $this->config->get('configblog_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('configblog_limit_admin')) > ($article_total - $this->config->get('configblog_limit_admin'))) ? $article_total : ((($page - 1) * $this->config->get('configblog_limit_admin')) + $this->config->get('configblog_limit_admin')), $article_total, ceil($article_total / $this->config->get('configblog_limit_admin')));
 
 		$data['filter_name'] = $filter_name;
 		$data['filter_category_name'] = $filter_category_name;
