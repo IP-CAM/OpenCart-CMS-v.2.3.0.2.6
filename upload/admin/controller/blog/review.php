@@ -689,7 +689,7 @@ class ControllerBlogReview extends Controller {
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['footer'] = $this->load->controller('common/footer');
 
-		$this->response->setOutput($this->load->view('blog/review_form.tpl', $data));
+		$this->response->setOutput($this->load->view('blog/review_form', $data));
 	}
 
 	protected function validateForm() {
@@ -697,15 +697,15 @@ class ControllerBlogReview extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-		if (!$this->request->post['article_id']) {
+		if (empty($this->request->post['article_id'])) {
 			$this->error['article'] = $this->language->get('error_article');
 		}
 
-		if ((utf8_strlen($this->request->post['author']) < 3) || (utf8_strlen($this->request->post['author']) > 64)) {
+		if (!isset($this->request->post['author']) || (utf8_strlen($this->request->post['author']) < 3) || (utf8_strlen($this->request->post['author']) > 64)) {
 			$this->error['author'] = $this->language->get('error_author');
 		}
 
-		if (utf8_strlen($this->request->post['text']) < 1) {
+		if (!isset($this->request->post['text']) || utf8_strlen($this->request->post['text']) < 1) {
 			$this->error['text'] = $this->language->get('error_text');
 		}
 
