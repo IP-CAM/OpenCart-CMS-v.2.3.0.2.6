@@ -989,7 +989,7 @@ class ControllerBlogArticle extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-		if (isset($this->request->post['article_description']) && in_array($this->request->post['article_description'])) {
+		if (isset($this->request->post['article_description']) && is_array($this->request->post['article_description'])) {
 			foreach ($this->request->post['article_description'] as $language_id => $value) {
 				if (!isset($value['name']) || (utf8_strlen($value['name']) < 2) || (utf8_strlen($value['name']) > 255)) {
 					$this->error['name'][$language_id] = $this->language->get('error_name');
