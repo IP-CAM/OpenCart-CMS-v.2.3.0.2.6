@@ -535,7 +535,7 @@ class ControllerBlogCategory extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-		if (isset($this->request->post['category_description']) && in_array($this->request->post['category_description'])) {
+		if (isset($this->request->post['category_description']) && is_array($this->request->post['category_description'])) {
 			foreach ($this->request->post['category_description'] as $language_id => $value) {
 				if (!isset($value['name']) || (utf8_strlen($value['name']) < 2) || (utf8_strlen($value['name']) > 255)) {
 					$this->error['name'][$language_id] = $this->language->get('error_name');
