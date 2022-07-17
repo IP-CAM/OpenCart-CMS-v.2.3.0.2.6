@@ -40,62 +40,82 @@ class Bus_Cache {
 		
 	);
 	private $setting_default = array(
-		'status'                          => false,
-		'cache_status'                    => false,
-		'cache_ses'                       => false,
-		'cache_onrot'                     => false,
-		'cache_rot'                       => false,
-		'cache_customer'                  => false,
-		'cache_cart'                      => false,
-		'cache_cart_count'                => 0,
-		'cache_oc'                        => false,
-		'cache_controller'                => false,
-		'cache_model'                     => array(),
-		'cache_engine'                    => false,
-		'cache_expire_controller'         => 3600,
-		'cache_expire_model'              => 3600,
-		'cache_expire'                    => 3600,
-		'cache_expire_all'                => 3600,
-		'pagespeed_status'                => false,
-		'pagespeed_onrot'                 => false,
-		'pagespeed_rot'                   => false,
-		'pagespeed_attribute_w_h'         => false,
-		'pagespeed_lazy_load_images'      => false,
-		'pagespeed_lazy_load_html'        => false,
-		'pagespeed_device'                => false,
-		'pagespeed_html_min'              => false,
-		'pagespeed_html_replace'          => false,
-		'pagespeed_replace'               => false,
-		'pagespeed_css_min'               => false,
-		'pagespeed_css_replace'           => false,
-		'pagespeed_css_min_links'         => false,
-		'pagespeed_css_min_download'      => false,
-		'pagespeed_css_min_exception'     => false,
-		'pagespeed_css_min_font'          => false,
-		'pagespeed_css_min_display'       => false,
-		'pagespeed_css_min_url'           => false,
-		'pagespeed_css_critical'          => false,
-		'pagespeed_css_critical_status'   => false,
-		'pagespeed_css_critical_name'     => '',
-		'pagespeed_css_critical_all'      => true,
-		'pagespeed_css_critical_time'     => 1,
-		'pagespeed_css_critical_elements' => "font-face\r\nkeyframes\r\n*\r\n::after, ::before\r\n]",
-		'pagespeed_css_inline_transfer'   => false,
-		'pagespeed_css_inline_exception'  => false,
-		'pagespeed_css_events'            => false,
-		'pagespeed_css_style'             => false,
-		'pagespeed_js_min'                => false,
-		'pagespeed_js_replace'            => false,
-		'pagespeed_js_min_download'       => false,
-		'pagespeed_js_min_exception'      => false,
-		'pagespeed_js_inline_event'       => false,
-		'pagespeed_js_inline_event_time'  => false,
-		'pagespeed_js_inline_transfer'    => false,
-		'pagespeed_js_inline_exception'   => false,
-		'pagespeed_js_events'             => false,
-		'pagespeed_js_script'             => false,
-		'debug'                           => false,
-		'getDebugSpeed'                   => false,
+		'status'                             => false,
+		'cache_status'                       => false,
+		'cache_con'                          => false,
+		'cache_ses'                          => false,
+		'cache_cok'                          => false,
+		'cache_par'                          => array(
+			'cache_off',
+			'_route_',
+			'route',
+			'blog_article_id',
+			'article_id',
+			'category_id',
+			'path',
+			'manufacturer_id',
+			'product_id',
+			'page',
+			'sort',
+			'order',
+			'limit'
+		),
+		'cache_onrot'                        => false,
+		'cache_rot'                          => false,
+		'cache_customer'                     => false,
+		'cache_cart'                         => false,
+		'cache_cart_count'                   => 0,
+		'cache_oc'                           => false,
+		'cache_controller'                   => false,
+		'cache_model'                        => false,
+		'cache_engine'                       => false,
+		'cache_engine_mine'                  => false,
+		'cache_expire'                       => 3600,
+		'cache_expire_cart'                  => 3600,
+		'cache_expire_controller'            => 3600,
+		'cache_expire_model'                 => 3600,
+		'cache_expire_all'                   => 3600,
+		'pagespeed_status'                   => false,
+		'pagespeed_onrot'                    => false,
+		'pagespeed_rot'                      => false,
+		'pagespeed_attribute_w_h'            => false,
+		'pagespeed_lazy_load_images'         => 0,
+		'pagespeed_lazy_load_html'           => array(),
+		'pagespeed_html_replace'             => false,
+		'pagespeed_html_min'                 => 0,
+		'pagespeed_css_replace'              => false,
+		'pagespeed_css_min'                  => 0,
+		'pagespeed_css_min_links'            => false,
+		'pagespeed_css_min_download'         => false,
+		'pagespeed_css_min_exception'        => false,
+		'pagespeed_css_min_font'             => false,
+		'pagespeed_css_min_display'          => false,
+		'pagespeed_css_min_url'              => false,
+		'pagespeed_css_critical'             => false,
+		'pagespeed_css_critical_status'      => false,
+		'pagespeed_css_critical_name'        => '',
+		'pagespeed_css_critical_all'         => true,
+		'pagespeed_css_critical_time'        => 1,
+		'pagespeed_css_critical_elements'    => "font-face\r\nkeyframes\r\n*\r\n::after, ::before\r\n]",
+		'pagespeed_css_critical_links'       => false,
+		'pagespeed_css_inline_transfer'      => 0,
+		'pagespeed_css_inline_exception'     => false,
+		'pagespeed_css_events'               => false,
+		'pagespeed_css_style'                => false,
+		'pagespeed_js_replace'               => false,
+		'pagespeed_js_min'                   => 0,
+		'pagespeed_js_min_links'             => false,
+		'pagespeed_js_min_download'          => false,
+		'pagespeed_js_min_exception'         => false,
+		'pagespeed_js_inline_event'          => false,
+		'pagespeed_js_inline_event_time'     => 0,
+		'pagespeed_js_inline_transfer'       => 0,
+		'pagespeed_js_inline_transfer_onrot' => false,
+		'pagespeed_js_inline_exception'      => false,
+		'pagespeed_js_events'                => false,
+		'pagespeed_js_script'                => false,
+		'debug'                              => false,
+		'getDebugSpeed'                      => false,
 	);
 	private $outputTransfer = array(
 		'css' => array('', '', '', ''),
@@ -113,13 +133,12 @@ class Bus_Cache {
 	//public function output() {}
 	//public function controller() {}
 	//public function model() {}
-	//public function view() {}
 	//private function realUrlCSS() {}
 	//private function minCSS() {}
 	//private function minJS() {}
 	//private function minHTML() {}
 	//private function setDebugSpeed() {}
-	//private function var_dump() {}
+	//private function examination() {}
 
 	public function __construct($registry = false, $cache_timer = 0) {
 		if ($registry) {
@@ -154,6 +173,9 @@ class Bus_Cache {
 
 		$setting_default['route'] = false;
 		$setting_default['keyword'] = false;
+		$setting_default['config'] = array();
+		$setting_default['session'] = array();
+		$setting_default['params'] = array();
 
 		if (is_array($setting)) {
 			foreach ($setting as $key => $result) {
@@ -163,6 +185,9 @@ class Bus_Cache {
 
 		$setting = $setting_default;
 		$this->setting_default = $setting_default;
+		if (!defined('BUS_CACHE_SETTING')) {
+			//('BUS_CACHE_SETTING', $setting_default);
+		}
 
 		// время загрузки страницы
 		$cache_timer = (float)$cache_timer;
@@ -198,6 +223,17 @@ class Bus_Cache {
 		}
 
 		// critical
+		if ($user->isLogged() && $setting['pagespeed_css_critical'] && $setting['pagespeed_status'] && $setting['pagespeed_css_min']) {
+			if (!empty($this->request->post['bus_critical_name']) && utf8_strtolower(pathinfo($this->request->post['bus_critical_name'], PATHINFO_EXTENSION)) == 'css') {
+				$setting['pagespeed_css_critical_name'] = 'critical_' . preg_replace('/[^A-Z0-9\.]/i', '', $this->request->post['bus_critical_name']);
+			}
+			if (!empty($this->request->post['bus_critical']) && $setting['pagespeed_css_critical_name'] && !is_file(DIR_IMAGE . 'bus_cache/' . $setting['pagespeed_css_critical_name'])) {
+				if (!is_dir(DIR_IMAGE . 'bus_cache/')) {
+					mkdir(DIR_IMAGE . 'bus_cache/', 0755);
+				}
+				file_put_contents(DIR_IMAGE . 'bus_cache/' . $setting['pagespeed_css_critical_name'], $this->minCSS(html_entity_decode($this->request->post['bus_critical'], ENT_QUOTES, 'UTF-8'), $setting['pagespeed_css_min']));
+			}
+		}
 
 		// отключаем кэш, если пользователь авторизован
 		if (!$setting['cache_customer'] && $setting['cache_status']) {
@@ -222,7 +258,17 @@ class Bus_Cache {
 		}
 
 		// условие обработки роута и keyword
-		if ($setting['cache_status'] || $setting['pagespeed_status']) {
+		if ($setting['cache_status'] || $setting['cache_controller'] || $setting['cache_model'] || $setting['pagespeed_status']) {
+			if (!empty($this->request->get)) {
+				foreach ($this->request->get as $key => $result) {
+					$setting['params'][$key] = $result;
+				}
+			}
+			if (!empty($this->request->post)) {
+				foreach ($this->request->post as $key => $result) {
+					$setting['params'][$key] = $result;
+				}
+			}
 			if (isset($this->request->get['_route_'])) {
 				$setting['route'] = $this->request->get['_route_'];
 				$setting['keyword'] = utf8_strtolower(basename($setting['route']));
@@ -239,27 +285,27 @@ class Bus_Cache {
 
 				if ($query->num_rows && $query->row['query']) {
 					$setting['route'] = $query->row['query'];
+					$param = strstr($query->row['query'], '=', true);
+					if ($param) {
+						$setting['params'][$param] = substr(strstr($query->row['query'], '='), 1);
+					}
 				}
 			} elseif (isset($this->request->get['route'])) {
 				$setting['route'] = $this->request->get['route'];
 			} elseif (isset($this->request->post['route'])) {
 				$setting['route'] = $this->request->post['route'];
 			} else {
-				$setting['route'] = 'common/home';
+				$setting['route'] = ($this->config->get('action_default') ? $this->config->get('action_default') : 'common/home');
 			}
 			if ($setting['route']) {
 				$setting['route'] = utf8_strtolower($setting['route']);
 			}
 		}
 
-		// параметры работы кэша
-
 		// параметры исключения из кэша
 		if ($setting['cache_rot'] && $setting['cache_status']) {
-			$exceptions = str_replace(array("\r", "\n", ';', ' '), ',', $setting['cache_rot']);
-			$exceptions = str_replace(',,', ',', $exceptions);
-			$exceptions = utf8_strtolower($exceptions);
-			$exceptions = explode(',', $exceptions);
+			$exceptions = $setting['cache_rot'];
+			$exceptions = explode("\r\n", $exceptions);
 
 			foreach ($exceptions as $exception) {
 				if ($exception && strpos($setting['route'], $exception) !== false || $setting['keyword'] && strpos($exception, $setting['keyword']) !== false) {
@@ -268,56 +314,48 @@ class Bus_Cache {
 			}
 		}
 
-		// данные сессии
-		$session = array();
+		// данные конфиг
+		$setting['config'] = array();
 
-		if ($setting['cache_ses'] && $setting['cache_status']) {
-			$exceptions = str_replace(array("\r", "\n", ';', ' '), ',', $setting['cache_ses']);
-			$exceptions = str_replace(',,', ',', $exceptions);
-			$exceptions = utf8_strtolower($exceptions);
-			$exceptions = explode(',', $exceptions);
+		if ($setting['cache_con'] && ($setting['cache_status'] || $setting['cache_controller'] || $setting['cache_model'])) {
+			$exceptions = $setting['cache_con'];
+			$exceptions = explode("\r\n", $exceptions);
 
 			foreach ($exceptions as $exception) {
-				$exception = explode('|', $exception);
-				$count = 0;
+				if ($exception && substr($exception, 0, 1) != ';') {
+					$exception = explode('|', $exception);
 
-				// валидация
-				if (isset($this->session->data[$exception[0]])) {
-					$count = 1;
-					if (isset($exception[1]) && isset($this->session->data[$exception[0]][$exception[1]])) {
-						$count = 2;
-						if (isset($exception[2]) && isset($this->session->data[$exception[0]][$exception[1]][$exception[2]])) {
-							$count = 3;
-							if (isset($exception[3]) && isset($this->session->data[$exception[0]][$exception[1]][$exception[2]][$exception[3]])) {
-								$count = 4;
-								if (isset($exception[4]) && isset($this->session->data[$exception[0]][$exception[1]][$exception[2]][$exception[3]][$exception[4]])) {
-									$count = 5;
-									if (isset($exception[5]) && isset($this->session->data[$exception[0]][$exception[1]][$exception[2]][$exception[3]][$exception[4]][$exception[5]])) {
-										$count = 6;
-									}
-								}
-							}
-						}
+					if ($this->config->has($exception[0])) {
+						$setting['config'] = $this->examination($setting['config'], array($exception[0] => $this->config->get($exception[0])), $exception);
 					}
 				}
+			}
+		}
 
-				// устанавливаем значение после валидации
-				if ($count == 1) {
-					$session[$exception[0]] = $this->session->data[$exception[0]];
-				} elseif ($count == 2) {
-					$session[$exception[0]][$exception[1]] = $this->session->data[$exception[0]][$exception[1]];
-				} elseif ($count == 3) {
-					$session[$exception[0]][$exception[1]][$exception[2]] = $this->session->data[$exception[0]][$exception[1]][$exception[2]];
-				} elseif ($count == 4) {
-					$session[$exception[0]][$exception[1]][$exception[2]][$exception[3]] = $this->session->data[$exception[0]][$exception[1]][$exception[2]][$exception[3]];
-				} elseif ($count == 5) {
-					$session[$exception[0]][$exception[1]][$exception[2]][$exception[3]][$exception[4]] = $this->session->data[$exception[0]][$exception[1]][$exception[2]][$exception[3]][$exception[4]];
-				} elseif ($count == 6) {
-					$session[$exception[0]][$exception[1]][$exception[2]][$exception[3]][$exception[4]][$exception[5]] = $this->session->data[$exception[0]][$exception[1]][$exception[2]][$exception[3]][$exception[4]][$exception[5]];
+		// данные сессии
+		$setting['session'] = array();
+
+		if ($setting['cache_ses'] && ($setting['cache_status'] || $setting['cache_controller'] || $setting['cache_model'])) {
+			$exceptions = $setting['cache_ses'];
+			$exceptions = explode("\r\n", $exceptions);
+
+			foreach ($exceptions as $exception) {
+				if ($exception && substr($exception, 0, 1) != ';') {
+					$exception = explode('|', $exception);
+
+					if ($exception[0]) {
+						$setting['session'] = $this->examination($setting['session'], $this->session->data, $exception);
+					}
 				}
 			}
 
-			unset($session['user_id'], $session['token'], $session['user_token']);
+			unset($setting['session']['user_id'], $setting['session']['token'], $setting['session']['user_token']);
+		}
+
+		// устанавливаем индивидуальный обработчик кэша
+		if ($setting['cache_engine_mine']) {
+			$setting['cache_engine'] = $setting['cache_engine_mine'];
+			$this->setting_default['cache_engine'] = $setting['cache_engine_mine'];
 		}
 
 		// контроллируем другой кэш OpenCart
@@ -344,10 +382,19 @@ class Bus_Cache {
 				$category_id = 'other';
 			}
 
+			// для точечного удаления кэша
+			$name_route = substr(strstr($setting['route'], '/'), 1);
+			if ($name_route && strstr($name_route, '/', true)) {
+				$name_route = strstr($name_route, '/', true);
+			}
+			if (!$name_route) {
+				$name_route = strstr($setting['route'], '_', true);
+			}
+
 			// загружаем кэш
 			if ($setting['cache_engine'] == 'buslik') {
-				$cache_dir = 'buslik/' . md5($setting['debug'] . $setting['config_maintenance'] . $setting['config_store_id'] . $setting['config_language_id'] . $setting['config_customer_group_id'] . $img . $category_id . http_build_query(array($session, $cart))) . '/';
-				$cache_name = $cache_dir . md5($this->request->server['REQUEST_URI'] . http_build_query(array($this->request->get, $this->request->post)));
+				$cache_dir = 'buslik/' . $name_route . '.' . md5($setting['debug'] . $img . $category_id . http_build_query(array($setting['config'], $setting['session'], $cart))) . '/';
+				$cache_name = $cache_dir . md5(http_build_query($setting['params']));
 
 				if (!is_dir(DIR_CACHE . $cache_dir)) {
 					mkdir(DIR_CACHE . $cache_dir, 0755, true);
@@ -375,7 +422,7 @@ class Bus_Cache {
 					$cache_data =  false;
 				}
 			} else {
-				$cache_name = 'buslik.' . md5($setting['debug'] . $setting['config_maintenance'] . $setting['config_store_id'] . $setting['config_language_id'] . $setting['config_customer_group_id'] . $img . $category_id . http_build_query(array($session, $cart, $this->request->server['REQUEST_URI'], $this->request->get, $this->request->post)));
+				$cache_name = 'buslik.' . $name_route . '.' . md5($setting['debug'] . $img . $category_id . http_build_query(array($setting['config'], $setting['session'], $setting['params'], $cart)));
 				$cache_data = (new \Cache('Bus_Cache\\' . $setting['cache_engine'], $setting['cache_expire_all']))->get($cache_name);
 			}
 
@@ -388,8 +435,8 @@ class Bus_Cache {
 				}
 
 				// critical
-				if ($setting['pagespeed_css_min'] && $setting['pagespeed_css_critical'] && !empty($cache_data['critical_name']) && is_file(DIR_IMAGE . 'cache/bus_cache/' . $cache_data['critical_name'])) {
-					$cache_data['output'] = str_replace(str_replace('_critical', '', $cache_data['critical_name']), $cache_data['critical_name'], $cache_data['output']);
+				if ($setting['pagespeed_css_min'] && $setting['pagespeed_css_critical'] && !empty($cache_data['pagespeed_css_critical_name']) && is_file(DIR_IMAGE . 'bus_cache/' . $cache_data['pagespeed_css_critical_name'])) {
+					$cache_data['output'] = str_replace('/' . str_replace('critical_', '', $cache_data['pagespeed_css_critical_name']), '/' . $cache_data['pagespeed_css_critical_name'], $cache_data['output']);
 				}
 
 				// debug режим
@@ -414,18 +461,24 @@ class Bus_Cache {
 			}
 		}
 
-		// кэширование контроллеров
-
-		// кэширование моделей
-
 		// параметры работы оптимизации
+		if ($setting['pagespeed_onrot'] && $setting['cache_status']) {
+			$exceptions = utf8_strtolower($setting['pagespeed_onrot']);
+			$exceptions = explode("\r\n", $exceptions);
+
+			$setting['pagespeed_onrot'] = false;
+
+			foreach ($exceptions as $exception) {
+				if ($exception && strpos($setting['route'], $exception) !== false || $setting['keyword'] && strpos($exception, $setting['keyword']) !== false) {
+					$setting['pagespeed_onrot'] = true;
+				}
+			}
+		}
 
 		// параметры исключения из оптимизации
 		if ($setting['pagespeed_rot'] && $setting['pagespeed_status']) {
-			$exceptions = str_replace(array("\r", "\n", ';', ' '), ',', $setting['pagespeed_rot']);
-			$exceptions = str_replace(',,', ',', $exceptions);
-			$exceptions = utf8_strtolower($exceptions);
-			$exceptions = explode(',', $exceptions);
+			$exceptions = utf8_strtolower($setting['pagespeed_rot']);
+			$exceptions = explode("\r\n", $exceptions);
 
 			foreach ($exceptions as $exception) {
 				if ($exception && strpos($setting['route'], $exception) !== false || $setting['keyword'] && strpos($exception, $setting['keyword']) !== false) {
@@ -481,23 +534,27 @@ class Bus_Cache {
 
 			// pagespeed
 			if ($setting['pagespeed_status']) {
-				// проставляем атрибуты на изображения
-				if ($setting['pagespeed_attribute_w_h']) {
-					$output = preg_replace('!<img(.*?)-(\d{1,5})x(\d{1,5})(.[^\"\d]*?)"!', '<img$1-$2x$3$4" width="$2" height="$3"', $output);
+				if ($setting['debug']) {
+					$this->getDebugTime = microtime(true);
 				}
 
-				// подгружаем изображения
+				// проставляем атрибуты на изображения
+				if ($setting['pagespeed_attribute_w_h']) {
+					$output = preg_replace('!<img(.*?)src="(.[^\"]*?)-(\d{1,5})x(\d{1,5})(.[^\"\d]*?)"!', '<img$1src="$2-$3x$4$5" width="$3" height="$4"', $output);
+				}
+
+				// подгружаем html
 				if ($setting['pagespeed_lazy_load_images'] == 1) {
-					$output = str_ireplace(array(' loading="lazy"', ' decoding="async"'), '', $output);
-					$output = preg_replace('!<img([^>]*)src=([^>]*)>!ix', '<img loading="lazy"$1src=$2>', $output);
-					$output = str_replace('<iframe', '<iframe loading="lazy"', $output);
-					$output = str_replace('("<img loading="lazy"', '("<img', $output);
+					$output = str_replace('<base', '<script src="' . $setting['server'] . 'catalog/view/theme/default/javascript/bus_cache/bus_loading_lazy.js?time=' . $setting['time_save'] . '&v=' . $setting['version'] . '" type="text/javascript" async="true"></script>' . PHP_EOL . '<base', $output);
+					$output = str_replace('<img', '<img loading="lazy"', $output);
+					$output = preg_replace('~<(frame|iframe)([^>]*)src=([^>]*)>~ix', '<$1$2loading="lazy" data-busloadinglazy-src=$3><noscript><$1$2src=$3></noscript>', $output);
 				} elseif ($setting['pagespeed_lazy_load_images'] == 2) {
-					$output = str_ireplace('<base', '<noscript><style type="text/css">body img[loading="lazy"]{display:none !important}</style></noscript><style type="text/css">body img[loading="lazy"]{opacity:0}</style><script src="' . $setting['server'] . 'catalog/view/theme/default/javascript/bus_cache/bus_loading_lazy.js?v=0.8.0" type="text/javascript" async></script>' . PHP_EOL . '	<base', $output);
-					$output = str_ireplace(array(' loading="lazy"', ' decoding="async"'), '', $output);
-					$output = preg_replace('!<img([^>]*)src=([^>]*)>!ix', '<img loading="lazy"$1data-src=$2><noscript><img$1src=$2></noscript>', $output);
-					$output = str_replace('("<img loading="lazy"', '("<img', $output);
-					$output = preg_replace('!<iframe([^>]*)src=([^>]*)>!ix', '<iframe loading="lazy"$1data-src=$2><noscript><iframe$1src=$2></noscript>', $output);
+					$output = str_replace('<base', '<style type="text/css">body [loading="lazy"][data-busloadinglazy-src]{opacity:0}</style>' . PHP_EOL . '<noscript><style type="text/css">body [loading="lazy"][data-busloadinglazy-src]{display:none !important}</style></noscript>' . PHP_EOL . '<script src="' . $setting['server'] . 'catalog/view/theme/default/javascript/bus_cache/bus_loading_lazy.js?v=' . $setting['version'] . '" type="text/javascript" async="true"></script>' . PHP_EOL . '<base', $output);
+					$output = preg_replace('~<(img|frame|iframe)([^>]*)src=([^>]*)>~ix', '<$1$2loading="lazy" data-busloadinglazy-src=$3><noscript><$1$2src=$3></noscript>', $output);
+				}
+
+				if ($setting['debug']) {
+					$this->setDebugSpeed(array('name' => 'Время обработки атрибут width, height, loading', 'time' => round(microtime(true) - $this->getDebugTime, 3)));
 				}
 
 				// сжимаем стили
@@ -512,12 +569,14 @@ class Bus_Cache {
 					$setting['styles_after'] = array();
 
 					if ($setting['pagespeed_css_min_links']) {
-						$css_links = str_replace(array("\r", "\n", '&amp;'), array('ЖЫДКЭШ', 'ЖЫДКЭШ', '&'), $setting['pagespeed_css_min_links']);
-						$css_links = str_replace(array('ЖЫДКЭШЖЫДКЭШ'), 'ЖЫДКЭШ', $css_links);
-						$css_links = explode('ЖЫДКЭШ', $css_links);
+						$css_links = str_replace('&amp;', '&', $setting['pagespeed_css_min_links']);
+						$css_links = explode("\r\n", $css_links);
 						foreach ($css_links as $style) {
-							if (substr($style, 0, 1) != ';') {
+							if ($style && substr($style, 0, 1) != ';') {
 								$st = explode('|', $style);
+								if (strpos($output, $st[0]) === false) {
+									continue;
+								}
 								$style = array();
 								$style['href'] = $st[0];
 								$style['attribute'] = 'type="text/css" rel="preload" media="screen" as="style"';
@@ -543,26 +602,27 @@ class Bus_Cache {
 					}
 
 					if ($styles) {
-						$css_links = str_replace(array("\r", "\n", '&amp;'), array('ЖЫДКЭШ', 'ЖЫДКЭШ', '&'), $setting['pagespeed_css_min_exception']);
-						$css_links = str_replace(array('ЖЫДКЭШЖЫДКЭШ'), 'ЖЫДКЭШ', $css_links);
-						$css_links = explode('ЖЫДКЭШ', $css_links);
+						$css_links = str_replace('&amp;', '&', $setting['pagespeed_css_min_exception']);
+						$css_links = explode("\r\n", $css_links);
 						foreach ($styles as $style) {
-							$href = strstr($style['href'], '?', true);
-							if (!$href) {
-								$href = $style['href'];
-							}
-							if (!in_array($href, $css_links) || in_array(';' . $href, $css_links)) {
-								$styles_replace .= ($styles_replace ? '|' : false) . preg_quote($style['href'], '~');
-								if (in_array($href . '|after', $css_links) || in_array($style['href'] . '|after', $css_links)) {
-									$setting['styles_after'][] = array(
-										'href'      => $style['href'],
-										'attribute' => 'type="text/css" rel="preload ' . $style['rel'] . '" media="' . $style['media'] . '" as="style" '
-									);
-								} else {
-									$setting['styles'][] = array(
-										'href'      => $style['href'],
-										'attribute' => 'type="text/css" rel="preload ' . $style['rel'] . '" media="' . $style['media'] . '" as="style" '
-									);
+							if ($style) {
+								$href = strstr($style['href'], '?', true);
+								if (!$href) {
+									$href = $style['href'];
+								}
+								if (!in_array($href, $css_links) || in_array(';' . $href, $css_links)) {
+									$styles_replace .= ($styles_replace ? '|' : false) . preg_quote($style['href'], '~');
+									if (in_array($href . '|after', $css_links) || in_array($style['href'] . '|after', $css_links)) {
+										$setting['styles_after'][] = array(
+											'href'      => $style['href'],
+											'attribute' => 'type="text/css" rel="preload ' . $style['rel'] . '" media="' . $style['media'] . '" as="style" '
+										);
+									} else {
+										$setting['styles'][] = array(
+											'href'      => $style['href'],
+											'attribute' => 'type="text/css" rel="preload ' . $style['rel'] . '" media="' . $style['media'] . '" as="style" '
+										);
+									}
 								}
 							}
 						}
@@ -581,15 +641,23 @@ class Bus_Cache {
 						'styles' => array(),
 					);
 
-					foreach($setting['styles'] as $style) {
-						$her = strstr($style['href'], '//');
+					foreach ($setting['styles'] as $style) {
+						$her = (strpos($style['href'], '//') !== false);
 						if (!$her || $her && $setting['HTTP_HOST'] && strpos($style['href'], $setting['HTTP_HOST']) !== false) {
-							$href = explode('?', str_replace(array('..', 'https://' . $setting['HTTP_HOST'] . '/', 'http://' . $setting['HTTP_HOST'] . '/', '://' . $setting['HTTP_HOST'] . '/'), '', $style['href']));
+							$href = explode('?', $style['href']);
 							$href = $href[0];
+							$href = str_replace(array('..', 'https://' . $setting['HTTP_HOST'] . '/', 'http://' . $setting['HTTP_HOST'] . '/', '://' . $setting['HTTP_HOST'] . '/', '//' . $setting['HTTP_HOST'] . '/'), '', $href);
+							//$href = parse_url($href, PHP_URL_PATH);
+							if (substr($href, 0, 1) == '.') {
+								$href = substr($href, 1);
+							}
+							if (substr($href, 0, 1) == '/') {
+								$href = substr($href, 1);
+							}
 							$file = $dir . $href;
 						} else {
 							$href = md5($style['href']) . '.css';
-							$file = DIR_IMAGE . 'cache/bus_cache/download/' . $href;
+							$file = DIR_IMAGE . 'bus_cache/download/' . $href;
 							$href = basename(DIR_IMAGE) . '/cache/bus_cache/download/' . $href;
 						}
 						if (\is_file($file)) {
@@ -610,10 +678,10 @@ class Bus_Cache {
 
 					if ($css['name'] && $css['content']) {
 						$name_md = md5($css['name']) . '.css';
-						$file = DIR_IMAGE . 'cache/bus_cache/' . $name_md;
+						$file = DIR_IMAGE . 'bus_cache/' . $name_md;
 						if (!\is_file($file) || $setting['debug'] == 2) {
-							if (!is_dir(DIR_IMAGE . 'cache/bus_cache/')) {
-								mkdir(DIR_IMAGE . 'cache/bus_cache/', 0755);
+							if (!is_dir(DIR_IMAGE . 'bus_cache/')) {
+								mkdir(DIR_IMAGE . 'bus_cache/', 0755);
 							}
 							if ($setting['pagespeed_css_min_url']) {
 								$real_url = $this->realUrlCSS($css['content'], $setting['server'], $css['name']);
@@ -622,6 +690,9 @@ class Bus_Cache {
 							}
 							if ($setting['pagespeed_css_min_display']) {
 								$css['content'] = str_replace(array('@font-face{', '@font-face {'), '@font-face{font-display:' . $setting['pagespeed_css_min_display'] . ';', $css['content']);
+							}
+							if ($setting['pagespeed_css_style'] && \is_file(DIR_TEMPLATE . $setting['config_theme'] . '/stylesheet/bus_cache/bus_cache_replace.css')) {
+								$css['content'] .= file_get_contents(DIR_TEMPLATE . $setting['config_theme'] . '/stylesheet/bus_cache/bus_cache_replace.css');
 							}
 							if ($setting['pagespeed_css_min'] > 1) {
 								$css['content'] = $this->minCSS($css['content'], $setting['pagespeed_css_min']);
@@ -638,9 +709,8 @@ class Bus_Cache {
 
 						$setting['styles'] = array();
 						if (isset($css['styles'])) {
-							$css_links = str_replace(array("\r", "\n", '&amp;'), array('ЖЫДКЭШ', 'ЖЫДКЭШ', '&'), $setting['pagespeed_css_min_font']);
-							$css_links = str_replace(array('ЖЫДКЭШЖЫДКЭШ'), 'ЖЫДКЭШ', $css_links);
-							$css_links = explode('ЖЫДКЭШ', $css_links);
+							$css_links = str_replace('&amp;', '&', $setting['pagespeed_css_min_font']);
+							$css_links = explode("\r\n", $css_links);
 
 							foreach ($css['styles'] as $result) {
 								if (!$result['domain'] && in_array($result['href'], $css_links) && !in_array(';' . $result['href'], $css_links)) {
@@ -670,7 +740,7 @@ class Bus_Cache {
 							}
 
 							foreach ($css_links as $href) {
-								if (substr($href, 0, 1) != ';') {
+								if ($href && substr($href, 0, 1) != ';') {
 									$href2 = strstr($href, '?', true);
 									if (!$href2) {
 										$href2 = $href;
@@ -703,7 +773,7 @@ class Bus_Cache {
 							}
 						}
 						$setting['styles'][] = array(
-							'href'      => $setting['server'] . 'image/cache/bus_cache/' . $name_md . '?time=' . $setting['time_save'],
+							'href'      => $setting['server'] . 'image/bus_cache/' . $name_md . '?time=' . $setting['time_save'],
 							'attribute' => 'type="text/css" rel="stylesheet preload" media="screen" as="style"'
 						);
 
@@ -718,7 +788,7 @@ class Bus_Cache {
 				}
 
 				// Добавляем свои стили
-				if ($setting['pagespeed_css_style'] && $setting['config_theme'] && \is_file(DIR_TEMPLATE . $setting['config_theme'] . '/stylesheet/bus_cache/bus_cache_replace.css')) {
+				if (empty($name_md) && $setting['pagespeed_css_style'] && $setting['config_theme'] && \is_file(DIR_TEMPLATE . $setting['config_theme'] . '/stylesheet/bus_cache/bus_cache_replace.css')) {
 					$this->outputTransfer['css'][1] .= '<link href="' . $setting['server'] . 'catalog/view/theme/' . $setting['config_theme'] . '/stylesheet/bus_cache/bus_cache_replace.css?time=' . $setting['time_save'] . '" type="text/css" rel="stylesheet preload" media="screen" as="style" />' . PHP_EOL;
 				}
 
@@ -734,12 +804,14 @@ class Bus_Cache {
 					$setting['scripts_after'] = array();
 
 					if ($setting['pagespeed_js_min_links']) {
-						$js_links = str_replace(array("\r", "\n", '&amp;'), array('ЖЫДКЭШ', 'ЖЫДКЭШ', '&'), $setting['pagespeed_js_min_links']);
-						$js_links = str_replace(array('ЖЫДКЭШЖЫДКЭШ'), 'ЖЫДКЭШ', $js_links);
-						$js_links = explode('ЖЫДКЭШ', $js_links);
+						$js_links = str_replace('&amp;', '&', $setting['pagespeed_js_min_links']);
+						$js_links = explode("\r\n", $js_links);
 						foreach ($js_links as $script) {
-							if (substr($script, 0, 1) != ';') {
+							if ($script && substr($script, 0, 1) != ';') {
 								$sc = explode('|', $script);
+								if (strpos($output, $sc[0]) === false) {
+									continue;
+								}
 								$script = array();
 								$script['href'] = $sc[0];
 								$script['attribute'] = 'type="text/css" rel="preload" media="screen" as="style"';
@@ -765,24 +837,28 @@ class Bus_Cache {
 					}
 
 					if ($scripts) {
-						$js_links = str_replace(array("\r", "\n", '&amp;'), array('ЖЫДКЭШ', 'ЖЫДКЭШ', '&'), $setting['pagespeed_js_min_exception']);
-						$js_links = str_replace(array('ЖЫДКЭШЖЫДКЭШ'), 'ЖЫДКЭШ', $js_links);
-						$js_links = explode('ЖЫДКЭШ', $js_links);
+						$js_links = str_replace('&amp;', '&', $setting['pagespeed_js_min_exception']);
+						$js_links = explode("\r\n", $js_links);
 						foreach ($scripts as $script) {
-							$href = strstr($script, '?', true);
+							$href = strstr($script, '.js', true);
 							if (!$href) {
-								$href = $script;
+								$href = strstr($script, '?', true);
+								if (!$href) {
+									$href = $script;
+								}
+							} else {
+								$href .= '.js';
 							}
 							if (!in_array($href, $js_links) || in_array(';' . $href, $js_links)) {
 								$scripts_replace .= ($scripts_replace ? '|' : false) . preg_quote($script, '~');
 								if (in_array($href . '|after', $js_links) || in_array($script . '|after', $js_links)) {
 									$setting['scripts_after'][] = array(
-										'href'      => $script,
+										'href'      => $href,
 										'attribute' => 'type="text/javascript" '
 									);
 								} else {
 									$setting['scripts'][] = array(
-										'href'      => $script,
+										'href'      => $href,
 										'attribute' => 'type="text/javascript" '
 									);
 								}
@@ -804,15 +880,23 @@ class Bus_Cache {
 						'styles' => array(),
 					);
 
-					foreach($setting['scripts'] as $script)  {
-						$her = strstr($script['href'], '//');
+					foreach ($setting['scripts'] as $script)  {
+						$her = (strpos($script['href'], '//') !== false);
 						if (!$her || $her && $setting['HTTP_HOST'] && strpos($script['href'], $setting['HTTP_HOST']) !== false) {
-							$href = explode('?', str_replace(array('..', 'https://' . $setting['HTTP_HOST'] . '/', 'http://' . $setting['HTTP_HOST'] . '/', '://' . $setting['HTTP_HOST'] . '/'), '', $script['href']));
+							$href = explode('?', $script['href']);
 							$href = $href[0];
+							$href = str_replace(array('..', 'https://' . $setting['HTTP_HOST'] . '/', 'http://' . $setting['HTTP_HOST'] . '/', '://' . $setting['HTTP_HOST'] . '/', '//' . $setting['HTTP_HOST'] . '/'), '', $href);
+							//$href = parse_url($href, PHP_URL_PATH);
+							if (substr($href, 0, 1) == '.') {
+								$href = substr($href, 1);
+							}
+							if (substr($href, 0, 1) == '/') {
+								$href = substr($href, 1);
+							}
 							$file = $dir . $href;
 						} else {
 							$href = md5($script['href']) . '.js';
-							$file = DIR_IMAGE . 'cache/bus_cache/download/' . $href;
+							$file = DIR_IMAGE . 'bus_cache/download/' . $href;
 							$href = basename(DIR_IMAGE) . '/cache/bus_cache/download/' . $href;
 						}
 						if (\is_file($file)) {
@@ -833,15 +917,18 @@ class Bus_Cache {
 
 					if ($js['name'] && $js['content']) {
 						$js['name_md'] = md5($js['name']) . '.js';
-						$file = DIR_IMAGE . 'cache/bus_cache/' . $js['name_md'];
+						$file = DIR_IMAGE . 'bus_cache/' . $js['name_md'];
 						if (!\is_file($file) || $setting['debug'] == 2) {
-							if (!is_dir(DIR_IMAGE . 'cache/bus_cache/')) {
-								mkdir(DIR_IMAGE . 'cache/bus_cache/', 0755);
+							if (!is_dir(DIR_IMAGE . 'bus_cache/')) {
+								mkdir(DIR_IMAGE . 'bus_cache/', 0755);
 							}
 							if (1 == 0) {
 								$real_url = $this->realUrlCSS($js['content'], $setting['server'], $js['name']);
 								$js['content'] = $real_url['content'];
 								$js['styles'] = $real_url['styles'];
+							}
+							if ($setting['pagespeed_js_script'] && \is_file(DIR_TEMPLATE . $setting['config_theme'] . '/javascript/bus_cache/bus_cache_replace.js')) {
+								$js['content'] .= file_get_contents(DIR_TEMPLATE . $setting['config_theme'] . '/javascript/bus_cache/bus_cache_replace.js');
 							}
 							if ($setting['pagespeed_js_min'] > 1) {
 								$js['content'] = $this->minJS($js['content'], $setting['pagespeed_js_min']);
@@ -851,7 +938,7 @@ class Bus_Cache {
 
 						$setting['scripts_preload'] = array();
 						$setting['scripts_preload'][] = array(
-							'href'      => $setting['server'] . 'image/cache/bus_cache/' . $js['name_md'] . '?time=' . $setting['time_save'],
+							'href'      => $setting['server'] . 'image/bus_cache/' . $js['name_md'] . '?time=' . $setting['time_save'],
 							'attribute' => 'rel="preload" as="script" '
 						);
 
@@ -859,7 +946,7 @@ class Bus_Cache {
 
 						$setting['scripts'] = array();
 						$setting['scripts'][] = array(
-							'href'      => $setting['server'] . 'image/cache/bus_cache/' . $js['name_md'] . '?time=' . $setting['time_save'],
+							'href'      => $setting['server'] . 'image/bus_cache/' . $js['name_md'] . '?time=' . $setting['time_save'],
 							'attribute' => 'type="text/javascript"'
 						);
 
@@ -874,104 +961,38 @@ class Bus_Cache {
 				}
 
 				// Добавляем свои скрипты
-				if ($setting['pagespeed_js_script'] && $setting['config_theme'] && \is_file(DIR_TEMPLATE . $setting['config_theme'] . '/javascript/bus_cache/bus_cache_replace.js')) {
+				if (empty($js['name_md']) && $setting['pagespeed_js_script'] && $setting['config_theme'] && \is_file(DIR_TEMPLATE . $setting['config_theme'] . '/javascript/bus_cache/bus_cache_replace.js')) {
 					$this->outputTransfer['css'][1] .= '<link href="' . $setting['server'] . 'catalog/view/theme/' . $setting['config_theme'] . '/javascript/bus_cache/bus_cache_replace.js?time=' . $setting['time_save'] . '" rel="preload" as="script" />' . PHP_EOL;
 					$this->outputTransfer['js'][1] .= '<script src="' . $setting['server'] . 'catalog/view/theme/' . $setting['config_theme'] . '/javascript/bus_cache/bus_cache_replace.js?time=' . $setting['time_save'] . '" type="text/javascript"></script>' . PHP_EOL;
 				}
 
-				// Обработка inline кода
-				if ($setting['debug']) {
-					$this->getDebugTime = microtime(true);
-				}
-
-				$inline = array(
-					'route'               => $setting['route'],
-					'keyword'             => $setting['keyword'],
-
-					'css_inline_transfer' => $setting['pagespeed_css_inline_transfer'],
-					'js_inline_event'     => array(),
-					'js_inline_transfer'  => $setting['pagespeed_js_inline_transfer'],
-					'js_inline_exception' => array(),
-				);
-
-				if ($setting['pagespeed_js_inline_event']) {
-					$inline['js_inline_event'] = str_replace(array("\r", "\n", '&amp;'), array('ЖЫДКЭШ', 'ЖЫДКЭШ', '&'), html_entity_decode($setting['pagespeed_js_inline_event']));
-					$inline['js_inline_event'] = str_replace(array('ЖЫДКЭШЖЫДКЭШ'), 'ЖЫДКЭШ', $inline['js_inline_event']);
-					$inline['js_inline_event'] = explode('ЖЫДКЭШ', $inline['js_inline_event']);
-				}
-
-				// перемещаем inline стили
-				if ($inline['css_inline_transfer']) {
-					$output = preg_replace_callback('~(?:<!--[\s]*){0,}(?:<noscript>[\s]*){0,}<style([^>]*?){0,}>(.*?)</style>(?:[\s]*</noscript>){0,}(?:[\s]*-->){0,}~iSsu', function ($matches) use ($inline) {
-						if (substr($matches[0], 0, 6) == '<style') {
-							if ($inline['css_inline_transfer']) {
-								$this->outputTransfer['css_inline'][$inline['css_inline_transfer']] .= $matches[0];
-								return;
-							}
-						}
-
-						return $matches[0];
-					}, $output);
-				}
-
-				// перемещаем inline скрипты
-				if ($inline['js_inline_transfer'] || $inline['js_inline_event']) {
-					/* $output = preg_replace_callback('~<script(.[^>]*?)?>(.*?)</script>~is', function ($matches) use ($inline) { */
-					$output = preg_replace_callback('~(?:<!--[\s]*){0,}<script([^>]*?){0,}>(.*?)</script>(?:[\s]*-->){0,}~iSsu', function ($matches) use ($inline) {
-						$js_inline_event = '';
-						$js_inline_exception = '';
-
-						foreach ($inline['js_inline_event'] as $result) {
-							if (substr($result, 0, 1) != ';' && stripos($matches[0], substr(strstr($result, '|'), 1)) !== false) {
-								$result = explode('|', $result);
-								$result[0] = utf8_strtolower($result[0]);
-								if ($result[0] == '#' || $result[0] && strpos($inline['route'], $result[0]) !== false || $inline['keyword'] && strpos($result[0], $inline['keyword']) !== false) {
-									$js_inline_event = $result[1];
-								}
-							}
-						}
-
-						// откладываем по событию
-						if ($js_inline_event) {
-							$matches[0] = preg_replace('~(<script[^>]*?>)(?:[\s\r\n]*<!--|<!--){0,}(.*?)(?=' . preg_quote($js_inline_event, '~') . ')(.*?)(?://-->[\s\r\n]*|-->[\s\r\n]*|//-->|-->){0,}(</script>)~is', '$1' . PHP_EOL . 'window.addEventListener(\'busCache\', function() {$2$3});' . PHP_EOL . '$4', $matches[0]);
-						}
-
-						// перемещаем inline
-						if ($inline['js_inline_transfer'] && !$js_inline_exception && substr($matches[0], 0, 7) == '<script' && !preg_match('~<script([^>]*?)src=([^>]*?)>~i', $matches[0])) {
-							if ($inline['js_inline_transfer'] == 3) {
-								$matches[0] = preg_replace('~(<script[^>]*?>)(?:[\s\r\n]*<!--|<!--){0,}(.*?)(?://-->[\s\r\n]*|-->[\s\r\n]*|//-->|-->){0,}(</script>)~is', '$2', $matches[0]);;
-							}
-
-							$this->outputTransfer['js_inline'][$inline['js_inline_transfer']] .= $matches[0];
-							return;
-						}
-
-						return $matches[0];
-					}, $output);
-				}
-
-				if ($setting['debug']) {
-					$this->setDebugSpeed(array('name' => 'Время обработки css и js inline кода', 'time' => round(microtime(true) - $this->getDebugTime, 3)));
-				}
-
 				// откладываем загрузку скриптов и стилей
-				$html = "<script type=\"text/javascript\">
-var busCache = {
+				$html = "var busCache = {
 	'timeinterval':false,
 	'status':false,
 	'start':function(busAppSetting) {
 		if (busCache.status == false) {
-			busCache.status = true;
-			document.removeEventListener('DOMContentLoaded', busCache.start, {once:true, passive:true});";
+			busCache.status = true;";
 
-			$js_links = str_replace(array("\r", "\n", '&amp;'), array('ЖЫДКЭШ', 'ЖЫДКЭШ', '&'), $setting['pagespeed_js_events']);
-			$js_links = str_replace(array('ЖЫДКЭШЖЫДКЭШ'), 'ЖЫДКЭШ', $js_links);
-			$js_links = explode('ЖЫДКЭШ', $js_links);
-			foreach ($js_links as $result) {
-				$html .= PHP_EOL . "window.removeEventListener('" . $result . "', busCache.start, {once:true, passive:true});";
+			if (1 == 0) {
+			$css_links = str_replace('&amp;', '&', $setting['pagespeed_css_events']);
+			$css_links = explode("\r\n", $css_links);
+			foreach ($css_links as $result) {
+				if ($result && substr($result, 0, 1) != ';') {
+					$html .= PHP_EOL . "			window.removeEventListener('" . $result . "', busCache.start, {once:true, passive:true});";
+				}
+			}
 			}
 
-			$html .= PHP_EOL . "//clearInterval(busCache.timeinterval);
+			$js_links = str_replace('&amp;', '&', $setting['pagespeed_js_events']);
+			$js_links = explode("\r\n", $js_links);
+			foreach ($js_links as $result) {
+				if ($result && substr($result, 0, 1) != ';') {
+					$html .= PHP_EOL . "			window.removeEventListener('" . $result . "', busCache.start, {once:true, passive:true});";
+				}
+			}
+
+			$html .= PHP_EOL . "
 		} else {
 			console.log('bus_cache уже работает!');
 			return 'bus_cache уже работает!';
@@ -990,64 +1011,260 @@ var busCache = {
 		document.dispatchEvent(new CustomEvent('busCache', {bubbles: true}));
 	}
 };
+";
 
-var busCacheInline = {};
-
-window.addEventListener('load', function() {";
+				$html .= PHP_EOL . "
+window.addEventListener('DOMContentLoaded', function() {
+";
+				if (1 == 0) {
+				foreach ($css_links as $result) {
+					if ($result && substr($result, 0, 1) != ';') {
+						$html .= PHP_EOL . "	window.addEventListener('" . $result . "', busCache.start, {once:true, passive:true});";
+					}
+				}
+				}
 				foreach ($js_links as $result) {
-					$html .= PHP_EOL . "window.addEventListener('" . $result . "', busCache.start, {once:true, passive:true});";
+					if ($result && substr($result, 0, 1) != ';') {
+						$html .= PHP_EOL . "	window.addEventListener('" . $result . "', busCache.start, {once:true, passive:true});";
+					}
 				}
 
 				if ($setting['pagespeed_js_inline_event_time']) {
-					$html .= PHP_EOL . "setTimeout(busCache.start, " . (int)$setting['pagespeed_js_inline_event_time'] . ");";
+					$html .= PHP_EOL . "	setTimeout(busCache.start, " . (int)$setting['pagespeed_js_inline_event_time'] . ");";
 				}
 
-				$html .= PHP_EOL . "	//busCache.timeinterval = setInterval(busCache.start, 3000);
-}, {once:true, passive:true});";
+				$html .= PHP_EOL . "
+}, {once:true, passive:true});
+";
 
 				if ($setting['scripts_after'] || $setting['styles_after']) {
-					$html .= PHP_EOL . "busCacheInline['after'] = function() {";
+					$html .= PHP_EOL . "
+window.addEventListener('busCache', function() {
+	var s, ss;
+";
 
 					foreach ($setting['styles_after'] as $script) {
 						$html .= "
-	var s = document.createElement('link');
+	s = document.createElement('link');
 	s.type = 'text/css';
 	s.href = '" . $script['href'] . "';
 	s.rel = 'stylesheet';
-	var ss = document.getElementsByTagName('script')[0];
-	ss.parentNode.insertBefore(s, ss);";
+	ss = document.getElementsByTagName('head')[0];
+	ss.parentNode.appendChild(s);";
 					}
 
 					foreach ($setting['scripts_after'] as $script) {
 						$html .= "
-	var s = document.createElement('script');
+	s = document.createElement('script');
 	s.async = true;
 	s.type = 'text/javascript';
 	s.src = '" . $script['href'] . "';
-	var ss = document.getElementsByTagName('script')[0];
-	ss.parentNode.insertBefore(s, ss);";
+	ss = document.getElementsByTagName('head')[0];
+	ss.parentNode.appendChild(s);
+";
 					}
 
-					$html .= PHP_EOL . "};
-
-if ('busCache' in window) {
-	window.addEventListener('busCache', function() {
-		busCacheInline['after']();
-	});
-} else {
-	busCacheInline['after']();
-}";
+					$html .= PHP_EOL . "});";
 				}
 
-				$html .= PHP_EOL . "</script>";
-
-				$this->outputTransfer['js_inline'][1] .= $html;
+				if ($setting['pagespeed_js_inline_transfer'] == 3) {
+					$this->outputTransfer['js_inline'][3] .= $html;
+				} else {
+					$this->outputTransfer['js_inline'][1] .= '<script type="text/javascript">' .  PHP_EOL . $html .  PHP_EOL . '</script>';
+				}
 
 				// critical
+				if ($setting['pagespeed_css_min'] && $setting['pagespeed_css_critical'] && !empty($name_md)) {
+					if (\is_file(DIR_IMAGE . 'bus_cache/' . 'critical_' . $name_md)) {
+						$setting['pagespeed_css_critical_name'] = 'critical_' . $name_md;
+						$this->outputTransfer['css'][1] = str_replace('/' . $name_md, '/' . $setting['pagespeed_css_critical_name'], $this->outputTransfer['css'][1]);
+					} elseif (!\is_file(DIR_IMAGE . 'bus_cache/' . 'critical_' . $name_md) && empty($this->request->post['bus_critical_name'])) {
+						$html = PHP_EOL . "<script src=\"catalog/view/theme/default/javascript/bus_cache/bus_ajax.js\" type=\"text/javascript\" async ></script>";
+						$html .= PHP_EOL . "<script src=\"catalog/view/theme/default/javascript/bus_cache/bus_critical.js\" type=\"text/javascript\" async ></script>";
+						$html .= PHP_EOL . "<script type=\"text/javascript\">";
+						$html .= PHP_EOL . "window.addEventListener('busCritical', function() {";
+						if ($setting['pagespeed_css_critical_all']) {
+							$html .= PHP_EOL . "	window.busCritical.setting['html_all'] = true;";
+						}
+						if ($setting['pagespeed_css_critical_elements']) {
+							$js_links = str_replace('&amp;', '&', $setting['pagespeed_css_critical_elements']);
+							$js_links = json_encode(explode("\r\n", $js_links));
+							$html .= PHP_EOL . "	window.busCritical.setting['html_elements'] = " . $js_links . ";";
+						}
+
+$html .= PHP_EOL . "	setTimeout(function() {
+		var start = new Date().getTime();
+		var critical = window.busCritical.critical('body');
+
+		if (critical) {
+			var myAjax = function() {
+				window.busAjax(window.location.href, {
+					metod: 'post',
+					data: {bus_critical:critical,bus_critical_name:'$name_md'},
+					success: function(data) {
+						//console.log(data);
+					}
+				});
+			};
+
+			if ('busAjax' in window) {
+				myAjax();
+			} else {
+				window.addEventListener('busAjax', myAjax);
+			}
+		}
+
+		var end = new Date().getTime();
+		console.log('Обработка ' + (end - start)/1000 + ' сек. или ' + (end - start) + ' мс.', critical);
+	}, " . $setting['pagespeed_css_critical_time'] . ");
+});";
+
+						$html .= PHP_EOL . "</script>";
+
+						$this->outputTransfer['js_inline'][1] .= $html;
+						$setting['cache_status'] = false;
+					}
+				}
 
 				// проталкиваем скрипты и стили для server-push
 				if (!empty($name_md) && !empty($js['name_md'])) {
-					$setting['headers'][] = 'Link: <' . $setting['server'] . 'image/cache/bus_cache/' . ($setting['pagespeed_css_critical_name'] ? $setting['pagespeed_css_critical_name'] : $name_md) . '?time=' . $setting['time_save'] . '>; rel=preload; as=style' . (!empty($js['name_md']) ? ', <' . $setting['server'] . 'image/cache/bus_cache/' . $js['name_md'] . '?time=' . $setting['time_save'] . '>; rel=preload; as=script' : false);
+					$setting['headers'][] = 'Link: <' . $setting['server'] . 'image/bus_cache/' . ($setting['pagespeed_css_critical_name'] ? $setting['pagespeed_css_critical_name'] : $name_md) . '?time=' . $setting['time_save'] . '>; rel=preload; as=style' . (!empty($js['name_md']) ? ', <' . $setting['server'] . 'image/bus_cache/' . $js['name_md'] . '?time=' . $setting['time_save'] . '>; rel=preload; as=script' : false);
+				}
+
+				// замена на странице
+				if ($setting['pagespeed_html_replace']) {
+					if ($setting['debug']) {
+						$this->getDebugTime = microtime(true);
+					}
+
+					$pagespeed_replace = html_entity_decode($setting['pagespeed_html_replace'], ENT_QUOTES, 'UTF-8');
+					$pagespeed_replace = explode("\r\n", $pagespeed_replace);
+					$pagespeed_replace_before = array();
+					$pagespeed_replace_after = array();
+
+					foreach ($pagespeed_replace as $result) {
+						if ($result && substr($result, 0, 1) != ';') {
+							$result = str_replace(array('[\r]', '[\n]'), array("\r", "\n"), $result);
+							$result = explode('|', $result);
+							$result[0] = utf8_strtolower($result[0]);
+							if ($result[0] == '#' || $result[0] && strpos($setting['route'], $result[0]) !== false || $setting['keyword'] && strpos($result[0], $setting['keyword']) !== false) {
+								if (isset($result[1]) && isset($result[2])) {
+									$pagespeed_replace_before[] = $result[1];
+									$pagespeed_replace_after[] = $result[2];
+								}
+							}
+						}
+					}
+
+					if ($pagespeed_replace_before && $pagespeed_replace_after) {
+						/* if ($this->outputTransfer['css_inline'][3]) {
+							$this->outputTransfer['css_inline'][3] = str_replace($pagespeed_replace_before, $pagespeed_replace_after, $this->outputTransfer['css_inline'][3]);
+						}
+						if ($this->outputTransfer['js_inline'][3]) {
+							$this->outputTransfer['js_inline'][3] = str_replace($pagespeed_replace_before, $pagespeed_replace_after, $this->outputTransfer['js_inline'][3]);
+						} */
+						$output = str_replace($pagespeed_replace_before, $pagespeed_replace_after, $output);
+					}
+					
+					if ($setting['debug']) {
+						$this->setDebugSpeed(array('name' => 'Время обработки замены в html коде', 'time' => round(microtime(true) - $this->getDebugTime, 3)));
+					}
+				}
+				
+				// Обработка inline кода
+				if ($setting['debug']) {
+					$this->getDebugTime = microtime(true);
+				}
+
+				$inline = array(
+					'route'                    => $setting['route'],
+					'keyword'                  => $setting['keyword'],
+
+					'css_inline_transfer'      => $setting['pagespeed_css_inline_transfer'],
+					'js_inline_event'          => array(),
+					'js_inline_transfer'       => $setting['pagespeed_js_inline_transfer'],
+					'js_inline_transfer_onrot' => array(),
+					'js_inline_exception'      => array(),
+				);
+
+				if ($setting['pagespeed_js_inline_event']) {
+					$inline['js_inline_event'] = str_replace('&amp;', '&', html_entity_decode($setting['pagespeed_js_inline_event'], ENT_QUOTES, 'UTF-8'));
+					$inline['js_inline_event'] = explode("\r\n", $inline['js_inline_event']);
+				}
+
+				if ($setting['pagespeed_js_inline_transfer_onrot']) {
+					$inline['js_inline_transfer_onrot'] = str_replace('&amp;', '&', html_entity_decode($setting['pagespeed_js_inline_transfer_onrot'], ENT_QUOTES, 'UTF-8'));
+					$inline['js_inline_transfer_onrot'] = explode("\r\n", $inline['js_inline_transfer_onrot']);
+					$inline['js_inline_exception'] = $inline['js_inline_transfer_onrot'];
+				} elseif (!$setting['pagespeed_js_inline_transfer_onrot'] && $setting['pagespeed_js_inline_exception']) {
+					$inline['js_inline_exception'] = str_replace('&amp;', '&', html_entity_decode($setting['pagespeed_js_inline_exception'], ENT_QUOTES, 'UTF-8'));
+					$inline['js_inline_exception'] = explode("\r\n", $inline['js_inline_exception']);
+				}
+
+				// перемещаем inline стили
+				if ($inline['css_inline_transfer']) {
+					$output = preg_replace_callback('~(?:<!--[\s]*){0,}(?:<noscript>[\s]*){0,}<style([^>]*?){0,}>(.*?)</style>(?:[\s]*</noscript>){0,}(?:[\s]*-->){0,}~iSsu', function ($matches) use ($inline) {
+						if ($inline['css_inline_transfer'] && substr($matches[0], 0, 6) == '<style') {
+							if ($inline['css_inline_transfer'] == 3) {
+								$matches[0] = preg_replace('~<style([^>]*?){0,}>(.*?)</style>~is', '$2', $matches[0]);;
+							}
+
+							$this->outputTransfer['css_inline'][$inline['css_inline_transfer']] .= $matches[0];
+							return;
+						}
+
+						return $matches[0];
+					}, $output);
+				}
+
+				// перемещаем inline скрипты
+				if ($inline['js_inline_transfer'] || $inline['js_inline_event']) {
+					/* $output = preg_replace_callback('~<script(.[^>]*?)?>(.*?)</script>~is', function ($matches) use ($inline) { */
+					$output = preg_replace_callback('~(?:<!--[\s]*){0,}<script([^>]*?){0,}>(.*?)</script>(?:[\s]*-->){0,}~iSsu', function ($matches) use ($inline) {
+						$js_inline_event = '';
+						$js_inline_exception = ($inline['js_inline_transfer_onrot'] ? true : false);
+
+						foreach ($inline['js_inline_event'] as $result) {
+							if ($result && substr($result, 0, 1) != ';' && stripos($matches[0], substr(strstr($result, '|'), 1)) !== false) {
+								$result = explode('|', $result);
+								$result[0] = utf8_strtolower($result[0]);
+								if ($result[0] == '#' || $result[0] && strpos($inline['route'], $result[0]) !== false || $inline['keyword'] && strpos($result[0], $inline['keyword']) !== false) {
+									$js_inline_event = $result[1];
+								}
+							}
+						}
+
+						foreach ($inline['js_inline_exception'] as $result) {
+							if ($result && substr($result, 0, 1) != ';' && stripos($matches[0], substr(strstr($result, '|'), 1)) !== false) {
+								$result = explode('|', $result);
+								$result[0] = utf8_strtolower($result[0]);
+								if ($result[0] == '#' || $result[0] && strpos($inline['route'], $result[0]) !== false || $inline['keyword'] && strpos($result[0], $inline['keyword']) !== false) {
+									$js_inline_exception = ($inline['js_inline_transfer_onrot'] ? false : true);
+								}
+							}
+						}
+
+						// откладываем по событию
+						if ($js_inline_event) {
+							$matches[0] = preg_replace('~(<script[^>]*?>)(?:[\s\r\n]*<!--|<!--){0,}(.*?)(?=' . preg_quote($js_inline_event, '~') . ')(.*?)(?://-->[\s\r\n]*|-->[\s\r\n]*|//-->|-->){0,}(</script>)~is', '$1' . PHP_EOL . 'window.addEventListener(\'busCache\', function() {$2$3});' . PHP_EOL . '$4', $matches[0]);
+						}
+
+						// перемещаем inline
+						if ($inline['js_inline_transfer'] && !$js_inline_exception && substr($matches[0], 0, 7) == '<script' && !preg_match('~<script([^>]*?)src=([^>]*?)>~i', $matches[0])) {
+							if ($inline['js_inline_transfer'] == 3) {
+								$matches[0] = preg_replace('~(<script[^>]*?>)(?:[\s\r\n]*<!--|<!--){0,}(.*?)(?://-->[\s\r\n]*|-->[\s\r\n]*|//-->|-->){0,}(</script>)~is', '$2', $matches[0]);
+							}
+
+							$this->outputTransfer['js_inline'][$inline['js_inline_transfer']] .= $matches[0];
+							return;
+						}
+
+						return $matches[0];
+					}, $output);
+				}
+
+				if ($setting['debug']) {
+					$this->setDebugSpeed(array('name' => 'Время обработки css и js inline кода', 'time' => round(microtime(true) - $this->getDebugTime, 3)));
 				}
 
 				// устанавливаем код
@@ -1066,39 +1283,41 @@ if ('busCache' in window) {
 					if ($this->outputTransfer[$key][2]) {
 						$output = str_replace('</body>', $this->outputTransfer[$key][2] . PHP_EOL . '</body>', $output);
 					}
-					if ($this->outputTransfer[$key][3]) {
+					if ($this->outputTransfer[$key][3] && $id = mb_strlen($this->outputTransfer[$key][3])) {
+						$file = '';
+						$href = '';
+						if ($key == 'css_inline') {
+							if ($setting['pagespeed_css_min'] > 1) {
+								$this->outputTransfer[$key][3] = $this->minCSS($this->outputTransfer[$key][3], $setting['pagespeed_css_min']);
+							}
+							$id = mb_strlen($this->outputTransfer[$key][3]);
+							if ($id) {
+								$file = DIR_IMAGE . 'bus_cache/bus_cache_inline_' . $id . '.css';
+								$href = '<link href="' . $setting['server'] . 'image/bus_cache/bus_cache_inline_' . $id . '.css?time=' . $setting['time_save'] . '" type="text/css" rel="stylesheet preload" media="screen" as="style" />' . PHP_EOL;
+							}
+						} elseif ($key == 'js_inline') {
+							if ($setting['pagespeed_js_min'] > 1) {
+								$this->outputTransfer[$key][3] = $this->minJS($this->outputTransfer[$key][3], $setting['pagespeed_js_min']);
+							}
+							$id = mb_strlen($this->outputTransfer[$key][3]);
+							if ($id) {
+								$file = DIR_IMAGE . 'bus_cache/bus_cache_inline_' . $id . '.js';
+								$href = '<link href="' . $setting['server'] . 'image/bus_cache/bus_cache_inline_' . $id . '.js?time=' . $setting['time_save'] . '" rel="preload" media="screen" as="script" />' . PHP_EOL;
+								$href .= '<script src="' . $setting['server'] . 'image/bus_cache/bus_cache_inline_' . $id . '.js?time=' . $setting['time_save'] . '" type="text/javascript"></script>' . PHP_EOL;
+							}
+						}
 
+						if ($this->outputTransfer[$key][3]) {
+							$output = str_replace('<base', $href . '<base', $output);
+							if (!\is_file($file)) {
+								file_put_contents($file, $this->outputTransfer[$key][3]);
+							}
+						}
 					}
 				}
 
 				if ($setting['debug']) {
 					$this->setDebugSpeed(array('name' => 'Время перемещения кода', 'time' => round(microtime(true) - $this->getDebugTime, 3)));
-				}
-
-				// замена на странице
-				if ($setting['pagespeed_html_replace']) {
-					$pagespeed_replace = str_replace(array("\r", "\n"), array('ЖЫДКЭШ', 'ЖЫДКЭШ'), html_entity_decode($setting['pagespeed_html_replace']));
-					$pagespeed_replace = str_replace(array('ЖЫДКЭШЖЫДКЭШ'), 'ЖЫДКЭШ', $pagespeed_replace);
-					$pagespeed_replace = explode('ЖЫДКЭШ', $pagespeed_replace);
-					$pagespeed_replace_before = array();
-					$pagespeed_replace_after = array();
-
-					foreach ($pagespeed_replace as $result) {
-						if (substr($result, 0, 1) != ';') {
-							$result = explode('|', $result);
-							$result[0] = utf8_strtolower($result[0]);
-							if ($result[0] == '#' || $result[0] && strpos($setting['route'], $result[0]) !== false || $setting['keyword'] && strpos($result[0], $setting['keyword']) !== false) {
-								if (isset($result[1]) && isset($result[2])) {
-									$pagespeed_replace_before[] = $result[1];
-									$pagespeed_replace_after[] = $result[2];
-								}
-							}
-						}
-					}
-
-					if ($pagespeed_replace_before && $pagespeed_replace_after) {
-						$output = str_replace($pagespeed_replace_before, $pagespeed_replace_after, $output);
-					}
 				}
 
 				// сжимаем страницу
@@ -1131,9 +1350,10 @@ if ('busCache' in window) {
 
 			if ($setting['cache_status']) {
 				$cache_data = array(
-					'headers'     => $setting['headers'],
-					'output'      => $output,
-					'debug_times' => $this->getDebugSpeed
+					'headers'                     => $setting['headers'],
+					'output'                      => $output,
+					'debug_times'                 => $this->getDebugSpeed,
+					'pagespeed_css_critical_name' => $setting['pagespeed_css_critical_name']
 				);
 
 				if ($setting['cache_engine'] == 'buslik') {
@@ -1174,7 +1394,8 @@ if ('busCache' in window) {
 
 				foreach ($matches[0] as $orig) {
 					if ($orig && strpos($orig, 'data:') === false) {
-						$result = utf8_strtolower($orig);
+						//$result = utf8_strtolower($orig);
+						$result = $orig;
 
 						if (stripos($result, 'url(') === false && stripos($result, '.css') !== false) {
 							$css = $result;
@@ -1208,7 +1429,7 @@ if ('busCache' in window) {
 									}
 									$href = $server . substr($href, $dir_len) . $hach;
 								} else {
-									$href = $server . $css_path . ltrim(str_replace(array('\\', './', '.../'), array('/', '../', '../'), $result), '/');
+									$href = $server . ltrim(str_replace(array('\\', './', '.../'), array('/', '../', '../'), $result), '/');
 								}
 
 								$do[] = $orig;
@@ -1284,7 +1505,7 @@ if ('busCache' in window) {
 			$posle = array('if(', '){', '"+"', "'+'", "", "", "");
 
 			if ($level > 2) {
-				$do[] = "\r";
+				$do[] = "\r\n";
 				$do[] = "\n\n";
 				$do[] = '	';
 				$do[] = '  ';
@@ -1458,9 +1679,44 @@ if ('busCache' in window) {
 		$this->getDebugSpeed .= $message;
 	}
 
-	private function var_dump($var_dump) {
-		if ($this->isUser) {
-			var_dump($var_dump);
+	private function examination($output = array(), $data = array(), $exception = array()) {
+		$count = 0;
+
+		// валидация
+		if (isset($data[$exception[0]])) {
+			$count = 1;
+			if (isset($exception[1]) && isset($data[$exception[0]][$exception[1]])) {
+				$count = 2;
+				if (isset($exception[2]) && isset($data[$exception[0]][$exception[1]][$exception[2]])) {
+					$count = 3;
+					if (isset($exception[3]) && isset($data[$exception[0]][$exception[1]][$exception[2]][$exception[3]])) {
+						$count = 4;
+						if (isset($exception[4]) && isset($data[$exception[0]][$exception[1]][$exception[2]][$exception[3]][$exception[4]])) {
+							$count = 5;
+							if (isset($exception[5]) && isset($data[$exception[0]][$exception[1]][$exception[2]][$exception[3]][$exception[4]][$exception[5]])) {
+								$count = 6;
+							}
+						}
+					}
+				}
+			}
 		}
+
+		// устанавливаем значение после валидации
+		if ($count == 1) {
+			$output[$exception[0]] = $data[$exception[0]];
+		} elseif ($count == 2) {
+			$output[$exception[0]][$exception[1]] = $data[$exception[0]][$exception[1]];
+		} elseif ($count == 3) {
+			$output[$exception[0]][$exception[1]][$exception[2]] = $data[$exception[0]][$exception[1]][$exception[2]];
+		} elseif ($count == 4) {
+			$output[$exception[0]][$exception[1]][$exception[2]][$exception[3]] = $data[$exception[0]][$exception[1]][$exception[2]][$exception[3]];
+		} elseif ($count == 5) {
+			$output[$exception[0]][$exception[1]][$exception[2]][$exception[3]][$exception[4]] = $data[$exception[0]][$exception[1]][$exception[2]][$exception[3]][$exception[4]];
+		} elseif ($count == 6) {
+			$output[$exception[0]][$exception[1]][$exception[2]][$exception[3]][$exception[4]][$exception[5]] = $data[$exception[0]][$exception[1]][$exception[2]][$exception[3]][$exception[4]][$exception[5]];
+		}
+
+		return $output;
 	}
 }

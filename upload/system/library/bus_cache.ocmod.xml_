@@ -51,6 +51,36 @@
     <!-- ↑ АДМИНКА КОНТРОЛЛЕРЫ ↑ -->
 
     <!-- ↓ АДМИНКА МОДЕЛИ ↓ -->
+    <file path="admin/model/catalog/category.php">
+        <operation>
+            <search>
+            <![CDATA[$this->cache->delete('category');]]>
+            </search>
+            <add position="after">
+            <![CDATA[		$this->load->controller((version_compare(VERSION, '2.3.0', '>=') ? 'extension/' : false) . 'module/bus_cache/clear', array('tables' => array('category')));]]>
+            </add>
+        </operation>
+    </file>
+    <file path="admin/model/catalog/manufacturer.php">
+        <operation>
+            <search>
+            <![CDATA[$this->cache->delete('manufacturer');]]>
+            </search>
+            <add position="after">
+            <![CDATA[		$this->load->controller((version_compare(VERSION, '2.3.0', '>=') ? 'extension/' : false) . 'module/bus_cache/clear', array('tables' => array('manufacturer')));]]>
+            </add>
+        </operation>
+    </file>
+    <!-- <file path="admin/model/catalog/product.php">
+        <operation>
+            <search>
+            <![CDATA[$this->cache->delete('product');]]>
+            </search>
+            <add position="after">
+            <![CDATA[		$this->load->controller((version_compare(VERSION, '2.3.0', '>=') ? 'extension/' : false) . 'module/bus_cache/clear', array('tables' => array('product', 'special', 'latest', 'bestseller')));]]>
+            </add>
+        </operation>
+    </file> -->
     <!-- ↑ АДМИНКА МОДЕЛИ ↑ -->
 
     <!-- ↓ САЙТ КОНТРОЛЛЕРЫ ↓ -->

@@ -73,17 +73,24 @@
                                                 ▒█████▓░         ▒█████▓░                                               
 */
 
+//namespace Opencart\Admin\Controller\Extension\BusCache\Module;
 // забараняем прамы доступ
-if (!class_exists('Controller')) {
+if (version_compare(VERSION, '4.0.0', '<') && !class_exists('Controller') || version_compare(VERSION, '4.0.0', '>=') && !class_exists('\Opencart\System\Engine\Controller')) {
 	header('Refresh: 1; URL=/');
 	exit('ЗАПРЫШЧАЮ!');
 }
 
-if (version_compare(VERSION, '2.3.0', '<')) {
-	class ControllerModuleBusCache extends ControllerExtensionModuleBusCache {}
+if (version_compare(VERSION, '4.0.0', '>=')) {
+	class Controller extends \Opencart\System\Engine\Controller {}
 }
 
-class ControllerExtensionModuleBusCache extends Controller {
+if (version_compare(VERSION, '2.3.0', '<')) {
+	class ControllerModuleBusCache extends BusCache {}
+} elseif (version_compare(VERSION, '4.0.0', '<')) {
+	class ControllerExtensionModuleBusCache extends BusCache {}
+}
+
+class BusCache extends Controller {
 	private $error = array();
 	private $name_arhive = 'Buslik Cache';
 	private $code = '01000024';
@@ -99,7 +106,35 @@ class ControllerExtensionModuleBusCache extends Controller {
 		if (method_exists($this->language, 'set')) {
 			$this->language->set('bus_cache_version', $this->version);
 		}
-		if (version_compare(VERSION, '3.0.0', '>=')) {
+		if (version_compare(VERSION, '4.0.0', '>=')) {
+			$this->version_oc = 4;
+			$this->paths = array(
+				'controller' => array(
+					'bus_cache' => 'extension/bus_cache/module/bus_cache',
+					'extension' => 'marketplace/extension',
+					'modification' => 'marketplace/modification',
+				),
+				'language' => array(
+					'bus_cache' => 'extension/bus_cache/module/bus_cache',
+				),
+				'model' => array(
+					'bus_cache' => 'extension/bus_cache/module/bus_cache',
+					'bus_cache_path' => 'model_extension_module_bus_cache',
+					'module' => 'setting/module',
+					'module_path' => 'model_setting_module',
+					'extension' => 'setting/extension',
+					'extension_path' => 'model_setting_extension',
+					'modification' => 'setting/modification',
+					'modification_path' => 'model_setting_modification',
+					'event' => 'setting/event',
+					'event_path' => 'model_setting_event',
+				),
+				'view' => array(
+					'bus_cache' => 'extension/bus_cache/admin/view/template/module/bus_cache',
+				),
+				'token' => 'user_token=' . $this->session->data['user_token']
+			);
+		} elseif (version_compare(VERSION, '3.0.0', '>=')) {
 			$this->version_oc = 3;
 			$this->paths = array(
 				'controller' => array(
@@ -345,12 +380,54 @@ class ControllerExtensionModuleBusCache extends Controller {
 		}
 
 		if (!empty($this->request->post['minify'])) {
-			$this->request->get['minify'] = $this->request->post['minify'];
+			$this->request->get['minify'] = 1;
 		} elseif (!empty($setting['minify'])) {
-			$this->request->get['minify'] = $this->request->post['minify'];
+			$this->request->get['minify'] = 1;
+		}
+		if (!empty($this->request->post['images'])) {
+			$this->request->get['images'] = 1;
+		} elseif (!empty($setting['images'])) {
+			$this->request->get['images'] = 1;
+		}
+		if (!empty($this->request->post['logs'])) {
+			$this->request->get['logs'] = 1;
+		} elseif (!empty($setting['logs'])) {
+			$this->request->get['logs'] = 1;
+		}
+		if (!empty($this->request->post['modifications'])) {
+			$this->request->get['modifications'] = 1;
+		} elseif (!empty($setting['modifications'])) {
+			$this->request->get['modifications'] = 1;
+		}
+		if (!empty($this->request->post['view_products'])) {
+			$this->request->get['view_products'] = 1;
+		} elseif (!empty($setting['view_products'])) {
+			$this->request->get['view_products'] = 1;
+		}
+		if (!empty($this->request->post['customer_search'])) {
+			$this->request->get['customer_search'] = 1;
+		} elseif (!empty($setting['customer_search'])) {
+			$this->request->get['customer_search'] = 1;
+		}
+		if (!empty($this->request->post['customer_blog_search'])) {
+			$this->request->get['customer_blog_search'] = 1;
+		} elseif (!empty($setting['customer_blog_search'])) {
+			$this->request->get['customer_blog_search'] = 1;
+		}
+		if (!empty($this->request->post['customer_activity'])) {
+			$this->request->get['customer_activity'] = 1;
+		} elseif (!empty($setting['customer_activity'])) {
+			$this->request->get['customer_activity'] = 1;
+		}
+		if (!empty($this->request->post['customer_session'])) {
+			$this->request->get['customer_session'] = 1;
+		} elseif (!empty($setting['customer_session'])) {
+			$this->request->get['customer_session'] = 1;
 		}
 
 		if ($this->validate()) {
+			$text = '';
+
 			if (!empty($this->request->get['minify'])) {
 				if (($this->request->server['REQUEST_METHOD'] != 'POST')) {
 					$this->load->model('setting/setting');
@@ -367,63 +444,136 @@ class ControllerExtensionModuleBusCache extends Controller {
 					$this->model_setting_setting->editSetting('bus_cache', array('bus_cache' => $module_info));
 				}
 
-				$text = $this->deleteDir(DIR_IMAGE . 'cache/bus_cache[NAGIBATOR]');
-			} else {
-				// чистим всё или то, что используем
-				if (1 == 0) {
-					if (ini_get('apc.enabled') && function_exists('apc_clear_cache')) {
-						(new Bus_Cache\apc())->flush();
-						$text = "\n" . '<br>APC cache delete';
-					}
-					if (ini_get('apc.enabled') && function_exists('apcu_clear_cache')) {
-						(new Bus_Cache\apcu())->flush();
-						if (1 == 0 && function_exists('opcache_reset')) {
-							opcache_reset();
-						}
-						$text = "\n" . '<br>APCu cache delete';
-					}
-					if (extension_loaded('memcache') && class_exists('Memcache') && function_exists('memcache_connect')) {
-						(new Bus_Cache\mem())->flush();
-						$text = "\n" . '<br>Memcache cache delete';
-					}
-					if (function_exists('Memcached')) {
-						(new Bus_Cache\memcached())->flush();
-						$text = "\n" . '<br>Memcached cache delete';
-					}
-					if (function_exists('Redis')) {
-						(new Bus_Cache\redis())->flush();
-						$text = "\n" . '<br>Redis cache delete';
-					}
-					$text .= $this->deleteDir(DIR_CACHE . 'buslik[NAGIBATOR]');
-					$text .= $this->deleteDir(DIR_CACHE);
-				} else {
-					$cache_engine = $this->configGet('cache_engine');
-					if ($cache_engine == 'apc' && ini_get('apc.enabled') && function_exists('apc_clear_cache')) {
-						(new Bus_Cache\apc())->flush();
-						$text = "\n" . '<br>APC cache delete';
-					} elseif ($cache_engine == 'apcu' && ini_get('apc.enabled') && function_exists('apcu_clear_cache')) {
-						(new Bus_Cache\apcu())->flush();
-						if (1 == 0 && function_exists('opcache_reset')) {
-							opcache_reset();
-						}
-						$text = "\n" . '<br>APCu cache delete';
-					} elseif ($cache_engine == 'mem' && extension_loaded('memcache') && class_exists('Memcache') && function_exists('memcache_connect')) {
-						(new Bus_Cache\mem())->flush();
-						$text = "\n" . '<br>Memcache cache delete';
-					} elseif ($cache_engine == 'memcached' && function_exists('Memcached')) {
-						(new Bus_Cache\memcached())->flush();
-						$text = "\n" . '<br>Memcached cache delete';
-					} elseif ($cache_engine == 'redis' && function_exists('Redis')) {
-						(new Bus_Cache\redis())->flush();
-						$text = "\n" . '<br>Redis cache delete';
-					} else {
-						$text = $this->deleteDir(DIR_CACHE . '[NAGIBATOR]');
-					}
-				}
+				$text .= $this->deleteDir(DIR_IMAGE . 'bus_cache[NAGIBATOR]');
 			}
 
-			if (!is_dir(DIR_IMAGE . 'cache/bus_cache/download/')) {
-				mkdir(DIR_IMAGE . 'cache/bus_cache/download/', 0755, true);
+			if (!empty($this->request->get['images'])) {
+				$this->deleteDir(DIR_IMAGE . 'cache/[NAGIBATOR]');
+				$text .= "\n" . '<br>Images resize delete';
+			}
+
+			if (!empty($this->request->get['logs'])) {
+				$text .= $this->deleteDir(DIR_LOGS);
+				$setting['logs'] = 1;
+			}
+
+			if (!empty($this->request->get['view_products'])) {
+				$this->db->query("UPDATE `" . DB_PREFIX . "product` SET viewed = '0'");
+				$text .= ' product viewed ' . (method_exists($this->db, 'countAffected') ? $this->db->countAffected() : $this->db->query("SELECT ROW_COUNT() AS total")->row['total']+1);
+				$setting['view_products'] = 1;
+			}
+
+			if (!empty($this->request->get['customer_search'])) {
+				$this->db->query("DELETE FROM `" . DB_PREFIX . "customer_search` WHERE customer_search_id");
+				$text .= ' customer_search ' . (method_exists($this->db, 'countAffected') ? $this->db->countAffected() : $this->db->query("SELECT ROW_COUNT() AS total")->row['total']+1);
+				$setting['customer_search'] = 1;
+			}
+
+			if (!empty($this->request->get['customer_blog_search'])) {
+				if ($this->db->query("SHOW TABLES FROM " . DB_DATABASE . " LIKE '" . DB_PREFIX . $this->db->escape('customer_blog_search') . "'")->num_rows) {
+					$this->db->query("DELETE FROM `" . DB_PREFIX . "customer_blog_search` WHERE customer_blog_search_id");
+					$text .= ' customer_blog_search ' . (method_exists($this->db, 'countAffected') ? $this->db->countAffected() : $this->db->query("SELECT ROW_COUNT() AS total")->row['total']+1);
+				}
+				$setting['customer_blog_search'] = 1;
+			}
+
+			if (!empty($this->request->get['customer_activity'])) {
+				$this->db->query("DELETE FROM `" . DB_PREFIX . "customer_activity` WHERE customer_activity_id");
+				$text .= ' customer_activity ' . (method_exists($this->db, 'countAffected') ? $this->db->countAffected() : $this->db->query("SELECT ROW_COUNT() AS total")->row['total']+1);
+				$setting['customer_activity'] = 1;
+			}
+
+			if (!empty($this->request->get['customer_session'])) {
+				if (defined('DIR_SESSION')) {
+					$text .= $this->deleteDir(DIR_SESSION);
+				}
+				$this->db->query("DELETE FROM `" . DB_PREFIX . "api_session` WHERE api_session_id");
+				$text .= ' api_session ' . (method_exists($this->db, 'countAffected') ? $this->db->countAffected() : $this->db->query("SELECT ROW_COUNT() AS total")->row['total']+1);
+				if ($this->db->query("SHOW TABLES FROM " . DB_DATABASE . " LIKE '" . DB_PREFIX . $this->db->escape('session') . "'")->num_rows) {
+					$this->db->query("DELETE FROM `" . DB_PREFIX . "session` WHERE session_id");
+					$text .= ' session ' . (method_exists($this->db, 'countAffected') ? $this->db->countAffected() : $this->db->query("SELECT ROW_COUNT() AS total")->row['total']+1);
+				}
+				$setting['customer_session'] = 1;
+			}
+
+			if (!empty($this->request->get['cart_session'])) {
+				$this->db->query("DELETE FROM `" . DB_PREFIX . "cart` WHERE customer_id = '0'");
+				$text .= ' cart customer_id == 0 ' . (method_exists($this->db, 'countAffected') ? $this->db->countAffected() : $this->db->query("SELECT ROW_COUNT() AS total")->row['total']+1);
+				$setting['cart_session'] = 1;
+			}
+
+			if (!$setting || !empty($this->request->get['caches']) || !empty($this->request->get['minify']) || !empty($this->request->get['images']) || !empty($this->request->get['modifications'])) {
+				$cache_engine = $this->configGet('cache_engine');
+				if ($cache_engine == 'apc' && ini_get('apc.enabled') && function_exists('apc_clear_cache')) {
+					(new \Bus_Cache\apc())->flush();
+					$text .= "\n" . '<br>APC cache delete';
+				} elseif ($cache_engine == 'apcu' && ini_get('apc.enabled') && function_exists('apcu_clear_cache')) {
+					(new \Bus_Cache\apcu())->flush();
+					if (1 == 0 && function_exists('opcache_reset')) {
+						opcache_reset();
+					}
+					$text .= "\n" . '<br>APCu cache delete';
+				} elseif ($cache_engine == 'mem' && extension_loaded('memcache') && class_exists('Memcache') && function_exists('memcache_connect')) {
+					(new \Bus_Cache\mem())->flush();
+					$text .= "\n" . '<br>Memcache cache delete';
+				} elseif ($cache_engine == 'memcached' && function_exists('Memcached')) {
+					(new \Bus_Cache\memcached())->flush();
+					$text .= "\n" . '<br>Memcached cache delete';
+				} elseif ($cache_engine == 'redis' && function_exists('Redis')) {
+					(new \Bus_Cache\redis())->flush();
+					$text .= "\n" . '<br>Redis cache delete';
+				} else {
+					$this->deleteDir(DIR_CACHE . '[NAGIBATOR]');
+					$text .= "\n" . '<br>Buslik cache delete';
+				}
+			} elseif (!empty($setting['tables']) && is_array($setting['tables'])) {
+				$cache_engine = $this->configGet('cache_engine');
+				if ($cache_engine == 'apc' && ini_get('apc.enabled') && function_exists('apc_clear_cache')) {
+					foreach ($setting['tables'] as $table) {
+						(new \Bus_Cache\apc())->delete('buslik.' . $table);
+					}
+					$text .= "\n" . '<br>APC cache delete';
+				} elseif ($cache_engine == 'apcu' && ini_get('apc.enabled') && function_exists('apcu_clear_cache')) {
+					foreach ($setting['tables'] as $table) {
+						(new \Bus_Cache\apcu())->delete('buslik.' . $table);
+					}
+					if (1 == 0 && function_exists('opcache_reset')) {
+						opcache_reset();
+					}
+					$text .= "\n" . '<br>APCu cache delete';
+				} elseif ($cache_engine == 'mem' && extension_loaded('memcache') && class_exists('Memcache') && function_exists('memcache_connect')) {
+					foreach ($setting['tables'] as $table) {
+						(new \Bus_Cache\mem())->delete('buslik.' . $table);
+					}
+					$text .= "\n" . '<br>Memcache cache delete';
+				} elseif ($cache_engine == 'memcached' && function_exists('Memcached')) {
+					foreach ($setting['tables'] as $table) {
+						(new \Bus_Cache\memcached())->delete('buslik.' . $table);
+					}
+					$text .= "\n" . '<br>Memcached cache delete';
+				} elseif ($cache_engine == 'redis' && function_exists('Redis')) {
+					foreach ($setting['tables'] as $table) {
+						(new \Bus_Cache\redis())->delete('buslik.' . $table);
+					}
+					$text .= "\n" . '<br>Redis cache delete';
+				} else {
+					foreach ($setting['tables'] as $table) {
+						$this->deleteDir(DIR_CACHE . 'buslik/' . $table . '[NAGIBATOR]');
+						$text .= "\n" . '<br>Buslik and OpenCart cache delete';
+						$this->cache->delete('buslik.' . $table);
+					}
+				}
+				$this->cache->delete('bus_cache_controller');
+				$this->cache->delete('bus_cache_model');
+			}
+
+			if (!empty($this->request->get['modifications'])) {
+				$text = $this->modification($text, true, 1);
+			}
+
+			// при сохранении данных и чистки css, js
+			if (!is_dir(DIR_IMAGE . 'bus_cache/download/')) {
+				mkdir(DIR_IMAGE . 'bus_cache/download/', 0755, true);
 			}
 
 			if (!empty($this->request->post['pagespeed_css_min_download'])) {
@@ -431,7 +581,7 @@ class ControllerExtensionModuleBusCache extends Controller {
 				$css_links = str_replace(array('ЖЫДКЭШЖЫДКЭШ'), 'ЖЫДКЭШ', $css_links);
 				$css_links = explode('ЖЫДКЭШ', $css_links);
 				foreach ($css_links as $link) {
-					$file = DIR_IMAGE . 'cache/bus_cache/download/' . md5($link) . '.css';
+					$file = DIR_IMAGE . 'bus_cache/download/' . md5($link) . '.css';
 					if ($link && stristr($link, '//') && !\is_file($file)) {
 						$href = @get_headers($link);
 						if (!empty($href[0]) && strpos($href[0], '404') === false) {
@@ -461,15 +611,45 @@ class ControllerExtensionModuleBusCache extends Controller {
 			}
 
 			if (!empty($this->request->post['pagespeed_js_min_download'])) {
-
+				$js_links = str_replace(array("\r", "\n", '&amp;'), array('ЖЫДКЭШ', 'ЖЫДКЭШ', '&'), $this->request->post['pagespeed_js_min_download']);
+				$js_links = str_replace(array('ЖЫДКЭШЖЫДКЭШ'), 'ЖЫДКЭШ', $js_links);
+				$js_links = explode('ЖЫДКЭШ', $js_links);
+				foreach ($js_links as $link) {
+					$file = DIR_IMAGE . 'bus_cache/download/' . md5($link) . '.js';
+					if ($link && stristr($link, '//') && !\is_file($file)) {
+						$href = @get_headers($link);
+						if (!empty($href[0]) && strpos($href[0], '404') === false) {
+							if (!empty($this->request->server['HTTP_USER_AGENT'])) {
+								$user_agent = $this->request->server['HTTP_USER_AGENT'];
+							} else {
+								$user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36';
+							}
+							$context  = stream_context_create(array('http' =>
+								array(
+									'method'  => 'GET',
+									'header'  => "Content-Type: application/x-www-form-urlencoded\r\n" . "Referer: /\r\n" . "User-Agent: " . $user_agent,
+									/* 'content' => http_build_query(array(
+										'family'  => 'Open+Sans:400,400i,300,700',
+										'display' => 'swap'
+									)) */
+								)
+							));
+							$content = file_get_contents($link, false, $context);
+							//$content = fopen($link, 'r', false, $context);
+							if ($content) {
+								file_put_contents($file, $content);
+							}
+						}
+					}
+				}
 			}
 
-			if (isset($this->request->post['info'])) {
-				$this->request->get['info'] = $this->request->post['info'];
-			}
-
-			if (isset($this->request->get['route']) && $this->request->get['route'] == $this->paths['controller']['bus_cache'] . '/clear') {
-				$this->session->data['success'] = $this->language->get('success_clear') . (!empty($this->request->get['info']) ? str_replace(DIR_CACHE, 'system/storage/cache/', $text) : '');
+			if (isset($this->request->get['route']) && ($this->request->get['route'] == $this->paths['controller']['bus_cache'] . '/clear' || $this->request->get['route'] == $this->paths['controller']['bus_cache'] . '|clear')) {
+				if (isset($this->request->post['info'])) {
+					$this->request->get['info'] = $this->request->post['info'];
+				}
+				$text = str_replace(array(DIR_APPLICATION, DIR_CATALOG, DIR_IMAGE, DIR_SYSTEM), array(basename(DIR_APPLICATION) . '/', basename(DIR_CATALOG) . '/', basename(DIR_IMAGE) . '/', basename(DIR_SYSTEM) . '/'), $text);
+				$this->session->data['success'] = $this->language->get('success_clear') . $text;
 
 				if (isset($this->request->get['redirect'])) {
 					$this->response->redirect($this->url->link($this->request->get['redirect'], $this->paths['token'], true));
@@ -477,10 +657,11 @@ class ControllerExtensionModuleBusCache extends Controller {
 					$this->response->redirect($this->url->link($this->paths['controller']['bus_cache'], $this->paths['token'], true));
 				}
 			} else {
-				return $this->language->get('success_clear') . (!empty($setting['info']) ? str_replace(DIR_CACHE, 'system/storage/cache/', $text) : '');
+				$text = str_replace(array(DIR_APPLICATION, DIR_CATALOG, DIR_IMAGE, DIR_SYSTEM), array(basename(DIR_APPLICATION) . '/', basename(DIR_CATALOG) . '/', basename(DIR_IMAGE) . '/', basename(DIR_SYSTEM) . '/'), $text);
+				return $this->language->get('success_clear') . $text;
 			}
 		} else {
-			if (isset($this->request->get['route']) && $this->request->get['route'] == $this->paths['controller']['bus_cache'] . '/clear') {
+			if (isset($this->request->get['route']) && ($this->request->get['route'] == $this->paths['controller']['bus_cache'] . '/clear' || $this->request->get['route'] == $this->paths['controller']['bus_cache'] . '|clear')) {
 				$this->session->data['warning'] = $this->language->get('error_permission');
 				$this->session->data['error'] = $this->language->get('error_permission');
 
@@ -527,6 +708,7 @@ class ControllerExtensionModuleBusCache extends Controller {
 
 		$data['heading_title'] = $this->language->get('heading_title');
 		$data['help_pagespeed_css_style'] = htmlspecialchars($this->language->get('help_pagespeed_css_style'));
+		$data['help_pagespeed_js_inline_transfer_onrot'] = htmlspecialchars($this->language->get('help_pagespeed_js_inline_transfer_onrot'));
 		$data['help_pagespeed_js_inline_exception'] = htmlspecialchars($this->language->get('help_pagespeed_js_inline_exception'));
 		$data['help_pagespeed_js_inline_event'] = htmlspecialchars($this->language->get('help_pagespeed_js_inline_event'));
 		$data['help_pagespeed_js_script'] = htmlspecialchars($this->language->get('help_pagespeed_js_script'));
@@ -572,6 +754,14 @@ class ControllerExtensionModuleBusCache extends Controller {
 			$this->request->post['version'] = $this->version;
 			$this->request->post['time_save'] = time();
 
+			if (isset($this->request->post['cache_par'])) {
+				$this->request->post['cache_par'] = explode("\r\n", $this->request->post['cache_par']);
+			}
+
+			if (!empty($this->request->post['cache_engine_mine']) && !is_file(DIR_SYSTEM . 'library/bus_cache/' . $this->request->post['cache_engine_mine'] . '.php')) {
+				unset($this->request->post['cache_engine_mine']);
+			}
+
 			if (isset($this->request->post['pagespeed_css_style'])) {
 				$this->setFile('replace', html_entity_decode($this->request->post['pagespeed_css_style']), 'css');
 
@@ -589,6 +779,7 @@ class ControllerExtensionModuleBusCache extends Controller {
 			}
 
 			$this->clear();
+			$cache_engine = $this->configGet('cache_engine');
 
 			$modification = '';
 			if (!empty($module_info['status']) && empty($this->request->post['status'])) {
@@ -600,6 +791,10 @@ class ControllerExtensionModuleBusCache extends Controller {
 			$this->load->model('setting/setting');
 
 			$this->model_setting_setting->editSetting('bus_cache', array('bus_cache' => $this->request->post));
+
+			if ($cache_engine != $this->configGet('cache_engine')) {
+				$this->clear();
+			}
 
 			if ($apply) {
 				$this->session->data['success'] = $this->language->get('success_setting_apply') . $modification;
@@ -653,10 +848,18 @@ class ControllerExtensionModuleBusCache extends Controller {
 		);
 
 		$data['action'] = $this->url->link($this->paths['controller']['bus_cache'], $this->paths['token'], true);
-		$data['clear'] = $this->url->link($this->paths['controller']['bus_cache'] . '/clear', $this->paths['token'], true);
-		$data['clear_minify'] = $this->url->link($this->paths['controller']['bus_cache'] . '/clear', $this->paths['token'] . '&minify=1', true);
+		if ($this->version_oc >= 4) {
+			$data['clear'] = $this->url->link($this->paths['controller']['bus_cache'] . '|clear', $this->paths['token'], true);
+		} else {
+			$data['clear'] = $this->url->link($this->paths['controller']['bus_cache'] . '/clear', $this->paths['token'], true);
+		}
+		$data['clear_blog_search'] = ($this->config->get('configblog_article_limit') != null);
 		if ($this->config->get('bus_app')) {
-			$data['clear_pwa'] = $this->url->link(str_replace('bus_cache', 'bus_app', $this->paths['controller']['bus_cache']) . '/clear', $this->paths['token'] . '&redirect=' . $this->paths['controller']['bus_cache'], true);
+			if ($this->version_oc >= 4) {
+				$data['clear_pwa'] = $this->url->link(str_replace('bus_cache', 'bus_app', $this->paths['controller']['bus_cache']) . '|clear', $this->paths['token'] . '&redirect=' . $this->paths['controller']['bus_cache'], true);
+			} else {
+				$data['clear_pwa'] = $this->url->link(str_replace('bus_cache', 'bus_app', $this->paths['controller']['bus_cache']) . '/clear', $this->paths['token'] . '&redirect=' . $this->paths['controller']['bus_cache'], true);
+			}
 		} else {
 			$data['clear_pwa'] = false;
 		}
@@ -686,12 +889,50 @@ class ControllerExtensionModuleBusCache extends Controller {
 			$data['cache_status'] = true;
 		}
 
+		if (isset($this->request->post['cache_con'])) {
+			$data['cache_con'] = $this->request->post['cache_con'];
+		} elseif (isset($module_info['cache_con'])) {
+			$data['cache_con'] = $module_info['cache_con'];
+		} else {
+			$data['cache_con'] = "config_maintenance\r\nconfig_store_id\r\nconfig_language_id\r\nconfig_customer_group_id";
+		}
+
 		if (isset($this->request->post['cache_ses'])) {
 			$data['cache_ses'] = $this->request->post['cache_ses'];
 		} elseif (isset($module_info['cache_ses'])) {
 			$data['cache_ses'] = $module_info['cache_ses'];
 		} else {
-			$data['cache_ses'] = "customer_id\r\naffiliate_id\r\nlanguage\r\ncurrency\r\nwishlist\r\ncompare";
+			$data['cache_ses'] = "guest\r\nlanguage\r\ncurrency\r\nwishlist\r\ncompare";
+		}
+
+		if (isset($this->request->post['cache_cok'])) {
+			$data['cache_cok'] = $this->request->post['cache_cok'];
+		} elseif (isset($module_info['cache_cok'])) {
+			$data['cache_cok'] = $module_info['cache_cok'];
+		} else {
+			$data['cache_cok'] = "language\r\nlanguageauto";
+		}
+
+		if (isset($this->request->post['cache_par'])) {
+			$data['cache_par'] = implode("\r\n", $this->request->post['cache_par']);
+		} elseif (isset($module_info['cache_par'])) {
+			$data['cache_par'] = implode("\r\n", $module_info['cache_par']);
+		} else {
+			$data['cache_par'] = implode("\r\n", array(
+				'cache_off',
+				'_route_',
+				'route',
+				'blog_article_id',
+				'article_id',
+				'category_id',
+				'manufacturer_id',
+				'product_id',
+				'sort',
+				'order',
+				'page',
+				'path',
+				'limit'
+			));
 		}
 
 		if (isset($this->request->post['cache_onrot'])) {
@@ -742,8 +983,6 @@ class ControllerExtensionModuleBusCache extends Controller {
 			$data['cache_oc'] = false;
 		}
 
-		//$data['cache_controllers'] = array();
-
 		if (isset($this->request->post['cache_controller'])) {
 			$data['cache_controller'] = $this->request->post['cache_controller'];
 		} elseif (isset($module_info['cache_controller'])) {
@@ -751,8 +990,6 @@ class ControllerExtensionModuleBusCache extends Controller {
 		} else {
 			$data['cache_controller'] = false;
 		}
-
-		//$data['cache_models'] = array();
 
 		if (isset($this->request->post['cache_model'])) {
 			$data['cache_model'] = $this->request->post['cache_model'];
@@ -780,12 +1017,28 @@ class ControllerExtensionModuleBusCache extends Controller {
 			$data['cache_engine'] = 'buslik';
 		}
 
+		if (isset($this->request->post['cache_engine_mine'])) {
+			$data['cache_engine_mine'] = $this->request->post['cache_engine_mine'];
+		} elseif (isset($module_info['cache_engine_mine'])) {
+			$data['cache_engine_mine'] = $module_info['cache_engine_mine'];
+		} else {
+			$data['cache_engine_mine'] = false;
+		}
+
 		if (isset($this->request->post['cache_expire'])) {
 			$data['cache_expire'] = $this->request->post['cache_expire'];
 		} elseif (isset($module_info['cache_expire'])) {
 			$data['cache_expire'] = $module_info['cache_expire'];
 		} else {
 			$data['cache_expire'] = 3600;
+		}
+
+		if (isset($this->request->post['cache_expire_cart'])) {
+			$data['cache_expire_cart'] = $this->request->post['cache_expire_cart'];
+		} elseif (isset($module_info['cache_expire_cart'])) {
+			$data['cache_expire_cart'] = $module_info['cache_expire_cart'];
+		} else {
+			$data['cache_expire_cart'] = 3600;
 		}
 
 		if (isset($this->request->post['cache_expire_controller'])) {
@@ -844,14 +1097,6 @@ class ControllerExtensionModuleBusCache extends Controller {
 			$data['pagespeed_attribute_w_h'] = false;
 		}
 
-		if (isset($this->request->post['pagespeed_device'])) {
-			$data['pagespeed_device'] = $this->request->post['pagespeed_device'];
-		} elseif (isset($module_info['pagespeed_device'])) {
-			$data['pagespeed_device'] = $module_info['pagespeed_device'];
-		} else {
-			$data['pagespeed_device'] = false;
-		}
-
 		if (isset($this->request->post['pagespeed_lazy_load_images'])) {
 			$data['pagespeed_lazy_load_images'] = $this->request->post['pagespeed_lazy_load_images'];
 		} elseif (isset($module_info['pagespeed_lazy_load_images'])) {
@@ -859,10 +1104,6 @@ class ControllerExtensionModuleBusCache extends Controller {
 		} else {
 			$data['pagespeed_lazy_load_images'] = 1;
 		}
-
-		/* $data['pagespeed_lazy_load_htmls'] = array(
-			1 => array('route')
-		); */
 
 		if (isset($this->request->post['pagespeed_lazy_load_html'])) {
 			$data['pagespeed_lazy_load_html'] = $this->request->post['pagespeed_lazy_load_html'];
@@ -872,20 +1113,12 @@ class ControllerExtensionModuleBusCache extends Controller {
 			$data['pagespeed_lazy_load_html'] = false;
 		}
 
-		if (isset($this->request->post['pagespeed_replace'])) {
-			$data['pagespeed_replace'] = $this->request->post['pagespeed_replace'];
-		} elseif (isset($module_info['pagespeed_replace'])) {
-			$data['pagespeed_replace'] = $module_info['pagespeed_replace'];
-		} else {
-			$data['pagespeed_replace'] = false;
-		}
-
 		if (isset($this->request->post['pagespeed_html_replace'])) {
 			$data['pagespeed_html_replace'] = $this->request->post['pagespeed_html_replace'];
 		} elseif (isset($module_info['pagespeed_html_replace'])) {
 			$data['pagespeed_html_replace'] = $module_info['pagespeed_html_replace'];
 		} else {
-			$data['pagespeed_html_replace'] = $data['pagespeed_replace'];
+			$data['pagespeed_html_replace'] = false;
 		}
 
 		if (isset($this->request->post['pagespeed_html_min'])) {
@@ -893,7 +1126,7 @@ class ControllerExtensionModuleBusCache extends Controller {
 		} elseif (isset($module_info['pagespeed_html_min'])) {
 			$data['pagespeed_html_min'] = $module_info['pagespeed_html_min'];
 		} else {
-			$data['pagespeed_html_min'] = 2;
+			$data['pagespeed_html_min'] = 0;
 		}
 
 		if (isset($this->request->post['pagespeed_css_replace'])) {
@@ -909,7 +1142,7 @@ class ControllerExtensionModuleBusCache extends Controller {
 		} elseif (isset($module_info['pagespeed_css_min'])) {
 			$data['pagespeed_css_min'] = $module_info['pagespeed_css_min'];
 		} else {
-			$data['pagespeed_css_min'] = false;
+			$data['pagespeed_css_min'] = 0;
 		}
 
 		if (isset($this->request->post['pagespeed_css_min_links'])) {
@@ -960,6 +1193,14 @@ class ControllerExtensionModuleBusCache extends Controller {
 			$data['pagespeed_css_critical'] = false;
 		}
 
+		if (isset($this->request->post['pagespeed_css_critical_all'])) {
+			$data['pagespeed_css_critical_all'] = $this->request->post['pagespeed_css_critical_all'];
+		} elseif (isset($module_info['pagespeed_css_critical_all'])) {
+			$data['pagespeed_css_critical_all'] = $module_info['pagespeed_css_critical_all'];
+		} else {
+			$data['pagespeed_css_critical_all'] = true;
+		}
+
 		if (isset($this->request->post['pagespeed_css_critical_time'])) {
 			$data['pagespeed_css_critical_time'] = $this->request->post['pagespeed_css_critical_time'];
 		} elseif (isset($module_info['pagespeed_css_critical_time'])) {
@@ -974,6 +1215,14 @@ class ControllerExtensionModuleBusCache extends Controller {
 			$data['pagespeed_css_critical_elements'] = $module_info['pagespeed_css_critical_elements'];
 		} else {
 			$data['pagespeed_css_critical_elements'] = "font-face\r\nkeyframes\r\n*\r\n::after, ::before\r\n]";
+		}
+
+		if (isset($this->request->post['pagespeed_css_critical_links'])) {
+			$data['pagespeed_css_critical_links'] = $this->request->post['pagespeed_css_critical_links'];
+		} elseif (isset($module_info['pagespeed_css_critical_links'])) {
+			$data['pagespeed_css_critical_links'] = $module_info['pagespeed_css_critical_links'];
+		} else {
+			$data['pagespeed_css_critical_links'] = false;
 		}
 
 		if (isset($this->request->post['pagespeed_css_inline_transfer'])) {
@@ -1013,7 +1262,7 @@ class ControllerExtensionModuleBusCache extends Controller {
 		} elseif (isset($module_info['pagespeed_js_min'])) {
 			$data['pagespeed_js_min'] = $module_info['pagespeed_js_min'];
 		} else {
-			$data['pagespeed_js_min'] = false;
+			$data['pagespeed_js_min'] = 0;
 		}
 
 		if (isset($this->request->post['pagespeed_js_min_links'])) {
@@ -1064,6 +1313,14 @@ class ControllerExtensionModuleBusCache extends Controller {
 			$data['pagespeed_js_inline_transfer'] = 0;
 		}
 
+		if (isset($this->request->post['pagespeed_js_inline_transfer_onrot'])) {
+			$data['pagespeed_js_inline_transfer_onrot'] = $this->request->post['pagespeed_js_inline_transfer_onrot'];
+		} elseif (isset($module_info['pagespeed_js_inline_transfer_onrot'])) {
+			$data['pagespeed_js_inline_transfer_onrot'] = $module_info['pagespeed_js_inline_transfer_onrot'];
+		} else {
+			$data['pagespeed_js_inline_transfer_onrot'] = false;
+		}
+
 		if (isset($this->request->post['pagespeed_js_inline_exception'])) {
 			$data['pagespeed_js_inline_exception'] = $this->request->post['pagespeed_js_inline_exception'];
 		} elseif (isset($module_info['pagespeed_js_inline_exception'])) {
@@ -1088,7 +1345,11 @@ class ControllerExtensionModuleBusCache extends Controller {
 			$data['pagespeed_js_script'] = false;
 		}
 
-		$cache = new Cache('file', 600);
+		if ($this->version_oc >= 4) {
+			$cache = new \Opencart\System\Library\Cache('file', 600);
+		} else {
+			$cache = new Cache('file', 600);
+		}
 		$files_cache = $cache->get('bus_cache.debug.total');
 
 		if (empty($files_cache)) {
@@ -1136,7 +1397,17 @@ class ControllerExtensionModuleBusCache extends Controller {
 			$this->registry->get('config')->set('template_engine', 'template');
 		}
 
-		$template = $this->load->view($this->paths['view']['bus_cache'], $data);
+		if ($this->version_oc >= 4) {
+			extract($data);
+
+			ob_start();
+
+			require(DIR_OPENCART . $this->paths['view']['bus_cache'] . '.tpl');
+
+			$template = ob_get_clean();
+		} else {
+			$template = $this->load->view($this->paths['view']['bus_cache'], $data);
+		}
 
 		if ($this->version_oc >= 3) {
 			$this->registry->get('config')->set('template_engine', $template_engine);
@@ -1149,6 +1420,10 @@ class ControllerExtensionModuleBusCache extends Controller {
 	protected function validate() {
 		if (!$this->user->hasPermission('modify', $this->paths['controller']['bus_cache'])) {
 			$this->error['warning'] = $this->language->get('error_permission');
+		}
+
+		if ($this->config->get('bus_app')) {
+			//bGlzdF9vZl9saWNlbnNlcy5waHA=
 		}
 
 		return !$this->error;
@@ -1669,10 +1944,12 @@ HTML;
 				DIR_APPLICATION . 'view/template/extension/module/bus_cache',
 				//DIR_CATALOG . 'controller/extension/module/bus_cache.php',
 				//DIR_CATALOG . 'model/extension/module/bus_cache.php',
-				//DIR_IMAGE . 'catalog/bus_cache[NAGIBATOR]',
+				DIR_IMAGE . 'bus_cache[NAGIBATOR]',
 				//DIR_LOGS . 'bus_cache',
 				DIR_SYSTEM . 'library/bus_cache[NAGIBATOR]',
 				DIR_SYSTEM . 'library/bus_cache.ocmod.xml_',
+				DIR_SYSTEM . 'library/bus_cube/bus_cache[NAGIBATOR]',
+				DIR_SYSTEM . 'library/bus_cube',
 				DIR_SYSTEM . 'bus_cache.ocmod.xml',
 			);
 
@@ -1789,8 +2066,13 @@ HTML;
 	private function update() {
 		$version = $this->configGet('version');
 		if ($this->validate() && ($this->request->server['REQUEST_METHOD'] != 'POST') && $version && version_compare($this->version, $version, '>')) {
-			if (version_compare('1.1.1', $version, '>')) {
+			if (version_compare('1.0.14', $version, '>') && $this->configGet('pagespeed_replace')) {
+					$this->load->model('setting/setting');
 
+					$module_info = $this->configGet();
+					$module_info['pagespeed_html_replace'] = $module_info['pagespeed_replace'];
+
+					$this->model_setting_setting->editSetting('bus_cache', array('bus_cache' => $module_info));
 			}
 
 			$this->clear();
@@ -1855,10 +2137,10 @@ HTML;
 			$text_ocmod_refresh = $this->language->get('text_ocmod_refresh');
 
 			if (isset($this->session->data['apply'])) {
-				$success = $this->language->get('success_setting_apply') . ' ' . $message;
+				$success = $this->language->get('success_setting_apply') . ' ' . addslashes(preg_replace('/[\r\n\t\x0B]/', '', html_entity_decode($message, ENT_QUOTES, 'UTF-8')));
 				unset($this->session->data['apply']);
 			} else {
-				$success = $this->language->get('success_setting_save') . ' ' . $message;
+				$success = $this->language->get('success_setting_save') . ' ' . addslashes(preg_replace('/[\r\n\t\x0B]/', '', html_entity_decode($message, ENT_QUOTES, 'UTF-8')));
 			}
 
 			$error_uninstall = $this->language->get('error_uninstall');
