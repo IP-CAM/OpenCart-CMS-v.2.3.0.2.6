@@ -132,7 +132,7 @@
           </div>
           <?php echo $captcha; ?>
         </fieldset>
-        <div class="buttons">
+        <div class="buttons clearfix">
           <div class="pull-right">
             <input class="btn btn-primary" type="submit" value="<?php echo $button_submit; ?>" />
           </div>
