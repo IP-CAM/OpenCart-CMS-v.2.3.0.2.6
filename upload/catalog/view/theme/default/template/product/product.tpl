@@ -445,7 +445,7 @@ $('select[name=\'recurring_id\'], input[name="quantity"]').change(function(){
 			$('#recurring-description').html('');
 		},
 		success: function(json) {
-			$('.alert, .text-danger').remove();
+			$('.alert-success, .text-danger').remove();
 
 			if (json['success']) {
 				$('#recurring-description').html(json['success']);
@@ -468,7 +468,7 @@ $('#button-cart').on('click', function() {
 			$('#button-cart').button('reset');
 		},
 		success: function(json) {
-			$('.alert, .text-danger').remove();
+			$('.alert-success, .text-danger').remove();
 			$('.form-group').removeClass('has-error');
 
 			if (json['error']) {
