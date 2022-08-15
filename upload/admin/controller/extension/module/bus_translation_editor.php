@@ -73,22 +73,31 @@
                                                 ▒█████▓░         ▒█████▓░                                               
 */
 
+//namespace Opencart\Admin\Controller\Extension\BusTranslationEditor\Module;
+
 // забараняем прамы доступ
-if (!class_exists('Controller')) {
+if (!defined('VERSION')) {
 	header('Refresh: 1; URL=/');
 	exit('ЗАПРЫШЧАЮ!');
 }
 
-if (version_compare(VERSION, '2.2.0', '<')) {
-	class ControllerModuleBusTranslationEditor extends ControllerExtensionModuleBusTranslationEditor {}
+if (version_compare(VERSION, '4.0.0', '>=')) {
+	class Controller extends \Opencart\System\Engine\Controller {}
 }
 
-class ControllerExtensionModuleBusTranslationEditor extends Controller {
+if (version_compare(VERSION, '2.3.0', '<')) {
+	class ControllerModuleBusTranslationEditor extends BusTranslationEditor {}
+} elseif (version_compare(VERSION, '4.0.0', '<')) {
+	class ControllerExtensionModuleBusTranslationEditor extends BusTranslationEditor {}
+}
+
+class BusTranslationEditor extends Controller {
 	private $error = array();
 	private $name_arhive = 'Translation editor';
+	private $code_event = 'bus_translation_editor';
 	private $code = '01000061';
 	private $mame = 'Редактор перевода - "Translation editor"';
-	private $version = '1.0.4';
+	private $version = '1.0.6';
 	private $author = 'BuslikDrev.by';
 	private $link = 'https://liveopencart.ru/buslikdrev';
 	private $version_oc = 2.2;
@@ -96,8 +105,40 @@ class ControllerExtensionModuleBusTranslationEditor extends Controller {
 
 	public function __construct($foo) {
 		parent::__construct($foo);
-		if (version_compare(VERSION, '3.0.0', '>=')) {
+		if (method_exists($this->language, 'set')) {
 			$this->language->set('bus_translation_editor_version', $this->version);
+		}
+		if (version_compare(VERSION, '4.0.0', '>=')) {
+			$this->version_oc = 4;
+			$this->paths = array(
+				'controller' => array(
+					'bus_cache' => 'extension/bus_cache/module/bus_cache',
+					'bus_cache_event' => 'extension/bus_cache/event/bus_cache',
+					'module' => 'extension/module',
+					'extension' => 'marketplace/extension',
+					'modification' => 'marketplace/modification',
+				),
+				'language' => array(
+					'bus_cache' => 'extension/bus_cache/module/bus_cache',
+				),
+				'model' => array(
+					'bus_cache' => 'extension/bus_cache/module/bus_cache',
+					'bus_cache_path' => 'model_extension_module_bus_cache',
+					'module' => 'setting/module',
+					'module_path' => 'model_setting_module',
+					'extension' => 'setting/extension',
+					'extension_path' => 'model_setting_extension',
+					'modification' => 'setting/modification',
+					'modification_path' => 'model_setting_modification',
+					'event' => 'setting/event',
+					'event_path' => 'model_setting_event',
+				),
+				'view' => array(
+					'bus_cache' => 'extension/bus_cache/admin/view/template/module/bus_cache',
+				),
+				'token' => 'user_token=' . $this->session->data['user_token']
+			);
+		} elseif (version_compare(VERSION, '3.0.0', '>=')) {
 			$this->version_oc = 3;
 			$this->paths = array(
 				'controller' => array(
@@ -127,7 +168,6 @@ class ControllerExtensionModuleBusTranslationEditor extends Controller {
 				'token' => 'user_token=' . $this->session->data['user_token']
 			);
 		} elseif (version_compare(VERSION, '2.2.0', '>=')) {
-			$this->language->set('bus_translation_editor_version', $this->version);
 			$this->version_oc = 2.2;
 			$this->paths = array(
 				'controller' => array(
@@ -525,7 +565,7 @@ class ControllerExtensionModuleBusTranslationEditor extends Controller {
 		$path = '';
 
 		if (isset($this->request->get['search']) && iconv_strlen($this->request->get['search'])) {
-			$search = $this->request->get['search'];
+			$search = mb_strtolower($this->request->get['search']);
 		} else {
 			$json['error'] = $this->language->get('error_install');
 		}
@@ -582,7 +622,7 @@ class ControllerExtensionModuleBusTranslationEditor extends Controller {
 						}
 					} elseif (is_file($file)) {
 						$totals++;
-						if (stristr(file_get_contents($file), $search) !== false) {
+						if (strpos(mb_strtolower(file_get_contents($file)), $search) !== false) {
 							$counts++;
 							$file_arr[] = $file;
 						}
@@ -603,8 +643,8 @@ class ControllerExtensionModuleBusTranslationEditor extends Controller {
 					foreach ($languages as $language) {
 						$language['code'] = ($this->version_oc != 2 ? $language['code'] : $language['directory']);
 						foreach ($this->loadLanguage($path, $language['code'], $dir) as $lang) {
-							$md5 = md5($lang['name']);
-							if (stristr($lang['name'], $search) !== false || stristr($lang['value'], $search) !== false) {
+							$md5 = md5($lang['name'] . $path);
+							if (strpos(mb_strtolower($lang['name']), $search) !== false || strpos(mb_strtolower($lang['value']), $search) !== false) {
 								$files['count_result']++;
 								$data['list_lang'][$md5]['path'] = str_replace('.php', '', $path);
 								$data['list_lang'][$md5]['name'] = $lang['name'];
@@ -704,6 +744,7 @@ class ControllerExtensionModuleBusTranslationEditor extends Controller {
 			}
 
 			$main = false;
+			$valid = false;
 
 			$languages = $this->model_localisation_language->getLanguages();
 
@@ -712,11 +753,17 @@ class ControllerExtensionModuleBusTranslationEditor extends Controller {
 					if ($language['code'] . '.php' == $path) {
 						$main = true;
 					}
+					if (isset($value[$language['code']]) && substr(str_replace('\\', '/', realpath($dir . $language['code'] . '/' . $path)), 0, strlen($dir)) == $dir) {
+						$valid = true;
+					}
 				}
 			} else {
 				foreach ($languages as $language) {
 					if ($language['directory'] . '.php' == $path) {
 						$main = true;
+					}
+					if (isset($value[$language['directory']]) && substr(str_replace('\\', '/', realpath($dir . $language['directory'] . '/' . $path)), 0, strlen($dir)) == $dir) {
+						$valid = true;
 					}
 				}
 			}
@@ -727,14 +774,14 @@ class ControllerExtensionModuleBusTranslationEditor extends Controller {
 					$path = $language['code'] . '.php';
 				}
 
-				if (isset($value[$language['code']]) && substr(str_replace('\\', '/', realpath($dir . $language['code'] . '/' . $path)), 0, strlen($dir)) == $dir) {
+				if ($valid) {
 					if (!is_file($dir . $language['code'] . '/' . $path)) {
 						$path_new = '';
 						$basename = basename($path);
 
-						foreach (explode('/', $path) as $path) {
-							$path_new .= '/' . $path;
-							if ($path == $basename) {
+						foreach (explode('/', $path) as $p) {
+							$path_new .= '/' . $p;
+							if ($p == $basename) {
 								file_put_contents($dir . $language['code'] . $path_new, '<?php');
 							} else {
 								if (!is_dir($dir . $language['code'] . $path_new)) {
@@ -815,6 +862,7 @@ class ControllerExtensionModuleBusTranslationEditor extends Controller {
 			}
 
 			$main = false;
+			$valid = false;
 
 			$languages = $this->model_localisation_language->getLanguages();
 
@@ -823,11 +871,17 @@ class ControllerExtensionModuleBusTranslationEditor extends Controller {
 					if ($language['code'] . '.php' == $path) {
 						$main = true;
 					}
+					if (isset($value[$language['code']]) && substr(str_replace('\\', '/', realpath($dir . $language['code'] . '/' . $path)), 0, strlen($dir)) == $dir) {
+						$valid = true;
+					}
 				}
 			} else {
 				foreach ($languages as $language) {
 					if ($language['directory'] . '.php' == $path) {
 						$main = true;
+					}
+					if (isset($value[$language['directory']]) && substr(str_replace('\\', '/', realpath($dir . $language['directory'] . '/' . $path)), 0, strlen($dir)) == $dir) {
+						$valid = true;
 					}
 				}
 			}
@@ -838,7 +892,7 @@ class ControllerExtensionModuleBusTranslationEditor extends Controller {
 					$path = $language['code'] . '.php';
 				}
 
-				if (isset($value[$language['code']]) && substr(str_replace('\\', '/', realpath($dir . $language['code'] . '/' . $path)), 0, strlen($dir)) == $dir && is_file($dir . $language['code'] . '/' . $path)) {
+				if ($valid && is_file($dir . $language['code'] . '/' . $path)) {
 					$data = file_get_contents($dir . $language['code'] . '/' . $path);
 
 					if (stristr($data, '$_[' . $name . ']') !== false) {
@@ -925,12 +979,6 @@ class ControllerExtensionModuleBusTranslationEditor extends Controller {
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
 	}
-
-	/* public function dump() {
-		if (isset($_GET['file']) && isset($_GET['code'])) {
-			var_dump($this->loadLanguage($_GET['file'], $_GET['code']));
-		}
-	} */
 
 	private function loadLanguage($filename, $code = '', $dir = '') {
 		$_ = array();
@@ -1770,11 +1818,11 @@ HTML;
 
 			}
 
-			$this->session->data['success'] = $this->modification($this->language->get('heading_title') . $this->language->get('success_update'));
+			$this->session->data['success'] = $this->modification($this->language->get('heading_title') . $this->language->get('success_update'), true, 300);
 		}
 	}
 
-	private function modification($message = false, $data = true) {
+	private function modification($message = false, $data = true, $speed = 2000) {
 		// посылыаем на йух
 		if ($this->version_oc >= 2.2) {
 			if (!$this->user->hasPermission('modify', 'extension/extension/module')) {
@@ -1869,7 +1917,7 @@ function ocmodClear() {
 		success: function(html) {
 			if (html) {
 				$('.alert-success').html('<i class="fa fa-check-circle"></i> $text_ocmod_clear <button type="button" class="close" data-dismiss="alert">×</button>');
-				setTimeout(ocmodClearlog, 2000);
+				setTimeout(ocmodClearlog, $speed);
 			}
 		},
 		error: function(xhr, ajaxOptions, thrownError) {
@@ -1889,7 +1937,7 @@ function ocmodClearlog() {
 		success: function(html) {
 			if (html) {
 				$('.alert-success').html('<i class="fa fa-check-circle"></i> $text_ocmod_clearlog <button type="button" class="close" data-dismiss="alert">×</button>');
-				setTimeout(ocmodRefresh, 2000);
+				setTimeout(ocmodRefresh, $speed);
 			}
 		},
 		error: function(xhr, ajaxOptions, thrownError) {
@@ -1909,7 +1957,7 @@ function ocmodRefresh() {
 		success: function(html) {
 			if (html) {
 				$('.alert-success').html('<i class="fa fa-check-circle"></i> $text_ocmod_refresh <button type="button" class="close" data-dismiss="alert">×</button>');
-				setTimeout(successModule, 2000);
+				setTimeout(successModule, $speed);
 			}
 		},
 		error: function(xhr, ajaxOptions, thrownError) {
