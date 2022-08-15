@@ -469,14 +469,14 @@ class ControllerStartupSeoPro extends Controller {
 		$config_action_not_found = $this->config->get('config_action_not_found');
 		if ($config_action_not_found) {
 			$config_action_route = $this->request->get['route'];
-			if (strpos($config_action_not_found, $config_action_route . "\r\n") !== false) {
+			if (strpos($config_action_not_found, $config_action_route . "\r\n") !== false && strpos($config_action_not_found, ';' . $config_action_route . "\r\n") === false) {
 				$this->request->get['route'] = $this->config->get('action_error');
 			} elseif (strpos($config_action_not_found, $config_action_route . "|") !== false || strpos($config_action_not_found, "#|") !== false) {
 				if (strpos($config_action_not_found, $config_action_route . "|") === false) {
 					$config_action_route = '#';
 				}
 				foreach (explode("\r\n", $config_action_not_found) as $result) {
-					if (strpos($result, $config_action_route . '|') !== false) {
+					if ($result[0] != ';' && strpos($result, $config_action_route . '|') !== false) {
 						$explode = explode('|', $result);
 						if (!empty($explode[2])) {
 							$params = array();
