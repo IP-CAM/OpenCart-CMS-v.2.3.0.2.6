@@ -8,7 +8,7 @@
     <file path="catalog/view/theme/*/template/common/header.tpl">
         <operation error="skip">
             <search>
-            <![CDATA[<base href="<?php echo $base; ?>" />]]>
+            <![CDATA[<base href="<?php echo $base; ?>"]]>
             </search>
             <add position="before">
             <![CDATA[<?php if ($robots) { ?><meta name="robots" content="<?php echo $robots; ?>" /><?php } ?>]]>
