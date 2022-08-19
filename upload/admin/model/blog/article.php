@@ -4,1087 +4,485 @@
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
-class ControllerBlogArticle extends Controller {
-	private $error = array();
+class ModelBlogArticle extends Model {
+	public function addArticle($data) {
+		$this->db->query("INSERT INTO " . DB_PREFIX . "article SET status = '" . (int)$data['status'] . "', noindex = '" . (int)$data['noindex'] . "', sort_order = '" . (int)$data['sort_order'] . "', date_added = NOW()");
 
-	public function index() {
-		$this->load->language('blog/article');
+		$article_id = $this->db->getLastId();
 
-		$this->document->setTitle($this->language->get('heading_title'));
+		if (isset($data['image'])) {
+			$this->db->query("UPDATE " . DB_PREFIX . "article SET image = '" . $this->db->escape($data['image']) . "' WHERE article_id = '" . (int)$article_id . "'");
+		}
 
-		$this->load->model('blog/article');
+		foreach ($data['article_description'] as $language_id => $value) {
+			$this->db->query("INSERT INTO " . DB_PREFIX . "article_description SET article_id = '" . (int)$article_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "', description = '" . $this->db->escape($value['description']) . "', tag = '" . $this->db->escape($value['tag']) . "', meta_title = '" . $this->db->escape($value['meta_title']) . "', meta_h1 = '" . $this->db->escape($value['meta_h1']) . "', meta_description = '" . $this->db->escape($value['meta_description']) . "', meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "'");
+		}
 
-		$this->getList();
+		if (isset($data['article_store'])) {
+			foreach ($data['article_store'] as $store_id) {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "article_to_store SET article_id = '" . (int)$article_id . "', store_id = '" . (int)$store_id . "'");
+			}
+		}
+
+		if (isset($data['article_image'])) {
+			foreach ($data['article_image'] as $article_image) {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "article_image SET article_id = '" . (int)$article_id . "', image = '" . $this->db->escape($article_image['image']) . "', sort_order = '" . (int)$article_image['sort_order'] . "'");
+			}
+		}
+
+		if (isset($data['article_download'])) {
+			foreach ($data['article_download'] as $download_id) {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "article_to_download SET article_id = '" . (int)$article_id . "', download_id = '" . (int)$download_id . "'");
+			}
+		}
+
+		if (isset($data['article_category'])) {
+			foreach ($data['article_category'] as $blog_category_id) {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "article_to_blog_category SET article_id = '" . (int)$article_id . "', blog_category_id = '" . (int)$blog_category_id . "'");
+			}
+		}
+
+		if (isset($data['main_blog_category_id']) && $data['main_blog_category_id'] > 0) {
+			$this->db->query("DELETE FROM " . DB_PREFIX . "article_to_blog_category WHERE article_id = '" . (int)$article_id . "' AND blog_category_id = '" . (int)$data['main_blog_category_id'] . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "article_to_blog_category SET article_id = '" . (int)$article_id . "', blog_category_id = '" . (int)$data['main_blog_category_id'] . "', main_blog_category = 1");
+		} elseif (isset($data['article_category'][0])) {
+			$this->db->query("UPDATE " . DB_PREFIX . "article_to_blog_category SET main_blog_category = 1 WHERE article_id = '" . (int)$article_id . "' AND blog_category_id = '" . (int)$data['article_category'][0] . "'");
+		}
+
+		if (isset($data['article_related'])) {
+			foreach ($data['article_related'] as $related_id) {
+				$this->db->query("DELETE FROM " . DB_PREFIX . "article_related WHERE article_id = '" . (int)$article_id . "' AND related_id = '" . (int)$related_id . "'");
+				$this->db->query("INSERT INTO " . DB_PREFIX . "article_related SET article_id = '" . (int)$article_id . "', related_id = '" . (int)$related_id . "'");
+				$this->db->query("DELETE FROM " . DB_PREFIX . "article_related WHERE article_id = '" . (int)$related_id . "' AND related_id = '" . (int)$article_id . "'");
+				$this->db->query("INSERT INTO " . DB_PREFIX . "article_related SET article_id = '" . (int)$related_id . "', related_id = '" . (int)$article_id . "'");
+			}
+		}
+
+		if (isset($data['article_related_product'])) {
+			foreach ($data['article_related_product'] as $related_id) {
+				$this->db->query("DELETE FROM " . DB_PREFIX . "article_related_product WHERE article_id = '" . (int)$article_id . "' AND product_id = '" . (int)$related_id . "'");
+				$this->db->query("INSERT INTO " . DB_PREFIX . "article_related_product SET article_id = '" . (int)$article_id . "', product_id = '" . (int)$related_id . "'");
+			}
+		}
+
+		if (isset($data['article_layout'])) {
+			foreach ($data['article_layout'] as $store_id => $layout_id) {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "article_to_layout SET article_id = '" . (int)$article_id . "', store_id = '" . (int)$store_id . "', layout_id = '" . (int)$layout_id . "'");
+			}
+		}
+
+		if (!empty($data['keyword'])) {
+			$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'article_id=" . (int)$article_id . "', keyword = '" . $this->db->escape($data['keyword']) . "'");
+		}
+
+		$this->cache->delete('article');
+		$this->cache->delete('seo_pro');
+		$this->cache->delete('seo_url');
+
+		return $article_id;
 	}
 
-	public function add() {
-		$this->load->language('blog/article');
+	public function editArticle($article_id, $data) {
+		$this->db->query("UPDATE " . DB_PREFIX . "article SET status = '" . (int)$data['status'] . "', noindex = '" . (int)$data['noindex'] . "', sort_order = '" . (int)$data['sort_order'] . "', date_modified = NOW() WHERE article_id = '" . (int)$article_id . "'");
 
-		$this->document->setTitle($this->language->get('heading_title'));
-
-		$this->load->model('blog/article');
-
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$this->model_blog_article->addArticle($this->request->post);
-
-			$this->session->data['success'] = $this->language->get('text_success');
-
-			$url = '';
-
-			if (isset($this->request->get['filter_name'])) {
-				$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
-			}
-
-			if (isset($this->request->get['filter_category'])) {
-				$url .= '&filter_category=' . $this->request->get['filter_category'];
-				if (isset($this->request->get['filter_sub_category'])) {
-					$url .= '&filter_sub_category';
-				}
-			}
-
-			if (isset($this->request->get['filter_status'])) {
-				$url .= '&filter_status=' . $this->request->get['filter_status'];
-			}
-
-			if (isset($this->request->get['filter_noindex'])) {
-				$url .= '&filter_noindex=' . $this->request->get['filter_noindex'];
-			}
-
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
-
-			$this->response->redirect($this->url->link('blog/article', 'token=' . $this->session->data['token'] . $url, true));
+		if (isset($data['image'])) {
+			$this->db->query("UPDATE " . DB_PREFIX . "article SET image = '" . $this->db->escape($data['image']) . "' WHERE article_id = '" . (int)$article_id . "'");
 		}
 
-		$this->getForm();
+		$this->db->query("DELETE FROM " . DB_PREFIX . "article_description WHERE article_id = '" . (int)$article_id . "'");
+
+		foreach ($data['article_description'] as $language_id => $value) {
+			$this->db->query("INSERT INTO " . DB_PREFIX . "article_description SET article_id = '" . (int)$article_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "', description = '" . $this->db->escape($value['description']) . "', tag = '" . $this->db->escape($value['tag']) . "', meta_title = '" . $this->db->escape($value['meta_title']) . "', meta_h1 = '" . $this->db->escape($value['meta_h1']) . "', meta_description = '" . $this->db->escape($value['meta_description']) . "', meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "'");
+		}
+
+		$this->db->query("DELETE FROM " . DB_PREFIX . "article_to_store WHERE article_id = '" . (int)$article_id . "'");
+
+		if (isset($data['article_store'])) {
+			foreach ($data['article_store'] as $store_id) {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "article_to_store SET article_id = '" . (int)$article_id . "', store_id = '" . (int)$store_id . "'");
+			}
+		}
+
+		$this->db->query("DELETE FROM " . DB_PREFIX . "article_image WHERE article_id = '" . (int)$article_id . "'");
+
+		if (isset($data['article_image'])) {
+			foreach ($data['article_image'] as $article_image) {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "article_image SET article_id = '" . (int)$article_id . "', image = '" . $this->db->escape($article_image['image']) . "', sort_order = '" . (int)$article_image['sort_order'] . "'");
+			}
+		}
+
+		$this->db->query("DELETE FROM " . DB_PREFIX . "article_to_download WHERE article_id = '" . (int)$article_id . "'");
+
+		if (isset($data['article_download'])) {
+			foreach ($data['article_download'] as $download_id) {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "article_to_download SET article_id = '" . (int)$article_id . "', download_id = '" . (int)$download_id . "'");
+			}
+		}
+
+		$this->db->query("DELETE FROM " . DB_PREFIX . "article_to_blog_category WHERE article_id = '" . (int)$article_id . "'");
+
+		if (isset($data['article_category'])) {
+			foreach ($data['article_category'] as $blog_category_id) {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "article_to_blog_category SET article_id = '" . (int)$article_id . "', blog_category_id = '" . (int)$blog_category_id . "'");
+			}
+		}
+
+		if (isset($data['main_blog_category_id']) && $data['main_blog_category_id'] > 0) {
+			$this->db->query("DELETE FROM " . DB_PREFIX . "article_to_blog_category WHERE article_id = '" . (int)$article_id . "' AND blog_category_id = '" . (int)$data['main_blog_category_id'] . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "article_to_blog_category SET article_id = '" . (int)$article_id . "', blog_category_id = '" . (int)$data['main_blog_category_id'] . "', main_blog_category = 1");
+		} elseif (isset($data['article_category'][0])) {
+			$this->db->query("UPDATE " . DB_PREFIX . "article_to_blog_category SET main_blog_category = 1 WHERE article_id = '" . (int)$article_id . "' AND blog_category_id = '" . (int)$data['article_category'][0] . "'");
+		}
+
+		$this->db->query("DELETE FROM " . DB_PREFIX . "article_related WHERE article_id = '" . (int)$article_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "article_related WHERE related_id = '" . (int)$article_id . "'");
+
+		if (isset($data['article_related'])) {
+			foreach ($data['article_related'] as $related_id) {
+				$this->db->query("DELETE FROM " . DB_PREFIX . "article_related WHERE article_id = '" . (int)$article_id . "' AND related_id = '" . (int)$related_id . "'");
+				$this->db->query("INSERT INTO " . DB_PREFIX . "article_related SET article_id = '" . (int)$article_id . "', related_id = '" . (int)$related_id . "'");
+				$this->db->query("DELETE FROM " . DB_PREFIX . "article_related WHERE article_id = '" . (int)$related_id . "' AND related_id = '" . (int)$article_id . "'");
+				$this->db->query("INSERT INTO " . DB_PREFIX . "article_related SET article_id = '" . (int)$related_id . "', related_id = '" . (int)$article_id . "'");
+			}
+		}
+
+		$this->db->query("DELETE FROM " . DB_PREFIX . "article_related_product WHERE article_id = '" . (int)$article_id . "'");
+
+		if (isset($data['article_related_product'])) {
+			foreach ($data['article_related_product'] as $related_id) {
+				$this->db->query("DELETE FROM " . DB_PREFIX . "article_related_product WHERE article_id = '" . (int)$article_id . "' AND product_id = '" . (int)$related_id . "'");
+				$this->db->query("INSERT INTO " . DB_PREFIX . "article_related_product SET article_id = '" . (int)$article_id . "', product_id = '" . (int)$related_id . "'");
+			}
+		}
+
+		$this->db->query("DELETE FROM " . DB_PREFIX . "article_to_layout WHERE article_id = '" . (int)$article_id . "'");
+
+		if (isset($data['article_layout'])) {
+			foreach ($data['article_layout'] as $store_id => $layout_id) {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "article_to_layout SET article_id = '" . (int)$article_id . "', store_id = '" . (int)$store_id . "', layout_id = '" . (int)$layout_id . "'");
+			}
+		}
+
+		$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'article_id=" . (int)$article_id . "'");
+
+		if (!empty($data['keyword'])) {
+			$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'article_id=" . (int)$article_id . "', keyword = '" . $this->db->escape($data['keyword']) . "'");
+		}
+
+		$this->cache->delete('article');
+		$this->cache->delete('seo_pro');
+		$this->cache->delete('seo_url');
 	}
 
-	public function edit() {
-		$this->load->language('blog/article');
+	public function editArticleStatus($article_id, $status) {
+		$this->db->query("UPDATE " . DB_PREFIX . "article SET status = '" . (int)$status . "', date_modified = NOW() WHERE article_id = '" . (int)$article_id . "'");
 
-		$this->document->setTitle($this->language->get('heading_title'));
+		$this->cache->delete('article');
 
-		$this->load->model('blog/article');
-
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$this->model_blog_article->editArticle($this->request->get['article_id'], $this->request->post);
-
-			$this->session->data['success'] = $this->language->get('text_success');
-
-			$url = '';
-
-			if (isset($this->request->get['filter_name'])) {
-				$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
-			}
-
-			if (isset($this->request->get['filter_category'])) {
-				$url .= '&filter_category=' . $this->request->get['filter_category'];
-				if (isset($this->request->get['filter_sub_category'])) {
-					$url .= '&filter_sub_category';
-				}
-			}
-
-			if (isset($this->request->get['filter_status'])) {
-				$url .= '&filter_status=' . $this->request->get['filter_status'];
-			}
-
-			if (isset($this->request->get['filter_noindex'])) {
-				$url .= '&filter_noindex=' . $this->request->get['filter_noindex'];
-			}
-
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
-
-			$this->response->redirect($this->url->link('blog/article', 'token=' . $this->session->data['token'] . $url, true));
-		}
-
-		$this->getForm();
+		return $article_id;
 	}
 
-	public function delete() {
-		$this->load->language('blog/article');
+	public function copyArticle($article_id) {
+		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "article p LEFT JOIN " . DB_PREFIX . "article_description pd ON (p.article_id = pd.article_id) WHERE p.article_id = '" . (int)$article_id . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
-		$this->document->setTitle($this->language->get('heading_title'));
+		if ($query->num_rows) {
+			$data = $query->row;
 
-		$this->load->model('blog/article');
+			$data['viewed'] = '0';
+			$data['keyword'] = '';
+			$data['status'] = '0';
+			$data['noindex'] = '0';
 
-		if (isset($this->request->post['selected']) && $this->validateDelete()) {
-			foreach ($this->request->post['selected'] as $article_id) {
-				$this->model_blog_article->deleteArticle($article_id);
-			}
+			$data['article_description'] = $this->getArticleDescriptions($article_id);
+			$data['article_image'] = $this->getArticleImages($article_id);
+			$data['article_related'] = $this->getArticleRelated($article_id);
+			$data['article_related_product'] = $this->getProductRelated($article_id);
+			$data['article_category'] = $this->getArticleCategories($article_id);
+			$data['article_download'] = $this->getArticleDownloads($article_id);
+			$data['article_layout'] = $this->getArticleLayouts($article_id);
+			$data['article_store'] = $this->getArticleStores($article_id);
 
-			$this->session->data['success'] = $this->language->get('text_success');
-
-			$url = '';
-
-			if (isset($this->request->get['filter_name'])) {
-				$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
-			}
-
-			if (isset($this->request->get['filter_category'])) {
-				$url .= '&filter_category=' . $this->request->get['filter_category'];
-				if (isset($this->request->get['filter_sub_category'])) {
-					$url .= '&filter_sub_category';
-				}
-			}
-
-			if (isset($this->request->get['filter_status'])) {
-				$url .= '&filter_status=' . $this->request->get['filter_status'];
-			}
-
-			if (isset($this->request->get['filter_noindex'])) {
-				$url .= '&filter_noindex=' . $this->request->get['filter_noindex'];
-			}
-
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
-
-			$this->response->redirect($this->url->link('blog/article', 'token=' . $this->session->data['token'] . $url, true));
+			$this->addArticle($data);
 		}
-
-		$this->getList();
 	}
 
-	public function copy() {
-		$this->load->language('blog/article');
+	public function deleteArticle($article_id) {
+		$this->db->query("DELETE FROM " . DB_PREFIX . "article WHERE article_id = '" . (int)$article_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "article_description WHERE article_id = '" . (int)$article_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "article_image WHERE article_id = '" . (int)$article_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "article_related WHERE article_id = '" . (int)$article_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "article_related WHERE related_id = '" . (int)$article_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "article_related_product WHERE article_id = '" . (int)$article_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "article_to_blog_category WHERE article_id = '" . (int)$article_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "article_to_download WHERE article_id = '" . (int)$article_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "article_to_layout WHERE article_id = '" . (int)$article_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "article_to_store WHERE article_id = '" . (int)$article_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "review_article WHERE article_id = '" . (int)$article_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'article_id=" . (int)$article_id . "'");
 
-		$this->document->setTitle($this->language->get('heading_title'));
-
-		$this->load->model('blog/article');
-
-		if (isset($this->request->post['selected']) && $this->validateCopy()) {
-			foreach ($this->request->post['selected'] as $article_id) {
-				$this->model_blog_article->copyArticle($article_id);
-			}
-
-			$this->session->data['success'] = $this->language->get('text_success');
-
-			$url = '';
-
-			if (isset($this->request->get['filter_name'])) {
-				$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
-			}
-
-			if (isset($this->request->get['filter_category'])) {
-				$url .= '&filter_category=' . $this->request->get['filter_category'];
-				if (isset($this->request->get['filter_sub_category'])) {
-					$url .= '&filter_sub_category';
-				}
-			}
-
-			if (isset($this->request->get['filter_status'])) {
-				$url .= '&filter_status=' . $this->request->get['filter_status'];
-			}
-
-			if (isset($this->request->get['filter_noindex'])) {
-				$url .= '&filter_noindex=' . $this->request->get['filter_noindex'];
-			}
-
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
-
-			$this->response->redirect($this->url->link('blog/article', 'token=' . $this->session->data['token'] . $url, true));
-		}
-
-		$this->getList();
+		$this->cache->delete('article');
 	}
 
-	public function enable() {
-		$this->load->language('blog/article');
+	public function getArticle($article_id) {
+		$query = $this->db->query("SELECT DISTINCT *, (SELECT keyword FROM " . DB_PREFIX . "url_alias WHERE query = 'article_id=" . (int)$article_id . "' LIMIT 1) AS keyword FROM " . DB_PREFIX . "article p LEFT JOIN " . DB_PREFIX . "article_description pd ON (p.article_id = pd.article_id) WHERE p.article_id = '" . (int)$article_id . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
-		$this->document->setTitle($this->language->get('heading_title'));
-
-		$this->load->model('blog/article');
-
-		if (isset($this->request->post['selected']) && $this->validateProStatus()) {
-			foreach ($this->request->post['selected'] as $article_id) {
-				$this->model_blog_article->editArticleStatus($article_id, 1);
-			}
-
-			$this->session->data['success'] = $this->language->get('text_success');
-
-			$url = '';
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
-
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			$this->response->redirect($this->url->link('blog/article', 'token=' . $this->session->data['token'] . $url, true));
-		}
-
-		$this->getList();
+		return $query->row;
 	}
 
-	public function disable() {
-		$this->load->language('blog/article');
+	public function getArticles($data = array()) {
+		$sql = "SELECT p.*, pd.* FROM " . DB_PREFIX . "article p LEFT JOIN " . DB_PREFIX . "article_description pd ON (p.article_id = pd.article_id)";
 
-		$this->document->setTitle($this->language->get('heading_title'));
-
-		$this->load->model('blog/article');
-
-		if (isset($this->request->post['selected']) && $this->validateProStatus()) {
-			foreach ($this->request->post['selected'] as $article_id) {
-				$this->model_blog_article->editArticleStatus($article_id, 0);
-			}
-
-			$this->session->data['success'] = $this->language->get('text_success');
-
-			$url = '';
-
-			if (isset($this->request->get['page'])) {
-				$url .= '&page=' . $this->request->get['page'];
-			}
-
-			if (isset($this->request->get['sort'])) {
-				$url .= '&sort=' . $this->request->get['sort'];
-			}
-
-			if (isset($this->request->get['order'])) {
-				$url .= '&order=' . $this->request->get['order'];
-			}
-
-			$this->response->redirect($this->url->link('blog/article', 'token=' . $this->session->data['token'] . $url, true));
+		if (isset($data['filter_category'])) {
+			$sql .= " LEFT JOIN " . DB_PREFIX . "article_to_blog_category a2c ON (p.article_id = a2c.article_id)";
 		}
 
-		$this->getList();
-	}
+		$sql .= " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
-	protected function getList() {
-		$data['heading_title'] = $this->language->get('heading_title');
-
-		$data['text_list'] = $this->language->get('text_list');
-		$data['text_all'] = $this->language->get('text_all');
-		$data['text_none_category'] = $this->language->get('text_none_category');
-		$data['text_enabled'] = $this->language->get('text_enabled');
-		$data['text_disabled'] = $this->language->get('text_disabled');
-		$data['text_no_results'] = $this->language->get('text_no_results');
-		$data['text_confirm'] = $this->language->get('text_confirm');
-
-		$data['column_image'] = $this->language->get('column_image');
-		$data['column_name'] = $this->language->get('column_name');
-		$data['column_status'] = $this->language->get('column_status');
-		$data['column_noindex'] = $this->language->get('column_noindex');
-		$data['column_action'] = $this->language->get('column_action');
-
-		$data['entry_name'] = $this->language->get('entry_name');
-		$data['entry_category'] = $this->language->get('entry_category');
-		$data['entry_category_filter'] = $this->language->get('entry_category_filter');
-		$data['entry_sub_category'] = $this->language->get('entry_sub_category');
-		$data['entry_status'] = $this->language->get('entry_status');
-		$data['entry_noindex'] = $this->language->get('entry_noindex');
-
-		$data['button_copy'] = $this->language->get('button_copy');
-		$data['button_add'] = $this->language->get('button_add');
-		$data['button_edit'] = $this->language->get('button_edit');
-		$data['button_shop'] = $this->language->get('button_shop');
-		$data['button_delete'] = $this->language->get('button_delete');
-		$data['button_filter'] = $this->language->get('button_filter');
-		$data['button_clear'] = $this->language->get('button_clear');
-		$data['button_enable'] = $this->language->get('button_enable');
-		$data['button_disable'] = $this->language->get('button_disable');
-
-		$data['token'] = $this->session->data['token'];
-
-		if (isset($this->request->get['filter_name'])) {
-			$filter_name = $this->request->get['filter_name'];
-		} else {
-			$filter_name = null;
+		if (!empty($data['filter_name'])) {
+			$sql .= " AND pd.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
 		}
 
-		$filter_sub_category = null;
+		if (isset($data['filter_category']) && !is_null($data['filter_category'])) {
+			if (!empty($data['filter_category']) && !empty($data['filter_sub_category'])) {
+				$implode_data = array();
 
-		if (isset($this->request->get['filter_category'])) {
-			$filter_category = $this->request->get['filter_category'];
-
-			if (!empty($filter_category) && isset($this->request->get['filter_sub_category'])) {
-				$filter_sub_category = true;
-			} elseif (isset($this->request->get['filter_sub_category'])) {
-				unset($this->request->get['filter_sub_category']);
-			}
-		} else {
-			$filter_category = null;
-
-			if (isset($this->request->get['filter_sub_category'])) {
-				unset($this->request->get['filter_sub_category']);
-			}
-		}
-
-		$filter_category_name = null;
-
-		if (isset($filter_category)) {
-			if ($filter_category > 0) {
 				$this->load->model('blog/category');
 
-				$category = $this->model_blog_category->getCategory($filter_category);
+				$categories = $this->model_blog_category->getCategoriesChildren($data['filter_category']);
 
-				if ($category) {
-					$filter_category_name = ($category['path']) ? $category['path'] . ' &gt; ' . $category['name'] : $category['name'];
+				foreach ($categories as $category) {
+					$implode_data[] = "a2c.blog_category_id = '" . (int)$category['blog_category_id'] . "'";
+				}
+
+				if ($implode_data) {
+					$sql .= " AND (" . implode(' OR ', $implode_data) . ")";
+				}
+			} else {
+				if ((int)$data['filter_category'] > 0) {
+					$sql .= " AND a2c.blog_category_id = '" . (int)$data['filter_category'] . "'";
 				} else {
-					$filter_category = null;
-					$filter_sub_category = null;
-
-					unset($this->request->get['filter_category']);
-
-					if (isset($this->request->get['filter_sub_category'])) {
-						unset($this->request->get['filter_sub_category']);
-					}
+					$sql .= " AND a2c.blog_category_id IS NULL";
 				}
-			} else {
-				$filter_category_name = $this->language->get('text_none_category');
 			}
 		}
 
-		if (isset($this->request->get['filter_status'])) {
-			$filter_status = $this->request->get['filter_status'];
-		} else {
-			$filter_status = null;
+		if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
+			$sql .= " AND p.status = '" . (int)$data['filter_status'] . "'";
 		}
 
-		if (isset($this->request->get['filter_noindex'])) {
-			$filter_noindex = $this->request->get['filter_noindex'];
-		} else {
-			$filter_noindex = null;
+		if (isset($data['filter_noindex']) && !is_null($data['filter_noindex'])) {
+			$sql .= " AND p.noindex = '" . (int)$data['filter_noindex'] . "'";
 		}
 
-		if (isset($this->request->get['sort'])) {
-			$sort = $this->request->get['sort'];
-		} else {
-			$sort = 'pd.name';
-		}
+		$sql .= " GROUP BY p.article_id";
 
-		if (isset($this->request->get['order'])) {
-			$order = $this->request->get['order'];
-		} else {
-			$order = 'ASC';
-		}
-
-		if (isset($this->request->get['page'])) {
-			$page = $this->request->get['page'];
-		} else {
-			$page = 1;
-		}
-
-		if ($this->request->server['HTTPS']) {
-			$server = HTTPS_CATALOG;
-		} else {
-			$server = HTTP_CATALOG;
-		}
-
-		$url = '';
-
-		if (isset($this->request->get['filter_name'])) {
-			$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
-		}
-
-		if (isset($this->request->get['filter_category'])) {
-			$url .= '&filter_category=' . $this->request->get['filter_category'];
-			if (isset($this->request->get['filter_sub_category'])) {
-				$url .= '&filter_sub_category';
-			}
-		}
-
-		if (isset($this->request->get['filter_status'])) {
-			$url .= '&filter_status=' . $this->request->get['filter_status'];
-		}
-
-		if (isset($this->request->get['filter_noindex'])) {
-			$url .= '&filter_noindex=' . $this->request->get['filter_noindex'];
-		}
-
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
-
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
-
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
-
-		$data['breadcrumbs'] = array();
-
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_home'),
-			'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], true)
+		$sort_data = array(
+			'pd.name',
+			'p.status',
+			'p.noindex',
+			'p.sort_order'
 		);
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('heading_title'),
-			'href' => $this->url->link('blog/article', 'token=' . $this->session->data['token'] . $url, true)
-		);
+		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+			$sql .= " ORDER BY " . $data['sort'];
+		} else {
+			$sql .= " ORDER BY pd.name";
+		}
 
-		$data['add'] = $this->url->link('blog/article/add', 'token=' . $this->session->data['token'] . $url, true);
-		$data['copy'] = $this->url->link('blog/article/copy', 'token=' . $this->session->data['token'] . $url, true);
-		$data['delete'] = $this->url->link('blog/article/delete', 'token=' . $this->session->data['token'] . $url, true);
-		$data['enabled'] = $this->url->link('blog/article/enable', 'token=' . $this->session->data['token'] . $url, true);
-		$data['disabled'] = $this->url->link('blog/article/disable', 'token=' . $this->session->data['token'] . $url, true);
+		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+			$sql .= " DESC";
+		} else {
+			$sql .= " ASC";
+		}
 
-		$data['articles'] = array();
-
-		$filter_data = array(
-			'filter_name'         => $filter_name,
-			'filter_category'     => $filter_category,
-			'filter_sub_category' => $filter_sub_category,
-			'filter_status'       => $filter_status,
-			'filter_noindex'      => $filter_noindex,
-			'sort'                => $sort,
-			'order'               => $order,
-			'start'               => ($page - 1) * $this->config->get('configblog_limit_admin'),
-			'limit'               => $this->config->get('configblog_limit_admin')
-		);
-
-		$this->load->model('tool/image');
-
-		$article_total = $this->model_blog_article->getTotalArticles($filter_data);
-
-		$results = $this->model_blog_article->getArticles($filter_data);
-
-		foreach ($results as $result) {
-			if (is_file(DIR_IMAGE . $result['image'])) {
-				$image = $this->model_tool_image->resize($result['image'], 40, 40);
-			} else {
-				$image = $this->model_tool_image->resize('no_image.png', 40, 40);
+		if (isset($data['start']) || isset($data['limit'])) {
+			if ($data['start'] < 0) {
+				$data['start'] = 0;
 			}
 
-			$data['articles'][] = array(
-				'article_id' => $result['article_id'],
-				'image'      => $image,
-				'name'       => $result['name'],
-				'status'     => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
-				'noindex'    => ($result['noindex'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
-				'href_shop'  => $server . 'index.php?route=blog/article&article_id=' . $result['article_id'],
-				'edit'       => $this->url->link('blog/article/edit', 'token=' . $this->session->data['token'] . '&article_id=' . $result['article_id'] . $url, true)
+			if ($data['limit'] < 1) {
+				$data['limit'] = 20;
+			}
+
+			$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+		}
+
+		$query = $this->db->query($sql);
+
+		return $query->rows;
+	}
+
+	public function getArticlesByCategoryId($blog_category_id) {
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "article p LEFT JOIN " . DB_PREFIX . "article_description pd ON (p.article_id = pd.article_id) LEFT JOIN " . DB_PREFIX . "article_to_blog_category a2c ON (p.article_id = a2c.article_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND a2c.blog_category_id = '" . (int)$blog_category_id . "' ORDER BY pd.name ASC");
+
+		return $query->rows;
+	}
+
+	public function getArticleDescriptions($article_id) {
+		$article_description_data = array();
+
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "article_description WHERE article_id = '" . (int)$article_id . "'");
+
+		foreach ($query->rows as $result) {
+			$article_description_data[$result['language_id']] = array(
+				'name'             => $result['name'],
+				'description'      => $result['description'],
+				'meta_title'       => $result['meta_title'],
+				'meta_h1'          => $result['meta_h1'],
+				'meta_description' => $result['meta_description'],
+				'meta_keyword'     => $result['meta_keyword'],
+				'tag'              => $result['tag']
 			);
 		}
 
-		if (isset($this->error['warning'])) {
-			$data['error_warning'] = $this->error['warning'];
-		} else {
-			$data['error_warning'] = '';
-		}
-
-		if (isset($this->session->data['success'])) {
-			$data['success'] = $this->session->data['success'];
-
-			unset($this->session->data['success']);
-		} else {
-			$data['success'] = '';
-		}
-
-		if (isset($this->request->post['selected'])) {
-			$data['selected'] = (array)$this->request->post['selected'];
-		} else {
-			$data['selected'] = array();
-		}
-
-		$url = '';
-
-		if (isset($this->request->get['filter_name'])) {
-			$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
-		}
-
-		if (isset($this->request->get['filter_category'])) {
-			$url .= '&filter_category=' . $this->request->get['filter_category'];
-			if (isset($this->request->get['filter_sub_category'])) {
-				$url .= '&filter_sub_category';
-			}
-		}
-
-		if (isset($this->request->get['filter_status'])) {
-			$url .= '&filter_status=' . $this->request->get['filter_status'];
-		}
-
-		if (isset($this->request->get['filter_noindex'])) {
-			$url .= '&filter_noindex=' . $this->request->get['filter_noindex'];
-		}
-
-		if ($order == 'ASC') {
-			$url .= '&order=DESC';
-		} else {
-			$url .= '&order=ASC';
-		}
-
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
-
-		$data['sort_name'] = $this->url->link('blog/article', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url, true);
-		$data['sort_status'] = $this->url->link('blog/article', 'token=' . $this->session->data['token'] . '&sort=p.status' . $url, true);
-		$data['sort_noindex'] = $this->url->link('blog/article', 'token=' . $this->session->data['token'] . '&sort=p.noindex' . $url, true);
-		$data['sort_order'] = $this->url->link('blog/article', 'token=' . $this->session->data['token'] . '&sort=p.sort_order' . $url, true);
-
-		$url = '';
-
-		if (isset($this->request->get['filter_name'])) {
-			$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
-		}
-
-		if (isset($this->request->get['filter_category'])) {
-			$url .= '&filter_category=' . $this->request->get['filter_category'];
-			if (isset($this->request->get['filter_sub_category'])) {
-				$url .= '&filter_sub_category';
-			}
-		}
-
-		if (isset($this->request->get['filter_status'])) {
-			$url .= '&filter_status=' . $this->request->get['filter_status'];
-		}
-
-		if (isset($this->request->get['filter_noindex'])) {
-			$url .= '&filter_noindex=' . $this->request->get['filter_noindex'];
-		}
-
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
-		}
-
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
-
-		$pagination = new Pagination();
-		$pagination->total = $article_total;
-		$pagination->page = $page;
-		$pagination->limit = $this->config->get('configblog_limit_admin');
-		$pagination->url = $this->url->link('blog/article', 'token=' . $this->session->data['token'] . $url . '&page={page}', true);
-
-		$data['pagination'] = $pagination->render();
-
-		$data['results'] = sprintf($this->language->get('text_pagination'), ($article_total) ? (($page - 1) * $this->config->get('configblog_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('configblog_limit_admin')) > ($article_total - $this->config->get('configblog_limit_admin'))) ? $article_total : ((($page - 1) * $this->config->get('configblog_limit_admin')) + $this->config->get('configblog_limit_admin')), $article_total, ceil($article_total / $this->config->get('configblog_limit_admin')));
-
-		$data['filter_name'] = $filter_name;
-		$data['filter_category_name'] = $filter_category_name;
-		$data['filter_category'] = $filter_category;
-		$data['filter_sub_category'] = $filter_sub_category;
-		$data['filter_status'] = $filter_status;
-		$data['filter_noindex'] = $filter_noindex;
-
-		$data['sort'] = $sort;
-		$data['order'] = $order;
-
-		$data['header'] = $this->load->controller('common/header');
-		$data['column_left'] = $this->load->controller('common/column_left');
-		$data['footer'] = $this->load->controller('common/footer');
-
-		$this->response->setOutput($this->load->view('blog/article_list', $data));
+		return $article_description_data;
 	}
 
-	protected function getForm() {
-		$data['heading_title'] = $this->language->get('heading_title');
+	public function getArticleCategories($article_id) {
+		$article_category_data = array();
 
-		$data['text_form'] = !isset($this->request->get['article_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');
-		$data['text_enabled'] = $this->language->get('text_enabled');
-		$data['text_disabled'] = $this->language->get('text_disabled');
-		$data['text_none'] = $this->language->get('text_none');
-		$data['text_yes'] = $this->language->get('text_yes');
-		$data['text_no'] = $this->language->get('text_no');
-		$data['text_default'] = $this->language->get('text_default');
-		$data['text_select'] = $this->language->get('text_select');
-		$data['text_nogallery'] = $this->language->get('text_nogallery');
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "article_to_blog_category WHERE article_id = '" . (int)$article_id . "'");
 
-		$data['entry_name'] = $this->language->get('entry_name');
-		$data['entry_description'] = $this->language->get('entry_description');
-		$data['entry_meta_title'] = $this->language->get('entry_meta_title');
-		$data['entry_meta_h1'] = $this->language->get('entry_meta_h1');
-		$data['entry_meta_description'] = $this->language->get('entry_meta_description');
-		$data['entry_meta_keyword'] = $this->language->get('entry_meta_keyword');
-		$data['entry_keyword'] = $this->language->get('entry_keyword');
-		$data['entry_image'] = $this->language->get('entry_image');
-		$data['entry_store'] = $this->language->get('entry_store');
-		$data['entry_download'] = $this->language->get('entry_download');
-		$data['entry_category'] = $this->language->get('entry_category');
-		$data['entry_main_category'] = $this->language->get('entry_main_category');
-		$data['entry_related'] = $this->language->get('entry_related');
-		$data['entry_related_product'] = $this->language->get('entry_related_product');
-		$data['entry_sort_order'] = $this->language->get('entry_sort_order');
-		$data['entry_status'] = $this->language->get('entry_status');
-		$data['entry_noindex'] = $this->language->get('entry_noindex');
-		$data['entry_tag'] = $this->language->get('entry_tag');
-		$data['entry_layout'] = $this->language->get('entry_layout');
-
-		$data['help_keyword'] = $this->language->get('help_keyword');
-		$data['help_category'] = $this->language->get('help_category');
-		$data['help_download'] = $this->language->get('help_download');
-		$data['help_related'] = $this->language->get('help_related');
-		$data['help_related_product'] = $this->language->get('help_related_product');
-		$data['help_tag'] = $this->language->get('help_tag');
-		$data['help_noindex'] = $this->language->get('help_noindex');
-
-		$data['button_save'] = $this->language->get('button_save');
-		$data['button_cancel'] = $this->language->get('button_cancel');
-		$data['button_image_add'] = $this->language->get('button_image_add');
-		$data['button_remove'] = $this->language->get('button_remove');
-
-		$data['tab_general'] = $this->language->get('tab_general');
-		$data['tab_data'] = $this->language->get('tab_data');
-		$data['tab_links'] = $this->language->get('tab_links');
-		$data['tab_design'] = $this->language->get('tab_design');
-
-		if (isset($this->error['warning'])) {
-			$data['error_warning'] = $this->error['warning'];
-		} else {
-			$data['error_warning'] = '';
+		foreach ($query->rows as $result) {
+			$article_category_data[] = $result['blog_category_id'];
 		}
 
-		if (isset($this->error['name'])) {
-			$data['error_name'] = $this->error['name'];
-		} else {
-			$data['error_name'] = array();
+		return $article_category_data;
+	}
+
+	public function getArticleMainCategoryId($article_id) {
+		$query = $this->db->query("SELECT blog_category_id FROM " . DB_PREFIX . "article_to_blog_category WHERE article_id = '" . (int)$article_id . "' AND main_blog_category = '1' LIMIT 1");
+
+		return ($query->num_rows ? (int)$query->row['blog_category_id'] : 0);
+	}
+
+	public function getArticleImages($article_id) {
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "article_image WHERE article_id = '" . (int)$article_id . "' ORDER BY sort_order ASC");
+
+		return $query->rows;
+	}
+
+	public function getArticleDownloads($article_id) {
+		$article_download_data = array();
+
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "article_to_download WHERE article_id = '" . (int)$article_id . "'");
+
+		foreach ($query->rows as $result) {
+			$article_download_data[] = $result['download_id'];
 		}
 
-		if (isset($this->error['meta_title'])) {
-			$data['error_meta_title'] = $this->error['meta_title'];
-		} else {
-			$data['error_meta_title'] = array();
+		return $article_download_data;
+	}
+
+	public function getArticleStores($article_id) {
+		$article_store_data = array();
+
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "article_to_store WHERE article_id = '" . (int)$article_id . "'");
+
+		foreach ($query->rows as $result) {
+			$article_store_data[] = $result['store_id'];
 		}
 
-		if (isset($this->error['meta_h1'])) {
-			$data['error_meta_h1'] = $this->error['meta_h1'];
-		} else {
-			$data['error_meta_h1'] = array();
+		return $article_store_data;
+	}
+
+	public function getArticleLayouts($article_id) {
+		$article_layout_data = array();
+
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "article_to_layout WHERE article_id = '" . (int)$article_id . "'");
+
+		foreach ($query->rows as $result) {
+			$article_layout_data[$result['store_id']] = $result['layout_id'];
 		}
 
-		if (isset($this->error['keyword'])) {
-			$data['error_keyword'] = $this->error['keyword'];
-		} else {
-			$data['error_keyword'] = '';
-		}
+		return $article_layout_data;
+	}
 
-		$url = '';
+	public function getArticleRelated($article_id) {
+		$article_related_data = array();
 
-		if (isset($this->request->get['filter_name'])) {
-			$url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
-		}
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "article_related WHERE article_id = '" . (int)$article_id . "'");
 
-		if (isset($this->request->get['filter_category'])) {
-			$url .= '&filter_category=' . $this->request->get['filter_category'];
-			if (isset($this->request->get['filter_sub_category'])) {
-				$url .= '&filter_sub_category';
+		foreach ($query->rows as $result) {
+			if ($result['related_id'] != $article_id) {
+				$article_related_data[] = $result['related_id'];
 			}
 		}
 
-		if (isset($this->request->get['filter_status'])) {
-			$url .= '&filter_status=' . $this->request->get['filter_status'];
+		return $article_related_data;
+	}
+
+	public function getProductRelated($article_id) {
+		$article_related_product = array();
+
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "article_related_product WHERE article_id = '" . (int)$article_id . "'");
+
+		foreach ($query->rows as $result) {
+			$article_related_product[] = $result['product_id'];
 		}
 
-		if (isset($this->request->get['filter_noindex'])) {
-			$url .= '&filter_noindex=' . $this->request->get['filter_noindex'];
+		return $article_related_product;
+	}
+
+	public function getTotalArticles($data = array()) {
+		$sql = "SELECT COUNT(DISTINCT p.article_id) AS total FROM " . DB_PREFIX . "article p LEFT JOIN " . DB_PREFIX . "article_description pd ON (p.article_id = pd.article_id)";
+
+		if (isset($data['filter_category']) && !is_null($data['filter_category'])) {
+			$sql .= " LEFT JOIN " . DB_PREFIX . "article_to_blog_category a2c ON (p.article_id = a2c.article_id)";
 		}
 
-		if (isset($this->request->get['sort'])) {
-			$url .= '&sort=' . $this->request->get['sort'];
+		$sql .= " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+
+		if (!empty($data['filter_name'])) {
+			$sql .= " AND pd.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
 		}
 
-		if (isset($this->request->get['order'])) {
-			$url .= '&order=' . $this->request->get['order'];
-		}
+		if (isset($data['filter_category']) && !is_null($data['filter_category'])) {
+			if (!empty($data['filter_category']) && !empty($data['filter_sub_category'])) {
+				$implode_data = array();
 
-		if (isset($this->request->get['page'])) {
-			$url .= '&page=' . $this->request->get['page'];
-		}
+				$this->load->model('blog/category');
 
-		$data['breadcrumbs'] = array();
+				$categories = $this->model_blog_category->getCategoriesChildren($data['filter_category']);
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('text_home'),
-			'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], true)
-		);
+				foreach ($categories as $category) {
+					$implode_data[] = "a2c.blog_category_id = '" . (int)$category['blog_category_id'] . "'";
+				}
 
-		$data['breadcrumbs'][] = array(
-			'text' => $this->language->get('heading_title'),
-			'href' => $this->url->link('blog/article', 'token=' . $this->session->data['token'] . $url, true)
-		);
-
-		if (!isset($this->request->get['article_id'])) {
-			$data['action'] = $this->url->link('blog/article/add', 'token=' . $this->session->data['token'] . $url, true);
-		} else {
-			$data['action'] = $this->url->link('blog/article/edit', 'token=' . $this->session->data['token'] . '&article_id=' . $this->request->get['article_id'] . $url, true);
-		}
-
-		$data['cancel'] = $this->url->link('blog/article', 'token=' . $this->session->data['token'] . $url, true);
-
-		if (isset($this->request->get['article_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-			$article_info = $this->model_blog_article->getArticle($this->request->get['article_id']);
-		}
-
-		$data['token'] = $this->session->data['token'];
-
-		$this->load->model('localisation/language');
-
-		$data['languages'] = $this->model_localisation_language->getLanguages();
-
-		if (isset($this->request->post['article_description'])) {
-			$data['article_description'] = $this->request->post['article_description'];
-		} elseif (isset($this->request->get['article_id'])) {
-			$data['article_description'] = $this->model_blog_article->getArticleDescriptions($this->request->get['article_id']);
-		} else {
-			$data['article_description'] = array();
-		}
-
-		$language_id = $this->config->get('config_language_id');
-		if (isset($data['article_description'][$language_id]['name'])) {
-			$data['heading_title'] = $data['article_description'][$language_id]['name'];
-		}
-
-		if (isset($this->request->post['image'])) {
-			$data['image'] = $this->request->post['image'];
-		} elseif (!empty($article_info)) {
-			$data['image'] = $article_info['image'];
-		} else {
-			$data['image'] = '';
-		}
-
-		$this->load->model('tool/image');
-
-		if (isset($this->request->post['image']) && is_file(DIR_IMAGE . $this->request->post['image'])) {
-			$data['thumb'] = $this->model_tool_image->resize($this->request->post['image'], 100, 100);
-		} elseif (!empty($article_info) && is_file(DIR_IMAGE . $article_info['image'])) {
-			$data['thumb'] = $this->model_tool_image->resize($article_info['image'], 100, 100);
-		} else {
-			$data['thumb'] = $this->model_tool_image->resize('no_image.png', 100, 100);
-		}
-
-		$data['placeholder'] = $this->model_tool_image->resize('no_image.png', 100, 100);
-
-		$this->load->model('setting/store');
-
-		$data['stores'] = $this->model_setting_store->getStores();
-
-		if (isset($this->request->post['article_store'])) {
-			$data['article_store'] = $this->request->post['article_store'];
-		} elseif (isset($this->request->get['article_id'])) {
-			$data['article_store'] = $this->model_blog_article->getArticleStores($this->request->get['article_id']);
-		} else {
-			$data['article_store'] = array(0);
-		}
-
-		if (isset($this->request->post['keyword'])) {
-			$data['keyword'] = $this->request->post['keyword'];
-		} elseif (!empty($article_info)) {
-			$data['keyword'] = $article_info['keyword'];
-		} else {
-			$data['keyword'] = '';
-		}
-
-		if (isset($this->request->post['sort_order'])) {
-			$data['sort_order'] = $this->request->post['sort_order'];
-		} elseif (!empty($article_info)) {
-			$data['sort_order'] = $article_info['sort_order'];
-		} else {
-			$data['sort_order'] = 1;
-		}
-
-		if (isset($this->request->post['status'])) {
-			$data['status'] = $this->request->post['status'];
-		} elseif (!empty($article_info)) {
-			$data['status'] = $article_info['status'];
-		} else {
-			$data['status'] = true;
-		}
-
-		if (isset($this->request->post['noindex'])) {
-			$data['noindex'] = $this->request->post['noindex'];
-		} elseif (!empty($article_info)) {
-			$data['noindex'] = $article_info['noindex'];
-		} else {
-			$data['noindex'] = 1;
-		}
-
-		// Categories
-		$this->load->model('blog/category');
-
-		$data['categories'] = $this->model_blog_category->getCategories();
-
-		if (isset($this->request->post['main_blog_category_id'])) {
-			$data['main_blog_category_id'] = $this->request->post['main_blog_category_id'];
-		} elseif (isset($article_info)) {
-			$data['main_blog_category_id'] = $this->model_blog_article->getArticleMainCategoryId($this->request->get['article_id']);
-		} else {
-			$data['main_blog_category_id'] = 0;
-		}
-
-		if (isset($this->request->post['article_blog_category'])) {
-			$categories = $this->request->post['article_blog_category'];
-		} elseif (isset($this->request->get['article_id'])) {
-			$categories = $this->model_blog_article->getArticleCategories($this->request->get['article_id']);
-		} else {
-			$categories = array();
-		}
-
-		$data['article_categories'] = array();
-
-		foreach ($categories as $blog_category_id) {
-			$category_info = $this->model_blog_category->getCategory($blog_category_id);
-
-			if ($category_info) {
-				$data['article_categories'][] = array(
-					'blog_category_id' => $category_info['blog_category_id'],
-					'name' => ($category_info['path']) ? $category_info['path'] . ' &gt; ' . $category_info['name'] : $category_info['name']
-				);
-			}
-		}
-
-		// Images
-		if (isset($this->request->post['article_image'])) {
-			$article_images = $this->request->post['article_image'];
-		} elseif (isset($this->request->get['article_id'])) {
-			$article_images = $this->model_blog_article->getArticleImages($this->request->get['article_id']);
-		} else {
-			$article_images = array();
-		}
-
-		$data['article_images'] = array();
-
-		foreach ($article_images as $article_image) {
-			if (is_file(DIR_IMAGE . $article_image['image'])) {
-				$image = $article_image['image'];
-				$thumb = $article_image['image'];
+				if ($implode_data) {
+					$sql .= " AND (" . implode(' OR ', $implode_data) . ")";
+				}
 			} else {
-				$image = '';
-				$thumb = 'no_image.png';
-			}
-
-			$data['article_images'][] = array(
-				'image'      => $image,
-				'thumb'      => $this->model_tool_image->resize($thumb, 100, 100),
-				'sort_order' => $article_image['sort_order']
-			);
-		}
-
-		// Downloads
-		$this->load->model('catalog/download');
-
-		if (isset($this->request->post['article_download'])) {
-			$article_downloads = $this->request->post['article_download'];
-		} elseif (isset($this->request->get['article_id'])) {
-			$article_downloads = $this->model_blog_article->getArticleDownloads($this->request->get['article_id']);
-		} else {
-			$article_downloads = array();
-		}
-
-		$data['article_downloads'] = array();
-
-		foreach ($article_downloads as $download_id) {
-			$download_info = $this->model_catalog_download->getDownload($download_id);
-
-			if ($download_info) {
-				$data['article_downloads'][] = array(
-					'download_id' => $download_info['download_id'],
-					'name'        => $download_info['name']
-				);
-			}
-		}
-
-		if (isset($this->request->post['article_related'])) {
-			$articles = $this->request->post['article_related'];
-		} elseif (isset($this->request->get['article_id'])) {
-			$articles = $this->model_blog_article->getArticleRelated($this->request->get['article_id']);
-		} else {
-			$articles = array();
-		}
-
-		$data['article_relateds'] = array();
-
-		foreach ($articles as $article_id) {
-			$related_info = $this->model_blog_article->getArticle($article_id);
-
-			if ($related_info) {
-				$data['article_relateds'][] = array(
-					'article_id' => $related_info['article_id'],
-					'name'       => $related_info['name']
-				);
-			}
-		}
-
-		if (isset($this->request->post['article_related_product'])) {
-			$products = $this->request->post['article_related_product'];
-		} elseif (isset($article_info)) {
-			$products = $this->model_blog_article->getProductRelated($this->request->get['article_id']);
-		} else {
-			$products = array();
-		}
-
-		$data['article_related_product'] = array();
-
-		$this->load->model('catalog/product');
-
-		foreach ($products as $product_id) {
-			$product_info = $this->model_catalog_product->getProduct($product_id);
-
-			if ($product_info) {
-				$data['article_related_product'][] = array(
-					'product_id' => $product_info['product_id'],
-					'name'       => $product_info['name']
-				);
-			}
-		}
-
-		if (isset($this->request->post['article_layout'])) {
-			$data['article_layout'] = $this->request->post['article_layout'];
-		} elseif (isset($this->request->get['article_id'])) {
-			$data['article_layout'] = $this->model_blog_article->getArticleLayouts($this->request->get['article_id']);
-		} else {
-			$data['article_layout'] = array();
-		}
-
-		$this->load->model('design/layout');
-
-		$data['layouts'] = $this->model_design_layout->getLayouts();
-
-		$data['header'] = $this->load->controller('common/header');
-		$data['column_left'] = $this->load->controller('common/column_left');
-		$data['footer'] = $this->load->controller('common/footer');
-
-		$this->response->setOutput($this->load->view('blog/article_form', $data));
-	}
-
-	protected function validateForm() {
-		if (!$this->user->hasPermission('modify', 'blog/article')) {
-			$this->error['warning'] = $this->language->get('error_permission');
-		}
-
-		if (isset($this->request->post['article_description']) && is_array($this->request->post['article_description'])) {
-			foreach ($this->request->post['article_description'] as $language_id => $value) {
-				if (!isset($value['name']) || (utf8_strlen($value['name']) < 2) || (utf8_strlen($value['name']) > 255)) {
-					$this->error['name'][$language_id] = $this->language->get('error_name');
-				}
-
-				if (!isset($value['meta_h1']) || (utf8_strlen($value['meta_h1']) < 0) || (utf8_strlen($value['meta_h1']) > 255)) {
-					$this->error['meta_h1'][$language_id] = $this->language->get('error_meta_h1');
-				}
-
-				if (!isset($value['meta_title']) || (utf8_strlen($value['meta_title']) < 0) || (utf8_strlen($value['meta_title']) > 255)) {
-					$this->error['meta_title'][$language_id] = $this->language->get('error_meta_title');
+				if ((int)$data['filter_category'] > 0) {
+					$sql .= " AND a2c.blog_category_id = '" . (int)$data['filter_category'] . "'";
+				} else {
+					$sql .= " AND a2c.blog_category_id IS NULL";
 				}
 			}
 		}
 
-		if (!empty($this->request->post['keyword'])) {
-			$this->load->model('catalog/url_alias');
-
-			$url_alias_info = $this->model_catalog_url_alias->getUrlAlias($this->request->post['keyword']);
-
-			if ($url_alias_info && isset($this->request->get['article_id']) && $url_alias_info['query'] != 'article_id=' . $this->request->get['article_id']) {
-				$this->error['keyword'] = sprintf($this->language->get('error_keyword')) . ' <a href="' . $this->url->link('tool/seomanager', 'token=' . $this->session->data['token'] . '&filter_query=' . $url_alias_info['query'], true) . '" target="_blank">' . $url_alias_info['query'] . '</a>';
-			}
-
-			if ($url_alias_info && !isset($this->request->get['article_id'])) {
-				$this->error['keyword'] = sprintf($this->language->get('error_keyword')) . ' <a href="' . $this->url->link('tool/seomanager', 'token=' . $this->session->data['token'] . '&filter_query=' . $url_alias_info['query'], true) . '" target="_blank">' . $url_alias_info['query'] . '</a>';
-			}
+		if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
+			$sql .= " AND p.status = '" . (int)$data['filter_status'] . "'";
 		}
 
-		if ($this->error && !isset($this->error['warning'])) {
-			$this->error['warning'] = $this->language->get('error_warning');
+		if (isset($data['filter_noindex']) && $data['filter_noindex'] !== null) {
+			$sql .= " AND p.noindex = '" . (int)$data['filter_noindex'] . "'";
 		}
 
-		return !$this->error;
+		$query = $this->db->query($sql);
+
+		return $query->row['total'];
 	}
 
-	protected function validateDelete() {
-		if (!$this->user->hasPermission('modify', 'blog/article')) {
-			$this->error['warning'] = $this->language->get('error_permission');
-		}
+	public function getTotalArticlesByDownloadId($download_id) {
+		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "article_to_download WHERE download_id = '" . (int)$download_id . "'");
 
-		return !$this->error;
+		return $query->row['total'];
 	}
 
-	protected function validateCopy() {
-		if (!$this->user->hasPermission('modify', 'blog/article')) {
-			$this->error['warning'] = $this->language->get('error_permission');
-		}
+	public function getTotalArticlesByLayoutId($layout_id) {
+		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "article_to_layout WHERE layout_id = '" . (int)$layout_id . "'");
 
-		return !$this->error;
-	}
-
-	protected function validateProStatus() {
-		if (!$this->user->hasPermission('modify', 'blog/article')) {
-			$this->error['warning'] = $this->language->get('error_permission');
-		}
-
-		return !$this->error;
-	}
-
-	public function autocomplete() {
-		$json = array();
-
-		if (isset($this->request->get['filter_name'])) {
-			$this->load->model('blog/article');
-
-			if (isset($this->request->get['filter_name'])) {
-				$filter_name = $this->request->get['filter_name'];
-			} else {
-				$filter_name = '';
-			}
-
-			if (isset($this->request->get['limit'])) {
-				$limit = $this->request->get['limit'];
-			} else {
-				$limit = $this->config->get('configblog_limit_admin');
-			}
-
-			$filter_data = array(
-				'filter_name'  => $filter_name,
-				'start'        => 0,
-				'limit'        => $limit
-			);
-
-			$results = $this->model_blog_article->getArticles($filter_data);
-
-			foreach ($results as $result) {
-				$json[] = array(
-					'article_id' => $result['article_id'],
-					'name'       => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8'))
-				);
-			}
-		}
-
-		$this->response->addHeader('Content-Type: application/json');
-		$this->response->setOutput(json_encode($json));
+		return $query->row['total'];
 	}
 }
