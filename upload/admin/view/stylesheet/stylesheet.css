@@ -185,6 +185,12 @@ span.hidden-xs, span.hidden-sm, span.hidden-md, span.hidden-lg {
 }
 }
 /* Menu */
+#column-left:not(.active) #menu > li > ul {
+	display: none;
+}
+#column-left:not(.active) #menu > li:hover > ul {
+	display: block;
+}
 #menu, #menu ul, #menu li {
 	padding: 0;
 	margin: 0;
