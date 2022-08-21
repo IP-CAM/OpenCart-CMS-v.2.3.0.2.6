@@ -5,7 +5,7 @@
     <version>1.0.2</version>
     <author>opencart.pro</author>
     <link>https://opencart.pro</link>
-    <file path="catalog/view/template/common/footer.tpl">
+    <file path="admin/view/template/common/footer.tpl">
         <operation error="skip">
             <search>
             <![CDATA[</body>]]>
