@@ -1,7 +1,8 @@
 /*  Аўтар: "БуслікДрэў" ( https://buslikdrev.by/ )
     © 2016-2022; BuslikDrev - Усе правы захаваныя. 
-    busAjax v0.3 */
-
+    busAjax v0.4 */
+'use strict';
+'use asm';
 var busAjax = function(url, setting) {
 	if (typeof setting['metod'] === 'undefined') {
 		setting['metod'] = 'GET';
@@ -29,6 +30,9 @@ var busAjax = function(url, setting) {
 	}
 	if (typeof setting['error'] === 'undefined') {
 		setting['error'] = function(error) {};
+	}
+	if (typeof setting['complete'] === 'undefined') {
+		setting['complete'] = function(json) {};
 	}
 	if (typeof setting['debug'] === 'undefined') {
 		setting['debug'] = false;
@@ -105,14 +109,18 @@ var busAjax = function(url, setting) {
 	xhr.send(datanew);
 	xhr.onload = function(oEvent) {
 		if (xhr.status == 200) {
-			return setting['success'](xhr.response, xhr);
+			setting['success'](xhr.response, xhr);
+			setting['complete'](xhr.response, xhr);
+			return xhr;
 		} else {
 			var ajaxOptions = setting;
 			var thrownError = false;
-			return setting['error'](xhr, ajaxOptions, thrownError);
+			setting['error'](xhr, ajaxOptions, thrownError);
+			setting['complete'](xhr, ajaxOptions, thrownError);
+			return xhr;
 		}
 	};
-}
+};
 
 if (typeof window.CustomEvent !== 'function') {
 	window.CustomEvent = function(event, params) {

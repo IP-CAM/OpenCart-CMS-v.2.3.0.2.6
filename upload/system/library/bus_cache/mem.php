@@ -5,6 +5,14 @@
 
 //https://ospanel.io/forum/viewtopic.php?f=3&t=2191&start=10
 namespace Bus_Cache;
+//namespace Opencart\Extension\Bus_Cache\System\library\Bus_Cache;
+
+// забараняем прамы доступ
+if (!defined('VERSION')) {
+	header('Refresh: 1; URL=/');
+	exit('ЗАПРЫШЧАЮ!');
+}
+
 class Mem {
 	private $expire;
 	private $memcache;

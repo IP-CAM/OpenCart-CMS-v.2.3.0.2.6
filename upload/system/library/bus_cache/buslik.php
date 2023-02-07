@@ -4,6 +4,8 @@
 // *   Спецыяльна для сайта: "OpenCart.pro" ( https://opencart.pro/ )
 
 namespace Bus_Cache;
+//namespace Opencart\Extension\Bus_Cache\System\library\Bus_Cache;
+
 class Buslik {
 	private $expire;
 

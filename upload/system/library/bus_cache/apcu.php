@@ -4,6 +4,14 @@
 // *   Спецыяльна для сайта: "OpenCart.pro" ( https://opencart.pro/ )
 
 namespace Bus_Cache;
+//namespace Opencart\Extension\Bus_Cache\System\library\Bus_Cache;
+
+// забараняем прамы доступ
+if (!defined('VERSION')) {
+	header('Refresh: 1; URL=/');
+	exit('ЗАПРЫШЧАЮ!');
+}
+
 class APCu {
 	private $expire;
 	private $active = false;

@@ -6,9 +6,9 @@
 <modification>
     <code>01000024</code>
     <name>Буслік Кэш - "Buslik Cache"</name>
-    <version>1.0.14 Lite</version>
+    <version>1.0.14 Full</version>
     <author>BuslikDrev.by</author>
-    <link>https://liveopencart.ru/buslikdrev</link>
+    <link><![CDATA[https://www.opencart.com/index.php?route=marketplace/extension&filter_member=BuslikDrev]]></link>
     <!-- ↓ АДМИНКА КОНТРОЛЛЕРЫ ↓ -->
     <file path="admin/controller/module/cachemanager.php">
         <operation>
@@ -163,7 +163,55 @@
             <![CDATA[(!defined('BUS_CACHE_TIMER') ? define('BUS_CACHE_TIMER', microtime(true)) : false);]]>
             </add>
         </operation>
+        <operation>
+            <search index="0">
+            <![CDATA[$action->execute($this->registry, array(&$data))]]>
+            </search>
+            <add position="replace">
+            <![CDATA[(!defined('DIR_CATALOG') && $this->registry->get('bus_cache') ? $this->registry->get('bus_cache')->controller($action, $route, array(&$data)) : $action->execute($this->registry, array(&$data)))]]>
+            </add>
+        </operation>
+        <operation>
+            <search index="0">
+            <![CDATA[$route), $proxy);]]>
+            </search>
+            <add position="before">
+            <![CDATA[				$proxy = (!defined('DIR_CATALOG') && $this->registry->get('bus_cache') ? $this->registry->get('bus_cache')->model($proxy, $route, $class) : $proxy);]]>
+            </add>
+        </operation>
     </file>
+    <!-- ↓ 2.0 - 2.1 ↓ -->
+    <file path="system/engine/loader.php">
+       <!-- ↓ 2.0.0.0 - 2.0.3.1 ↓ -->
+        <operation>
+            <search index="0">
+            <![CDATA[$action->execute($this->registry)]]>
+            </search>
+            <add position="replace">
+            <![CDATA[(!defined('DIR_CATALOG') && $this->registry->get('bus_cache') ? $this->registry->get('bus_cache')->controller($action, $route, $args) : $action->execute($this->registry))]]>
+            </add>
+        </operation>
+        <!-- ↑ 2.0.0.0 - 2.0.3.1 ↑ -->
+        <!-- ↓ 2.1.0.0 - 2.1.0.2 ↓ -->
+        <operation>
+            <search index="0">
+            <![CDATA[call_user_func(array($controller, $method), $data)]]>
+            </search>
+            <add position="replace">
+            <![CDATA[(!defined('DIR_CATALOG') && $this->registry->get('bus_cache') ? $this->registry->get('bus_cache')->controller($controller, $route, $data) : call_user_func(array($controller, $method), $data))]]>
+            </add>
+        </operation>
+        <!-- ↑ 2.1.0.0 - 2.1.0.2 ↑ -->
+        <operation>
+            <search index="0">
+            <![CDATA[$this->registry->set('model_' . str_replace('/', '_', $model), new $class($this->registry));]]>
+            </search>
+            <add position="replace">
+            <![CDATA[$this->registry->set('model_' . str_replace('/', '_', $model), (!defined('DIR_CATALOG') && $this->registry->get('bus_cache') ? $this->registry->get('bus_cache')->model(new $class($this->registry), $model, $class) : new $class($this->registry)));]]>
+            </add>
+        </operation>
+    </file>
+    <!-- ↑ 2.0 - 2.1 ↑ -->
     <file path="system/library/cache.php">
         <operation>
             <search index="0">

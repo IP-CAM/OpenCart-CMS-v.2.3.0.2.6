@@ -123,13 +123,13 @@ button.close {padding:0;background:transparent;border:0;-webkit-appearance:none}
             <div class="col-sm-10">
               <select name="cache_status" id="input-cache-status" class="form-control">
                 <option value="1"<?php if ($cache_status == 1) { ?> selected="selected"<?php } ?>><?php echo $text_yes; ?></option>
-                <option value="2"<?php if ($cache_status == 2) { ?> selected="selected"<?php } ?>><?php echo $text_cache_status_2; ?> (у платнай версіі)</option>
+                <option value="2"<?php if ($cache_status == 2) { ?> selected="selected"<?php } ?>><?php echo $text_cache_status_2; ?></option>
                 <option value="0"<?php if (!$cache_status) { ?> selected="selected"<?php } ?>><?php echo $text_no; ?></option>
               </select>
             </div>
           </div>
           <div class="form-group row mb-3">
-            <label class="col-sm-2 control-label col-form-label" for="input-cache-con"><span title="<?php echo $help_cache_con; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_cache_con; ?></span></label>
+            <label class="col-sm-2 control-label col-form-label" for="input-cache-con"><b style="color:red">(навінка)</b> <span title="<?php echo $help_cache_con; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_cache_con; ?></span></label>
             <div class="col-sm-10">
               <textarea name="cache_con" rows="5" placeholder="<?php echo $entry_cache_con; ?>" id="input-cache-con" class="form-control"><?php echo $cache_con; ?></textarea>
             </div>
@@ -141,21 +141,21 @@ button.close {padding:0;background:transparent;border:0;-webkit-appearance:none}
             </div>
           </div>
           <div class="form-group row mb-3">
-            <label class="col-sm-2 control-label col-form-label" for="input-cache-cok"><b style="color:red">(у платнай версіі)</b> <span title="<?php echo $help_cache_cok; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_cache_cok; ?></span></label>
+            <label class="col-sm-2 control-label col-form-label" for="input-cache-cok"><b style="color:red">(навінка)</b> <span title="<?php echo $help_cache_cok; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_cache_cok; ?></span></label>
             <div class="col-sm-10">
-              <textarea rows="5" placeholder="<?php echo $entry_cache_cok; ?>" id="input-cache-cok" class="form-control"><?php echo $cache_cok; ?></textarea>
+              <textarea name="cache_cok" rows="5" placeholder="<?php echo $entry_cache_cok; ?>" id="input-cache-cok" class="form-control"><?php echo $cache_cok; ?></textarea>
             </div>
           </div>
           <div class="form-group row mb-3">
-            <label class="col-sm-2 control-label col-form-label" for="input-cache-par"><b style="color:red">(у платнай версіі)</b> <span title="<?php echo $help_cache_par; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_cache_par; ?></span></label>
+            <label class="col-sm-2 control-label col-form-label" for="input-cache-par"><b style="color:red">(навінка)</b> <span title="<?php echo $help_cache_par; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_cache_par; ?></span></label>
             <div class="col-sm-10">
-              <textarea rows="5" placeholder="<?php echo $entry_cache_par; ?>" id="input-cache-par" class="form-control"><?php echo $cache_par; ?></textarea>
+              <textarea name="cache_par" rows="5" placeholder="<?php echo $entry_cache_par; ?>" id="input-cache-par" class="form-control"><?php echo $cache_par; ?></textarea>
             </div>
           </div>
           <div class="form-group row mb-3">
-            <label class="col-sm-2 control-label col-form-label" for="input-cache-onrot"><b style="color:red">(у платнай версіі)</b> <span title="<?php echo $help_cache_onrot; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_cache_onrot; ?></span></label>
+            <label class="col-sm-2 control-label col-form-label" for="input-cache-onrot"><span title="<?php echo $help_cache_onrot; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_cache_onrot; ?></span></label>
             <div class="col-sm-10">
-              <textarea rows="5" placeholder="<?php echo $entry_cache_onrot; ?>" id="input-cache-onrot" class="form-control"><?php echo $cache_onrot; ?></textarea>
+              <textarea name="cache_onrot" rows="5" placeholder="<?php echo $entry_cache_onrot; ?>" id="input-cache-onrot" class="form-control"><?php echo $cache_onrot; ?></textarea>
             </div>
           </div>
           <div class="form-group row mb-3">
@@ -174,7 +174,7 @@ button.close {padding:0;background:transparent;border:0;-webkit-appearance:none}
             </div>
           </div>
           <!-- <div class="form-group row mb-3">
-            <label class="col-sm-2 control-label col-form-label" for="input-cache-cart"><span title="<?php echo $help_cache_cart; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_cache_cart; ?></span></label>
+            <label class="col-sm-2 control-label col-form-label" for="input-cache-cart"><b style="color:red">(навінка)</b> <span title="<?php echo $help_cache_cart; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_cache_cart; ?></span></label>
             <div class="col-sm-10">
               <select name="cache_cart" id="input-cache-cart" class="form-control">
                 <option value="1"<?php if ($cache_cart == 1) { ?> selected="selected"<?php } ?>><?php echo $text_yes; ?></option>
@@ -183,7 +183,7 @@ button.close {padding:0;background:transparent;border:0;-webkit-appearance:none}
             </div>
           </div> -->
           <div class="form-group row mb-3">
-            <label class="col-sm-2 control-label col-form-label" for="input-cache-cart-count"><span title="<?php echo $help_cache_cart_count; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_cache_cart_count; ?></span></label>
+            <label class="col-sm-2 control-label col-form-label" for="input-cache-cart-count"><b style="color:red">(навінка)</b> <span title="<?php echo $help_cache_cart_count; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_cache_cart_count; ?></span></label>
             <div class="col-sm-10">
               <input type="number" name="cache_cart_count" value="<?php echo $cache_cart_count; ?>" placeholder="<?php echo $entry_cache_cart_count; ?>" id="input-cache-cart-count" class="form-control" />
             </div>
@@ -198,15 +198,15 @@ button.close {padding:0;background:transparent;border:0;-webkit-appearance:none}
             </div>
           </div>
           <div class="form-group row mb-3">
-            <label class="col-sm-2 control-label col-form-label" for="input-cache-controller"><b style="color:red">(у платнай версіі)</b> <span title="<?php echo $help_cache_controller; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_cache_controller; ?></span></label>
+            <label class="col-sm-2 control-label col-form-label" for="input-cache-controller"><b style="color:red">(навінка)</b> <span title="<?php echo $help_cache_controller; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_cache_controller; ?></span></label>
             <div class="col-sm-10">
-              <textarea rows="5" placeholder="<?php echo $entry_cache_controller; ?>" id="input-cache-controller" class="form-control"><?php echo $cache_controller; ?></textarea>
+              <textarea name="cache_controller" rows="5" placeholder="<?php echo $entry_cache_controller; ?>" id="input-cache-controller" class="form-control"><?php echo $cache_controller; ?></textarea>
             </div>
           </div>
           <div class="form-group row mb-3">
-            <label class="col-sm-2 control-label col-form-label" for="input-cache-model"><b style="color:red">(у платнай версіі)</b> <span title="<?php echo $help_cache_model; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_cache_model; ?></span></label>
+            <label class="col-sm-2 control-label col-form-label" for="input-cache-model"><b style="color:red">(навінка)</b> <span title="<?php echo $help_cache_model; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_cache_model; ?></span></label>
             <div class="col-sm-10">
-              <textarea rows="5" placeholder="<?php echo $entry_cache_model; ?>" id="input-cache-model" class="form-control"><?php echo $cache_model; ?></textarea>
+              <textarea name="cache_model" rows="5" placeholder="<?php echo $entry_cache_model; ?>" id="input-cache-model" class="form-control"><?php echo $cache_model; ?></textarea>
             </div>
           </div>
           <div class="form-group row mb-3">
@@ -232,19 +232,19 @@ button.close {padding:0;background:transparent;border:0;-webkit-appearance:none}
             </div>
           </div>
           <div class="form-group row mb-3">
-            <label class="col-sm-2 control-label col-form-label" for="input-cache-expire-controller"><b style="color:red">(у платнай версіі)</b> <span title="<?php echo $help_cache_expire_controller; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_cache_expire_controller; ?></span></label>
+            <label class="col-sm-2 control-label col-form-label" for="input-cache-expire-controller"><b style="color:red">(навінка)</b> <span title="<?php echo $help_cache_expire_controller; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_cache_expire_controller; ?></span></label>
             <div class="col-sm-10">
-              <input type="number" value="<?php echo $cache_expire_controller; ?>" placeholder="<?php echo $entry_cache_expire_controller; ?>" id="input-cache-expire-controller" class="form-control" />
+              <input type="number" name="cache_expire_controller" value="<?php echo $cache_expire_controller; ?>" placeholder="<?php echo $entry_cache_expire_controller; ?>" id="input-cache-expire-controller" class="form-control" />
             </div>
           </div>
           <div class="form-group row mb-3">
-            <label class="col-sm-2 control-label col-form-label" for="input-cache-expire-model"><b style="color:red">(у платнай версіі)</b> <span title="<?php echo $help_cache_expire_model; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_cache_expire_model; ?></span></label>
+            <label class="col-sm-2 control-label col-form-label" for="input-cache-expire-model"><b style="color:red">(навінка)</b> <span title="<?php echo $help_cache_expire_model; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_cache_expire_model; ?></span></label>
             <div class="col-sm-10">
-              <input type="number" value="<?php echo $cache_expire_model; ?>" placeholder="<?php echo $entry_cache_expire_model; ?>" id="input-cache-expire-model" class="form-control" />
+              <input type="number" name="cache_expire_model" value="<?php echo $cache_expire_model; ?>" placeholder="<?php echo $entry_cache_expire_model; ?>" id="input-cache-expire-model" class="form-control" />
             </div>
           </div>
           <div class="form-group row mb-3">
-            <label class="col-sm-2 control-label col-form-label" for="input-cache-expire-all"><span title="<?php echo $help_cache_expire_all; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_cache_expire_all; ?></span></label>
+            <label class="col-sm-2 control-label col-form-label" for="input-cache-expire-all"><b style="color:red">(навінка)</b> <span title="<?php echo $help_cache_expire_all; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_cache_expire_all; ?></span></label>
             <div class="col-sm-10">
               <input type="number" name="cache_expire_all" value="<?php echo $cache_expire_all; ?>" placeholder="<?php echo $entry_cache_expire_all; ?>" id="input-cache-expire-all" class="form-control" />
             </div>
@@ -260,7 +260,7 @@ button.close {padding:0;background:transparent;border:0;-webkit-appearance:none}
             </div>
           </div>
           <div class="form-group row mb-3">
-            <label class="col-sm-2 control-label col-form-label" for="input-pagespeed-onrot"><span title="<?php echo $help_pagespeed_onrot; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_pagespeed_onrot; ?></span></label>
+            <label class="col-sm-2 control-label col-form-label" for="input-pagespeed-onrot"><b style="color:red">(навінка)</b> <span title="<?php echo $help_pagespeed_onrot; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_pagespeed_onrot; ?></span></label>
             <div class="col-sm-10">
               <textarea name="pagespeed_onrot" rows="5" placeholder="<?php echo $entry_pagespeed_onrot; ?>" id="input-pagespeed-onrot" class="form-control"><?php echo $pagespeed_onrot; ?></textarea>
             </div>
@@ -291,10 +291,10 @@ button.close {padding:0;background:transparent;border:0;-webkit-appearance:none}
             </div>
           </div>
           <div class="form-group row mb-3">
-            <label class="col-sm-2 control-label col-form-label" for="input-pagespeed-lazy-load-html"><b style="color:red">(у платнай версіі)</b> <span title="<?php echo $help_pagespeed_lazy_load_html; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_pagespeed_lazy_load_html; ?></span></label>
+            <label class="col-sm-2 control-label col-form-label" for="input-pagespeed-lazy-load-html"><b style="color:red">(навінка)</b> <span title="<?php echo $help_pagespeed_lazy_load_html; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_pagespeed_lazy_load_html; ?></span></label>
             <div class="col-sm-10">
               Ручной запуск: busLoadingLazy.start({element:'[data-busloadinglazy-id=\'309b58a6256d898adcd1923369df72bf\']', lazy:true});
-              <textarea rows="5" placeholder="<?php echo $entry_pagespeed_lazy_load_html; ?>" id="input-pagespeed-lazy-load-html" class="form-control"><?php echo $pagespeed_lazy_load_html; ?></textarea>
+              <textarea name="pagespeed_lazy_load_html" rows="5" placeholder="<?php echo $entry_pagespeed_lazy_load_html; ?>" id="input-pagespeed-lazy-load-html" class="form-control"><?php echo $pagespeed_lazy_load_html; ?></textarea>
             </div>
           </div>
           <div class="form-group row mb-3">
@@ -310,9 +310,9 @@ button.close {padding:0;background:transparent;border:0;-webkit-appearance:none}
             </div>
           </div>
           <div class="form-group row mb-3">
-            <label class="col-sm-2 control-label col-form-label" for="input-pagespeed-css-replace"><b style="color:red">(у платнай версіі)</b> <span title="<?php echo $help_pagespeed_css_replace; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_pagespeed_css_replace; ?></span></label>
+            <label class="col-sm-2 control-label col-form-label" for="input-pagespeed-css-replace"><b style="color:red">(навінка)</b> <span title="<?php echo $help_pagespeed_css_replace; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_pagespeed_css_replace; ?></span></label>
             <div class="col-sm-10">
-              <textarea rows="10" placeholder="<?php echo $entry_pagespeed_css_replace; ?>" id="input-pagespeed-css-replaces" class="form-control"><?php echo $pagespeed_css_replace; ?></textarea>
+              <textarea name="pagespeed_css_replace" rows="10" placeholder="<?php echo $entry_pagespeed_css_replace; ?>" id="input-pagespeed-css-replaces" class="form-control"><?php echo $pagespeed_css_replace; ?></textarea>
             </div>
           </div>
           <div class="form-group row mb-3">
@@ -395,9 +395,9 @@ button.close {padding:0;background:transparent;border:0;-webkit-appearance:none}
             </div>
           </div>
           <div class="form-group row mb-3">
-            <label class="col-sm-2 control-label col-form-label" for="input-pagespeed-css-events"><b style="color:red">(у платнай версіі)</b> <span title="<?php echo $help_pagespeed_css_events; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_pagespeed_css_events; ?></span></label>
+            <label class="col-sm-2 control-label col-form-label" for="input-pagespeed-css-events"><span title="<?php echo $help_pagespeed_css_events; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_pagespeed_css_events; ?></span></label>
             <div class="col-sm-10">
-              <textarea rows="5" placeholder="<?php echo $entry_pagespeed_css_events; ?>" id="input-pagespeed-css-events" class="form-control"><?php echo $pagespeed_css_events; ?></textarea>
+              <textarea name="pagespeed_css_events" rows="5" placeholder="<?php echo $entry_pagespeed_css_events; ?>" id="input-pagespeed-css-events" class="form-control"><?php echo $pagespeed_css_events; ?></textarea>
             </div>
           </div>
           <div class="form-group row mb-3">
@@ -407,9 +407,9 @@ button.close {padding:0;background:transparent;border:0;-webkit-appearance:none}
             </div>
           </div>
           <div class="form-group row mb-3">
-            <label class="col-sm-2 control-label col-form-label" for="input-pagespeed-js-replace"><b style="color:red">(у платнай версіі)</b> <span title="<?php echo $help_pagespeed_js_replace; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_pagespeed_js_replace; ?></span></label>
+            <label class="col-sm-2 control-label col-form-label" for="input-pagespeed-js-replace"><b style="color:red">(навінка)</b> <span title="<?php echo $help_pagespeed_js_replace; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_pagespeed_js_replace; ?></span></label>
             <div class="col-sm-10">
-              <textarea rows="10" placeholder="<?php echo $entry_pagespeed_js_replace; ?>" id="input-pagespeed-js-replaces" class="form-control"><?php echo $pagespeed_js_replace; ?></textarea>
+              <textarea name="pagespeed_js_replace" rows="10" placeholder="<?php echo $entry_pagespeed_js_replace; ?>" id="input-pagespeed-js-replaces" class="form-control"><?php echo $pagespeed_js_replace; ?></textarea>
             </div>
           </div>
           <div class="form-group row mb-3">
@@ -460,17 +460,18 @@ button.close {padding:0;background:transparent;border:0;-webkit-appearance:none}
                 <option value="1"<?php if ($pagespeed_js_inline_transfer == 1) { ?> selected="selected"<?php } ?>><?php echo $text_pagespeed_inline_transfer_1; ?></option>
                 <option value="2"<?php if ($pagespeed_js_inline_transfer == 2) { ?> selected="selected"<?php } ?>><?php echo $text_pagespeed_inline_transfer_2; ?></option>
                 <option value="3"<?php if ($pagespeed_js_inline_transfer == 3) { ?> selected="selected"<?php } ?>><?php echo $text_pagespeed_inline_transfer_3; ?></option>
+                <option value="4"<?php if ($pagespeed_js_inline_transfer == 4) { ?> selected="selected"<?php } ?>><?php echo $text_pagespeed_inline_transfer_4; ?></option>
               </select>
             </div>
           </div>
           <div class="form-group row mb-3">
-            <label class="col-sm-2 control-label col-form-label" for="input-pagespeed-js-inline-transfer-onrot"><b style="color:red">(у платнай версіі)</b> <span title="<?php echo $help_pagespeed_js_inline_transfer_onrot; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_pagespeed_js_inline_transfer_onrot; ?></span></label>
+            <label class="col-sm-2 control-label col-form-label" for="input-pagespeed-js-inline-transfer-onrot"><b style="color:red">(навінка)</b> <span title="<?php echo $help_pagespeed_js_inline_transfer_onrot; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_pagespeed_js_inline_transfer_onrot; ?></span></label>
             <div class="col-sm-10">
-              <textarea rows="5" placeholder="<?php echo $entry_pagespeed_js_inline_transfer_onrot; ?>" id="input-pagespeed-js-inline-transfer-onrot" class="form-control"><?php echo $pagespeed_js_inline_transfer_onrot; ?></textarea>
+              <textarea name="pagespeed_js_inline_transfer_onrot" rows="5" placeholder="<?php echo $entry_pagespeed_js_inline_transfer_onrot; ?>" id="input-pagespeed-js-inline-transfer-onrot" class="form-control"><?php echo $pagespeed_js_inline_transfer_onrot; ?></textarea>
             </div>
           </div>
           <div class="form-group row mb-3">
-            <label class="col-sm-2 control-label col-form-label" for="input-pagespeed-js-inline-exception"><span title="<?php echo $help_pagespeed_js_inline_exception; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_pagespeed_js_inline_exception; ?></span></label>
+            <label class="col-sm-2 control-label col-form-label" for="input-pagespeed-js-inline-exception"><b style="color:red">(навінка)</b> <span title="<?php echo $help_pagespeed_js_inline_exception; ?>" data-toggle="tooltip" data-html="true" data-bs-toggle="tooltip" data-bs-html="true"><?php echo $entry_pagespeed_js_inline_exception; ?></span></label>
             <div class="col-sm-10">
               <textarea name="pagespeed_js_inline_exception" rows="5" placeholder="<?php echo $entry_pagespeed_js_inline_exception; ?>" id="input-pagespeed-js-inline-exception" class="form-control"><?php echo $pagespeed_js_inline_exception; ?></textarea>
             </div>
@@ -489,15 +490,15 @@ button.close {padding:0;background:transparent;border:0;-webkit-appearance:none}
           </div>
           <legend><b><?php echo $tab_support; ?></b></legend>
           <div class="form-group row mb-3">
-            <label class="col-sm-2 control-label col-form-label" style="padding:0;"><?php echo $text_cache_total; ?></label>
+            <label class="col-sm-2 control-label col-form-label" style="padding:0;"><b style="color:red">(навінка)</b> <?php echo $text_cache_total; ?></label>
             <div class="col-sm-10"><?php echo $cache_total; ?></div>
           </div>
           <div class="form-group row mb-3">
-            <label class="col-sm-2 control-label col-form-label" style="padding:0;"><?php echo $text_cache_size; ?></label>
+            <label class="col-sm-2 control-label col-form-label" style="padding:0;"><b style="color:red">(навінка)</b> <?php echo $text_cache_size; ?></label>
             <div class="col-sm-10"><?php echo $cache_size; ?></div>
           </div>
           <div class="form-group row mb-3">
-            <label class="col-sm-2 control-label col-form-label" style="padding:0;"><?php echo $text_disc_free; ?></label>
+            <label class="col-sm-2 control-label col-form-label" style="padding:0;"><b style="color:red">(навінка)</b> <?php echo $text_disc_free; ?></label>
             <div class="col-sm-10"><?php echo $disc_free; ?></div>
           </div>
           <div class="form-group row mb-3">
@@ -509,7 +510,7 @@ button.close {padding:0;background:transparent;border:0;-webkit-appearance:none}
                 <option value="2"<?php if ($debug == 2) { ?> selected="selected"<?php } ?>><?php echo $text_debug_2; ?></option>
                 <option value="3"<?php if ($debug == 3) { ?> selected="selected"<?php } ?>><?php echo $text_debug_3; ?></option>
                 <option value="4"<?php if ($debug == 4) { ?> selected="selected"<?php } ?>><?php echo $text_debug_4; ?></option>
-                <option value="5"<?php if ($debug == 5) { ?> selected="selected"<?php } ?>><?php echo $text_debug_5; ?> (у платнай версіі)</option>
+                <option value="5"<?php if ($debug == 5) { ?> selected="selected"<?php } ?>><?php echo $text_debug_5; ?></option>
               </select>
             </div>
           </div>

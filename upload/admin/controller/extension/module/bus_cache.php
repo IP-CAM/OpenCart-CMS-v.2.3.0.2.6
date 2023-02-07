@@ -74,8 +74,9 @@
 */
 
 //namespace Opencart\Admin\Controller\Extension\BusCache\Module;
+
 // забараняем прамы доступ
-if (version_compare(VERSION, '4.0.0', '<') && !class_exists('Controller') || version_compare(VERSION, '4.0.0', '>=') && !class_exists('\Opencart\System\Engine\Controller')) {
+if (!defined('VERSION')) {
 	header('Refresh: 1; URL=/');
 	exit('ЗАПРЫШЧАЮ!');
 }
@@ -93,11 +94,12 @@ if (version_compare(VERSION, '2.3.0', '<')) {
 class BusCache extends Controller {
 	private $error = array();
 	private $name_arhive = 'Buslik Cache';
+	private $code_event = 'bus_cache';
 	private $code = '01000024';
 	private $mame = 'Буслік Кэш - "Buslik Cache"';
 	private $version = '1.0.14';
 	private $author = 'BuslikDrev.by';
-	private $link = 'https://liveopencart.ru/buslikdrev';
+	private $link = 'https://www.opencart.com/index.php?route=marketplace/extension&filter_member=BuslikDrev';
 	private $version_oc = 2.3;
 	private $paths = array();
 
@@ -111,6 +113,7 @@ class BusCache extends Controller {
 			$this->paths = array(
 				'controller' => array(
 					'bus_cache' => 'extension/bus_cache/module/bus_cache',
+					'module' => 'extension/module',
 					'extension' => 'marketplace/extension',
 					'modification' => 'marketplace/modification',
 				),
@@ -139,6 +142,7 @@ class BusCache extends Controller {
 			$this->paths = array(
 				'controller' => array(
 					'bus_cache' => 'extension/module/bus_cache',
+					'module' => 'extension/extension/module',
 					'extension' => 'marketplace/extension',
 					'modification' => 'marketplace/modification',
 				),
@@ -167,6 +171,7 @@ class BusCache extends Controller {
 			$this->paths = array(
 				'controller' => array(
 					'bus_cache' => 'extension/module/bus_cache',
+					'module' => 'extension/extension/module',
 					'extension' => 'extension/extension',
 					'modification' => 'extension/modification',
 				),
@@ -195,6 +200,7 @@ class BusCache extends Controller {
 			$this->paths = array(
 				'controller' => array(
 					'bus_cache' => 'module/bus_cache',
+					'module' => 'extension/module',
 					'extension' => 'extension/module',
 					'modification' => 'extension/modification',
 				),
@@ -249,34 +255,32 @@ class BusCache extends Controller {
 		$this->deleteFile($name, $format);
 
 		if ($value) {
-			$theme = ($this->config->get('config_template') ? $this->config->get('config_template') : ($this->config->get('theme_' . str_replace('theme_', '', $this->config->get('config_theme')) . '_directory') ? $this->config->get('theme_' . str_replace('theme_', '', $this->config->get('config_theme')) . '_directory') : $this->config->get('config_theme')));
+			if (version_compare(VERSION, '4.0.0', '>=')) {
+				$theme = DIR_EXTENSION . 'bus_cache/catalog/view/theme/' . ($this->config->get('config_template') ? $this->config->get('config_template') : ($this->config->get('theme_' . str_replace('theme_', '', $this->config->get('config_theme')) . '_directory') ? $this->config->get('theme_' . str_replace('theme_', '', $this->config->get('config_theme')) . '_directory') : $this->config->get('config_theme')));
+			} else {
+				$theme = DIR_CATALOG . 'view/theme/' . ($this->config->get('config_template') ? $this->config->get('config_template') : ($this->config->get('theme_' . str_replace('theme_', '', $this->config->get('config_theme')) . '_directory') ? $this->config->get('theme_' . str_replace('theme_', '', $this->config->get('config_theme')) . '_directory') : $this->config->get('config_theme')));
+			}
 
 			if ($format == 'css') {
-				$path = DIR_CATALOG . 'view/theme/' . $theme . '/stylesheet/bus_cache/bus_cache_';
+				$path = $theme . '/stylesheet/bus_cache/bus_cache_';
 				$name = ($name == 'library' ? false : preg_replace('/[^A-Z0-9_-]/i', '', $name));
 				$format = '.' . preg_replace('/[^A-Z_]/i', '', $format);
-				if (!is_dir(str_replace('/bus_cache/bus_cache_', '', $path))) {
-					mkdir(str_replace('/bus_cache/bus_cache_', '', $path), 0755);
-				}
 				if (!is_dir(str_replace('/bus_cache_', '', $path))) {
-					mkdir(str_replace('/bus_cache_', '', $path), 0755);
+					mkdir(str_replace('/bus_cache_', '', $path), 0755, true);
 				}
 			} elseif ($format == 'js') {
-				$path = DIR_CATALOG . 'view/theme/' . $theme . '/javascript/bus_cache/bus_cache_';
+				$path = $theme . '/javascript/bus_cache/bus_cache_';
 				$name = ($name == 'library' ? false : preg_replace('/[^A-Z0-9_-]/i', '', $name));
 				$format = '.' . preg_replace('/[^A-Z_]/i', '', $format);
-				if (!is_dir(str_replace('/bus_cache/bus_cache_', '', $path))) {
-					mkdir(str_replace('/bus_cache/bus_cache_', '', $path), 0755);
-				}
 				if (!is_dir(str_replace('/bus_cache_', '', $path))) {
-					mkdir(str_replace('/bus_cache_', '', $path), 0755);
+					mkdir(str_replace('/bus_cache_', '', $path), 0755, true);
 				}
 			} elseif ($format == 'tpl') {
-				$path = DIR_CATALOG . 'view/theme/' . $theme . '/template/' . $this->paths['controller']['bus_cache'] . '/bus_cache_';
+				$path = $theme . '/template/' . $this->paths['controller']['bus_cache'] . '/bus_cache_';
 				$name = ($name == 'library' ? false : preg_replace('/[^A-Z0-9_-]/i', '', $name));
 				$format = '.' . preg_replace('/[^A-Z_]/i', '', $format);
 			} elseif ($format == 'twig') {
-				$path = DIR_CATALOG . 'view/theme/' . $theme . '/template/' . $this->paths['controller']['bus_cache'] . '/bus_cache_';
+				$path = $theme . '/template/' . $this->paths['controller']['bus_cache'] . '/bus_cache_';
 				$name = ($name == 'library' ? false : preg_replace('/[^A-Z0-9_-]/i', '', $name));
 				$format = '.' . preg_replace('/[^A-Z_]/i', '', $format);
 			} elseif (in_array($format, array('jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'ico', 'json', 'webmanifest', 'webapp', 'appcache'))) {
@@ -306,16 +310,20 @@ class BusCache extends Controller {
 	}
 
 	private function deleteFile($name, $format = 'xml') {
-		$theme = ($this->config->get('config_template') ? $this->config->get('config_template') : ($this->config->get('theme_' . str_replace('theme_', '', $this->config->get('config_theme')) . '_directory') ? $this->config->get('theme_' . str_replace('theme_', '', $this->config->get('config_theme')) . '_directory') : $this->config->get('config_theme')));
+		if (version_compare(VERSION, '4.0.0', '>=')) {
+			$theme = DIR_EXTENSION . 'bus_cache/catalog/view/theme/' . ($this->config->get('config_template') ? $this->config->get('config_template') : ($this->config->get('theme_' . str_replace('theme_', '', $this->config->get('config_theme')) . '_directory') ? $this->config->get('theme_' . str_replace('theme_', '', $this->config->get('config_theme')) . '_directory') : $this->config->get('config_theme')));
+		} else {
+			$theme = DIR_CATALOG . 'view/theme/' . ($this->config->get('config_template') ? $this->config->get('config_template') : ($this->config->get('theme_' . str_replace('theme_', '', $this->config->get('config_theme')) . '_directory') ? $this->config->get('theme_' . str_replace('theme_', '', $this->config->get('config_theme')) . '_directory') : $this->config->get('config_theme')));
+		}
 
 		if ($format == 'css') {
-			$path = DIR_CATALOG . 'view/theme/' . $theme . '/stylesheet/bus_cache/bus_cache_';
+			$path = $theme . '/stylesheet/bus_cache/bus_cache_';
 		} elseif ($format == 'js') {
-			$path = DIR_CATALOG . 'view/theme/' . $theme . '/javascript/bus_cache/bus_cache_';
+			$path = $theme . '/javascript/bus_cache/bus_cache_';
 		} elseif ($format == 'tpl') {
-			$path = DIR_CATALOG . 'view/theme/' . $theme . '/template/' . $this->paths['controller']['bus_cache'] . '/bus_cache_';
+			$path = $theme . '/template/' . $this->paths['controller']['bus_cache'] . '/bus_cache_';
 		} elseif ($format == 'twig') {
-			$path = DIR_CATALOG . 'view/theme/' . $theme . '/template/' . $this->paths['controller']['bus_cache'] . '/bus_cache_';
+			$path = $theme . '/template/' . $this->paths['controller']['bus_cache'] . '/bus_cache_';
 		} elseif (in_array($format, array('jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'ico', 'json', 'webmanifest', 'webapp', 'appcache'))) {
 			$path = DIR_IMAGE . 'catalog/bus_cache/';
 		} else {
@@ -335,16 +343,20 @@ class BusCache extends Controller {
 	}
 
 	private function getFile($name = false, $format = 'xml') {
-		$theme = ($this->config->get('config_template') ? $this->config->get('config_template') : ($this->config->get('theme_' . str_replace('theme_', '', $this->config->get('config_theme')) . '_directory') ? $this->config->get('theme_' . str_replace('theme_', '', $this->config->get('config_theme')) . '_directory') : $this->config->get('config_theme')));
+		if (version_compare(VERSION, '4.0.0', '>=')) {
+			$theme = DIR_EXTENSION . 'bus_cache/catalog/view/theme/' . ($this->config->get('config_template') ? $this->config->get('config_template') : ($this->config->get('theme_' . str_replace('theme_', '', $this->config->get('config_theme')) . '_directory') ? $this->config->get('theme_' . str_replace('theme_', '', $this->config->get('config_theme')) . '_directory') : $this->config->get('config_theme')));
+		} else {
+			$theme = DIR_CATALOG . 'view/theme/' . ($this->config->get('config_template') ? $this->config->get('config_template') : ($this->config->get('theme_' . str_replace('theme_', '', $this->config->get('config_theme')) . '_directory') ? $this->config->get('theme_' . str_replace('theme_', '', $this->config->get('config_theme')) . '_directory') : $this->config->get('config_theme')));
+		}
 
 		if ($format == 'css') {
-			$path = DIR_CATALOG . 'view/theme/' . $theme . '/stylesheet/bus_cache/bus_cache_';
+			$path = $theme . '/stylesheet/bus_cache/bus_cache_';
 		} elseif ($format == 'js') {
-			$path = DIR_CATALOG . 'view/theme/' . $theme . '/javascript/bus_cache/bus_cache_';
+			$path = $theme . '/javascript/bus_cache/bus_cache_';
 		} elseif ($format == 'tpl') {
-			$path = DIR_CATALOG . 'view/theme/' . $theme . '/template/' . $this->paths['controller']['bus_cache'] . '/bus_cache_';
+			$path = $theme . '/template/' . $this->paths['controller']['bus_cache'] . '/bus_cache_';
 		} elseif ($format == 'twig') {
-			$path = DIR_CATALOG . 'view/theme/' . $theme . '/template/' . $this->paths['controller']['bus_cache'] . '/bus_cache_';
+			$path = $theme . '/template/' . $this->paths['controller']['bus_cache'] . '/bus_cache_';
 		} elseif (in_array($format, array('jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'ico', 'json', 'webmanifest', 'webapp', 'appcache'))) {
 			$path = DIR_IMAGE . 'catalog/bus_cache/';
 		} else {
@@ -370,6 +382,16 @@ class BusCache extends Controller {
 		}
 
 		return false;
+	}
+
+	public function clearEvent(&$route, &$args, &$output) {
+		if ($route == 'catalog/category/editCategory' || $route == 'catalog/category/addCategory') {
+			$this->clear(array('tables' => array('category')));
+		} elseif ($route == 'catalog/manufacturer/editManufacturer' || $route == 'catalog/category/addManufacturer') {
+			$this->clear(array('tables' => array('manufacturer')));
+		} elseif ($route == 'catalog/manufacturer/editProduct' || $route == 'catalog/category/addProduct') {
+			//$this->clear(array('tables' => array('product')));
+		}
 	}
 
 	public function clear($setting = array()) {
@@ -913,9 +935,9 @@ class BusCache extends Controller {
 			$data['cache_cok'] = "language\r\nlanguageauto";
 		}
 
-		if (isset($this->request->post['cache_par'])) {
+		if (isset($this->request->post['cache_par']) && is_array($this->request->post['cache_par'])) {
 			$data['cache_par'] = implode("\r\n", $this->request->post['cache_par']);
-		} elseif (isset($module_info['cache_par'])) {
+		} elseif (isset($module_info['cache_par']) && is_array($module_info['cache_par'])) {
 			$data['cache_par'] = implode("\r\n", $module_info['cache_par']);
 		} else {
 			$data['cache_par'] = implode("\r\n", array(
@@ -931,7 +953,8 @@ class BusCache extends Controller {
 				'order',
 				'page',
 				'path',
-				'limit'
+				'limit',
+				'language_id'
 			));
 		}
 
@@ -1001,13 +1024,23 @@ class BusCache extends Controller {
 
 		//https://web-creator.ru/technologies/webdev/legacy/memcached
 		$data['cache_engines'] = array();
-		$data['cache_engines'][] = array('code' => 'apc', 'name' => 'APC (Alternative PHP Cache)', 'status' => (is_file(DIR_SYSTEM . 'library/bus_cache/apc.php') && extension_loaded('apc') && function_exists('apc_cache_info') ? true : false));
-		$data['cache_engines'][] = array('code' => 'apcu', 'name' => 'APCu (Alternative PHP Cache) not opcode', 'status' => (is_file(DIR_SYSTEM . 'library/bus_cache/apcu.php') && extension_loaded('apcu') && function_exists('apcu_cache_info') ? true : false));
-		$data['cache_engines'][] = array('code' => 'buslik', 'name' => 'Буслік', 'status' => true);
-		$data['cache_engines'][] = array('code' => 'file', 'name' => 'File', 'status' => (is_file(DIR_SYSTEM . 'library/bus_cache/file.php') ? true : false));
-		$data['cache_engines'][] = array('code' => 'mem', 'name' => 'Memcache', 'status' => (is_file(DIR_SYSTEM . 'library/bus_cache/mem.php') && extension_loaded('memcache') && class_exists('Memcache') && function_exists('memcache_connect') ? true : false));
-		$data['cache_engines'][] = array('code' => 'memcached', 'name' => 'Memcached', 'status' => (is_file(DIR_SYSTEM . 'library/bus_cache/memcached.php') && extension_loaded('memcached') ? true : false));
-		$data['cache_engines'][] = array('code' => 'redis', 'name' => 'Redis', 'status' => (is_file(DIR_SYSTEM . 'library/bus_cache/redis.php') && extension_loaded('redis') && function_exists('Redis') ? true : false));
+		if ($this->version_oc >= 4) {
+			$data['cache_engines'][] = array('code' => 'apc', 'name' => 'APC (Alternative PHP Cache)', 'status' => (is_file(DIR_EXTENSION . 'bus_cache/system/' . 'library/bus_cache/apc.php') && extension_loaded('apc') && function_exists('apc_cache_info') ? true : false));
+			$data['cache_engines'][] = array('code' => 'apcu', 'name' => 'APCu (Alternative PHP Cache) not opcode', 'status' => (is_file(DIR_EXTENSION . 'bus_cache/system/' . 'library/bus_cache/apcu.php') && extension_loaded('apcu') && function_exists('apcu_cache_info') ? true : false));
+			$data['cache_engines'][] = array('code' => 'buslik', 'name' => 'Буслік', 'status' => true);
+			$data['cache_engines'][] = array('code' => 'file', 'name' => 'File', 'status' => (is_file(DIR_EXTENSION . 'bus_cache/system/' . 'library/bus_cache/file.php') ? true : false));
+			$data['cache_engines'][] = array('code' => 'mem', 'name' => 'Memcache', 'status' => (is_file(DIR_EXTENSION . 'bus_cache/system/' . 'library/bus_cache/mem.php') && extension_loaded('memcache') && class_exists('Memcache') && function_exists('memcache_connect') ? true : false));
+			$data['cache_engines'][] = array('code' => 'memcached', 'name' => 'Memcached', 'status' => (is_file(DIR_EXTENSION . 'bus_cache/system/' . 'library/bus_cache/memcached.php') && extension_loaded('memcached') ? true : false));
+			$data['cache_engines'][] = array('code' => 'redis', 'name' => 'Redis', 'status' => (is_file(DIR_EXTENSION . 'bus_cache/system/' . 'library/bus_cache/redis.php') && extension_loaded('redis') && function_exists('Redis') ? true : false));
+		} else {
+			$data['cache_engines'][] = array('code' => 'apc', 'name' => 'APC (Alternative PHP Cache)', 'status' => (is_file(DIR_SYSTEM . 'library/bus_cache/apc.php') && extension_loaded('apc') && function_exists('apc_cache_info') ? true : false));
+			$data['cache_engines'][] = array('code' => 'apcu', 'name' => 'APCu (Alternative PHP Cache) not opcode', 'status' => (is_file(DIR_SYSTEM . 'library/bus_cache/apcu.php') && extension_loaded('apcu') && function_exists('apcu_cache_info') ? true : false));
+			$data['cache_engines'][] = array('code' => 'buslik', 'name' => 'Буслік', 'status' => true);
+			$data['cache_engines'][] = array('code' => 'file', 'name' => 'File', 'status' => (is_file(DIR_SYSTEM . 'library/bus_cache/file.php') ? true : false));
+			$data['cache_engines'][] = array('code' => 'mem', 'name' => 'Memcache', 'status' => (is_file(DIR_SYSTEM . 'library/bus_cache/mem.php') && extension_loaded('memcache') && class_exists('Memcache') && function_exists('memcache_connect') ? true : false));
+			$data['cache_engines'][] = array('code' => 'memcached', 'name' => 'Memcached', 'status' => (is_file(DIR_SYSTEM . 'library/bus_cache/memcached.php') && extension_loaded('memcached') ? true : false));
+			$data['cache_engines'][] = array('code' => 'redis', 'name' => 'Redis', 'status' => (is_file(DIR_SYSTEM . 'library/bus_cache/redis.php') && extension_loaded('redis') && function_exists('Redis') ? true : false));
+		}
 
 		if (isset($this->request->post['cache_engine'])) {
 			$data['cache_engine'] = $this->request->post['cache_engine'];
@@ -1392,11 +1425,6 @@ class BusCache extends Controller {
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['footer'] = $this->load->controller('common/footer');
 
-		if ($this->version_oc >= 3) {
-			$template_engine = $this->registry->get('config')->get('template_engine');
-			$this->registry->get('config')->set('template_engine', 'template');
-		}
-
 		if ($this->version_oc >= 4) {
 			extract($data);
 
@@ -1406,12 +1434,17 @@ class BusCache extends Controller {
 
 			$template = ob_get_clean();
 		} else {
-			$template = $this->load->view($this->paths['view']['bus_cache'], $data);
-		}
+			if ($this->version_oc >= 3) {
+				$template_engine = $this->registry->get('config')->get('template_engine');
+				$this->registry->get('config')->set('template_engine', 'template');
+			}
 
-		if ($this->version_oc >= 3) {
-			$this->registry->get('config')->set('template_engine', $template_engine);
-			$this->response->addHeader('Content-Type: text/html; charset=utf-8');
+			$template = $this->load->view($this->paths['view']['bus_cache'], $data);
+			
+			if ($this->version_oc >= 3) {
+				$this->registry->get('config')->set('template_engine', $template_engine);
+				$this->response->addHeader('Content-Type: text/html; charset=utf-8');
+			}
 		}
 
 		$this->response->setOutput($template);
@@ -1434,14 +1467,8 @@ class BusCache extends Controller {
 		// посылыаем на йух
 		$this->load->language($this->paths['language']['bus_cache']);
 
-		if ($this->version_oc >= 2.3) {
-			if (!$this->user->hasPermission('modify', 'extension/extension/module')) {
-				$this->error['warning'] = $this->language->get('error_permission');
-			}
-		} else {
-			if (!$this->user->hasPermission('modify', 'extension/module')) {
-				$this->error['warning'] = $this->language->get('error_permission');
-			}
+		if (!$this->user->hasPermission('modify', $this->paths['controller']['module'])) {
+			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
 		if (!$this->error) {
@@ -1456,39 +1483,95 @@ class BusCache extends Controller {
 				$this->db->query("ALTER TABLE `" . DB_PREFIX . "product` ADD KEY status (status)");
 			} */
 
-			// включаем модификатор модуля, если заливался в БД
-			/* $this->load->model($this->paths['model']['modification']);
+			if ($this->version_oc < 4) {
+				// включаем модификатор модуля, если заливался в БД
+				/* $this->load->model($this->paths['model']['modification']);
 
-			$code = $this->{$this->paths['model']['modification_path']}->getModificationByCode($this->code);
+				if ($this->registry->has($this->paths['model']['modification_path'])) {
+					$code = $this->{$this->paths['model']['modification_path']}->getModificationByCode($this->code);
 
-			if ($code) {
-				$this->{$this->paths['model']['modification_path']}->enableModification($code['modification_id']);
-			} */
+					if ($code) {
+						$this->{$this->paths['model']['modification_path']}->enableModification($code['modification_id']);
+					}
+				} */
 
-			// удаляем модификатор модуля, если заливался в БД
-			$this->load->model($this->paths['model']['modification']);
+				// удаляем модификатор модуля, если заливался в БД
+				$this->load->model($this->paths['model']['modification']);
 
-			$code = $this->{$this->paths['model']['modification_path']}->getModificationByCode($this->code);
+				if ($this->registry->has($this->paths['model']['modification_path'])) {
+					$code = $this->{$this->paths['model']['modification_path']}->getModificationByCode($this->code);
 
-			if ($code) {
-				$this->{$this->paths['model']['modification_path']}->deleteModification($code['modification_id']);
+					if ($code) {
+						$this->{$this->paths['model']['modification_path']}->deleteModification($code['modification_id']);
+					}
+				}
+
+				// создаём копию из резерва и переименовываем модификатор, если заливался в system
+				$file = $this->getFile('library', 'xml_');
+
+				$this->setFile(false, $file, 'xml');
 			}
 
-			// создаём копию из резерва и переименовываем модификатор, если заливался в system
-			$file = $this->getFile('library', 'xml_');
-
-			$this->setFile(false, $file, 'xml');
-
 			// создаём событие
-			//$this->load->model($this->paths['model']['event']); 
+			if ($this->version_oc >= 4) {
+				/* OC 2.1
+				addEvent($code, $trigger, $action)
+				OC 2.3
+				addEvent($code, $trigger, $action, $status = 1)
+				OC 3.0
+				addEvent($code, $trigger, $action, $status = 1, $sort_order = 0)
+				OC 4.0
+				addEvent($code, $description, $trigger, $action, $status = true, $sort_order = 0) */
+				$this->load->model($this->paths['model']['event']); 
+				if ($this->registry->has($this->paths['model']['event_path'])) {
+					$this->db->query("DELETE FROM `" . DB_PREFIX . "event` WHERE `code` = 'bus_cache_clear'");
+					$this->db->query("DELETE FROM `" . DB_PREFIX . "event` WHERE `code` = 'bus_cache_images'");
+					$this->db->query("DELETE FROM `" . DB_PREFIX . "event` WHERE `code` = 'bus_cache_before'");
+					$this->db->query("DELETE FROM `" . DB_PREFIX . "event` WHERE `code` = 'bus_cache_after'");
+					$this->db->query("DELETE FROM `" . DB_PREFIX . "event` WHERE `code` = 'bus_cache_controller_before'");
+					$this->db->query("DELETE FROM `" . DB_PREFIX . "event` WHERE `code` = 'bus_cache_model_before'");
 
-			//if ($this->version_oc >= 3) {
-				//$code = $this->{$this->paths['model']['event_path']}->getEvent($this->name_arhive, 'catalog/view/*/after', $this->paths['controller']['bus_cache'] . '/event');
+					if ($this->version_oc >= 3) {
+						$this->db->query("DELETE FROM `" . DB_PREFIX . "event` WHERE `code` = '" . $this->db->escape('bus_cache_model_before') . "'");
+						$this->db->query("INSERT INTO `" . DB_PREFIX . "event` SET `code` = 'bus_cache_clear', `trigger` = 'admin/model/*/after', `action` = " . $this->paths['controller']['bus_cache'] . "'|clearEvent', `status` = '1'" . ($this->version_oc >= 3 ? ", `sort_order` = '0'" : false));
+						//$this->db->query("INSERT INTO `" . DB_PREFIX . "event` SET `code` = 'bus_cache_clear', `trigger` = 'catalog/model/tool/image/after', `action` = " . $this->paths['controller']['bus_cache'] . "'|images', `status` = '1'" . ($this->version_oc >= 3 ? ", `sort_order` = '0'" : false));
+						$this->db->query("INSERT INTO `" . DB_PREFIX . "event` SET `code` = 'bus_cache_clear', `trigger` = 'catalog/controller/*/before', `action` = " . $this->paths['controller']['bus_cache'] . "'|start', `status` = '1'" . ($this->version_oc >= 3 ? ", `sort_order` = '0'" : false));
+						$this->db->query("INSERT INTO `" . DB_PREFIX . "event` SET `code` = 'bus_cache_clear', `trigger` = 'catalog/controller/*/after', `action` = " . $this->paths['controller']['bus_cache'] . "'|output', `status` = '1'" . ($this->version_oc >= 3 ? ", `sort_order` = '9999999'" : false));
+						$this->db->query("INSERT INTO `" . DB_PREFIX . "event` SET `code` = 'bus_cache_clear', `trigger` = 'catalog/controller/*/before', `action` = " . $this->paths['controller']['bus_cache'] . "'|controller', `status` = '1'" . ($this->version_oc >= 3 ? ", `sort_order` = '0'" : false));
+						//$this->db->query("INSERT INTO `" . DB_PREFIX . "event` SET `code` = 'bus_cache_clear', `trigger` = 'catalog/model/*/before', `action` = " . $this->paths['controller']['bus_cache'] . "'|model', `status` = '1'" . ($this->version_oc >= 3 ? ", `sort_order` = '0'" : false));
+					}
+				}
+			}
 
-				//if (!$code) {
-					//$this->{$this->paths['model']['event_path']}->addEvent($this->name_arhive, 'catalog/view/*/after', $this->paths['controller']['bus_cache'] . '/event', 1, 1001);
-				//}
-			//}
+			// изменяем файлы
+			if ($this->version_oc >= 4) {
+				$module_paths = array(
+					DIR_EXTENSION . 'bus_cache/catalog/controller/event/bus_cache.php',
+					DIR_EXTENSION . 'bus_cache/system/library/bus_cache.php',
+				);
+
+				foreach (glob(DIR_EXTENSION . 'bus_cache/system/library/bus_cache/*') as $path) {
+					$module_paths[] = $path;
+				}
+
+				foreach ($module_paths as $path) {
+					if (is_file($path)) {
+						file_put_contents($path, str_replace(array('namespace Bus_Cache', '//namespace Opencart'), array('//namespace Bus_Cache', 'namespace Opencart'), file_get_contents($path)));
+					}
+				}
+
+				$path = DIR_SYSTEM . 'library/response.php';
+				if (is_file($path)) {
+					$file = file_get_contents($path);
+					if (strpos($file, 'busGetHeaders') === false) {
+						$file = str_replace("class Response {\r\n", "class Response {\r\npublic function busGetHeaders() {return \$this->headers;}\r\n", $file);
+						$file = str_replace("class Response {\n", "class Response {\npublic function busGetHeaders() {return \$this->headers;}\n", $file);
+						file_put_contents($path, $file);
+					}
+				}
+
+				file_put_contents(DIR_EXTENSION . 'bus_cache/system/.htaccess', '<Files *.*>' . PHP_EOL . 'Order Deny,Allow' . PHP_EOL . 'Deny from all' . PHP_EOL . '</Files>');
+			}
 
 			// чистим кэши необходимые для модуля
 			//$this->cache->delete('*');
@@ -1609,7 +1692,11 @@ function successModule() {
 //--></script>
 HTML;
 
-			if ($this->version_oc >= 2.3) {
+			if ($this->version_oc >= 4) {
+				$this->language->set('text_success', $text);
+				//$this->response->addHeader('Content-Type: application/json');
+				//$this->response->setOutput(json_encode($text, JSON_HEX_AMP));
+			} elseif ($this->version_oc == 2.3) {
 				$this->response->addHeader('Content-Type: text/html; charset=utf-8');
 				$this->response->setOutput($text);
 				echo $this->response->getOutput();
@@ -1619,7 +1706,8 @@ HTML;
 				$this->response->redirect($this->url->link($this->paths['controller']['extension'], $this->paths['token'], true));
 			}
 		} else {
-			echo $this->error['warning'];
+			$this->response->addHeader('Content-Type: application/json');
+			$this->response->setOutput(json_encode($this->error['warning'], JSON_HEX_AMP));
 		}
 	}
 
@@ -1628,14 +1716,8 @@ HTML;
 		// посылыаем на йух
 		$this->load->language($this->paths['language']['bus_cache']);
 
-		if ($this->version_oc >= 2.3) {
-			if (!$this->user->hasPermission('modify', 'extension/extension/module')) {
-				$this->error['warning'] = $this->language->get('error_permission');
-			}
-		} else {
-			if (!$this->user->hasPermission('modify', 'extension/module')) {
-				$this->error['warning'] = $this->language->get('error_permission');
-			}
+		if (!$this->user->hasPermission('modify', $this->paths['controller']['module'])) {
+			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
 		if (!$this->error) {
@@ -1644,28 +1726,65 @@ HTML;
 			//$this->db->query("TRUNCATE TABLE `" . DB_PREFIX . "bus_cache`");
 			//$this->db->query("TRUNCATE TABLE `" . DB_PREFIX . "bus_cache_description`");
 
-			// выключаем модификатор модуля
-			/* $this->load->model($this->paths['model']['modification']);
+			if ($this->version_oc < 4) {
+				// выключаем модификатор модуля
+				/* $this->load->model($this->paths['model']['modification']);
 
-			$code = $this->{$this->paths['model']['modification_path']}->getModificationByCode($this->code);
+				if ($this->registry->has($this->paths['model']['modification_path'])) {
+					$code = $this->{$this->paths['model']['modification_path']}->getModificationByCode($this->code);
 
-			if ($code) {
-				$this->{$this->paths['model']['modification_path']}->disableModification($code['modification_id']);
-			} */
+					if ($code) {
+						$this->{$this->paths['model']['modification_path']}->disableModification($code['modification_id']);
+					}
+				} */
 
-			// удаляем копию модификатора созданную из резерва, если заливался в system
-			$this->deleteFile(false, 'xml');
+				// удаляем копию модификатора созданную из резерва, если заливался в system
+				$this->deleteFile(false, 'xml');
+			}
 
 			// удаляем событие
-			//$this->load->model($this->paths['model']['event']); 
+			if ($this->version_oc >= 3) {
+				$this->load->model($this->paths['model']['event']);
+				if ($this->registry->has($this->paths['model']['event_path'])) {
+					$this->db->query("DELETE FROM `" . DB_PREFIX . "event` WHERE `code` = 'bus_cache_clear'");
+					$this->db->query("DELETE FROM `" . DB_PREFIX . "event` WHERE `code` = 'bus_cache_images'");
+					$this->db->query("DELETE FROM `" . DB_PREFIX . "event` WHERE `code` = 'bus_cache_before'");
+					$this->db->query("DELETE FROM `" . DB_PREFIX . "event` WHERE `code` = 'bus_cache_after'");
+					$this->db->query("DELETE FROM `" . DB_PREFIX . "event` WHERE `code` = 'bus_cache_controller_before'");
+					$this->db->query("DELETE FROM `" . DB_PREFIX . "event` WHERE `code` = 'bus_cache_model_before'");
+				}
+			}
 
-			//if ($this->version_oc >= 3) {
-				//$code = $this->{$this->paths['model']['event_path']}->getEvent($this->name_arhive, 'catalog/view/*/after', $this->paths['controller']['bus_cache'] . '/event');
+			// изменяем файлы
+			if ($this->version_oc >= 4) {
+				$module_paths = array(
+					DIR_EXTENSION . 'bus_cache/catalog/controller/event/bus_cache.php',
+					DIR_EXTENSION . 'bus_cache/system/library/bus_cache.php',
+				);
 
-				//if ($code) {
-					//$this->{$this->paths['model']['event_path']}->deleteEvent($this->name_arhive);
-				//}
-			//}
+				foreach (glob(DIR_EXTENSION . 'bus_cache/system/library/bus_cache/*') as $path) {
+					$module_paths[] = $path;
+				}
+
+				foreach ($module_paths as $path) {
+					if (is_file($path)) {
+						file_put_contents($path, str_replace(array('//namespace Bus_Cache', 'namespace Opencart'), array('namespace Bus_Cache', '//namespace Opencart'), file_get_contents($path)));
+					}
+				}
+			}
+
+			// изменяем файлы
+			if ($this->version_oc >= 4) {
+				$path = DIR_SYSTEM . 'library/response.php';
+				if (is_file($path)) {
+					$file = file_get_contents($path);
+					if (strpos($file, 'busGetHeaders') !== false) {
+						$file = str_replace("public function busGetHeaders() {return \$this->headers;}\r\n", '', $file);
+						$file = str_replace("public function busGetHeaders() {return \$this->headers;}\n", '', $file);
+						file_put_contents($path, $file);
+					}
+				}
+			}
 
 			// чистим кэши необходимые для модуля
 			//$this->cache->delete('*');
@@ -1815,7 +1934,11 @@ function uninstallFiles() {
 //--></script>
 HTML;
 
-			if ($this->version_oc >= 2.3) {
+			if ($this->version_oc >= 4) {
+				$this->language->set('text_success', $text);
+				//$this->response->addHeader('Content-Type: application/json');
+				//$this->response->setOutput(json_encode($text, JSON_HEX_AMP));
+			} elseif ($this->version_oc == 2.3) {
 				$this->response->addHeader('Content-Type: text/html; charset=utf-8');
 				$this->response->setOutput($text);
 				echo $this->response->getOutput();
@@ -1825,23 +1948,21 @@ HTML;
 				$this->response->redirect($this->url->link($this->paths['controller']['extension'], $this->paths['token'], true));
 			}
 		} else {
-			echo $this->error['warning'];
+			$this->response->addHeader('Content-Type: application/json');
+			$this->response->setOutput(json_encode($this->error['warning'], JSON_HEX_AMP));
 		}
 	}
 
 	// удаление файлов модуля
 	public function uninstallFiles() {
+		if ($this->version_oc >= 4) {
+			return true;
+		}
 		$this->load->language($this->paths['language']['bus_cache']);
 
 		// посылыаем на йух
-		if ($this->version_oc >= 2.3) {
-			if (!$this->user->hasPermission('modify', 'extension/extension/module') || !$this->user->hasPermission('modify', $this->paths['controller']['bus_cache'])) {
-				$this->error['warning'] = $this->language->get('error_permission');
-			}
-		} else {
-			if (!$this->user->hasPermission('modify', 'extension/module') || !$this->user->hasPermission('modify', $this->paths['controller']['bus_cache'])) {
-				$this->error['warning'] = $this->language->get('error_permission');
-			}
+		if (!$this->user->hasPermission('modify', $this->paths['controller']['module'])) {
+			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
 		if (!$this->error) {
@@ -1916,15 +2037,17 @@ HTML;
 			}
 
 			// удаляем событие
-			//$this->load->model($this->paths['model']['event']); 
-
-			//if ($this->version_oc >= 3) {
-				//$code = $this->{$this->paths['model']['event_path']}->getEvent($this->name_arhive, 'catalog/view/*/after', $this->paths['controller']['bus_cache'] . '/event');
-
-				//if ($code) {
-					//$this->{$this->paths['model']['event_path']}->deleteEvent($this->name_arhive);
-				//}
-			//}
+			if ($this->version_oc >= 3) {
+				$this->load->model($this->paths['model']['event']);
+				if ($this->registry->has($this->paths['model']['event_path'])) {
+					$this->db->query("DELETE FROM `" . DB_PREFIX . "event` WHERE `code` = 'bus_cache_clear'");
+					$this->db->query("DELETE FROM `" . DB_PREFIX . "event` WHERE `code` = 'bus_cache_images'");
+					$this->db->query("DELETE FROM `" . DB_PREFIX . "event` WHERE `code` = 'bus_cache_before'");
+					$this->db->query("DELETE FROM `" . DB_PREFIX . "event` WHERE `code` = 'bus_cache_after'");
+					$this->db->query("DELETE FROM `" . DB_PREFIX . "event` WHERE `code` = 'bus_cache_controller_before'");
+					$this->db->query("DELETE FROM `" . DB_PREFIX . "event` WHERE `code` = 'bus_cache_model_before'");
+				}
+			}
 
 			// готовим данные для php
 			$db_paths = array(
@@ -1952,6 +2075,11 @@ HTML;
 				DIR_SYSTEM . 'library/bus_cube',
 				DIR_SYSTEM . 'bus_cache.ocmod.xml',
 			);
+
+			// 4.0 - 4.0 OpenCart
+			if ($this->version_oc >= 4) {
+				$module_paths[] = DIR_EXTENSION . 'bus_cache[NAGIBATOR]';
+			}
 
 			// проверяем и удаляем со всех языковых файлов
 			foreach (glob(DIR_APPLICATION . 'language/*') as $path) {
@@ -2082,14 +2210,8 @@ HTML;
 
 	private function modification($message = false, $data = true, $speed = 2000) {
 		// посылыаем на йух
-		if ($this->version_oc >= 2.3) {
-			if (!$this->user->hasPermission('modify', 'extension/extension/module')) {
-				$this->error['warning'] = $this->language->get('error_permission');
-			}
-		} else {
-			if (!$this->user->hasPermission('modify', 'extension/module')) {
-				$this->error['warning'] = $this->language->get('error_permission');
-			}
+		if (!$this->user->hasPermission('modify', $this->paths['controller']['module'])) {
+			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
 		if (!$this->error) {
@@ -2104,6 +2226,43 @@ HTML;
 				$this->setFile(false, $this->getFile('library', 'xml_'), 'xml');
 			} elseif (!$data) {
 				$this->deleteFile(false, 'xml');
+			}
+
+			if ($this->version_oc >= 4) {
+				$this->load->model($this->paths['model']['event']);
+				if ($this->registry->has($this->paths['model']['event_path'])) {
+					$this->db->query("DELETE FROM `" . DB_PREFIX . "event` WHERE `code` = 'bus_cache_clear'");
+					$this->db->query("DELETE FROM `" . DB_PREFIX . "event` WHERE `code` = 'bus_cache_images'");
+					$this->db->query("DELETE FROM `" . DB_PREFIX . "event` WHERE `code` = 'bus_cache_before'");
+					$this->db->query("DELETE FROM `" . DB_PREFIX . "event` WHERE `code` = 'bus_cache_after'");
+					$this->db->query("DELETE FROM `" . DB_PREFIX . "event` WHERE `code` = 'bus_cache_controller_before'");
+					$this->db->query("DELETE FROM `" . DB_PREFIX . "event` WHERE `code` = 'bus_cache_model_before'");
+
+					if ($data && $file || $data && !$file) {
+						if ($this->version_oc >= 3) {
+							$this->db->query("DELETE FROM `" . DB_PREFIX . "event` WHERE `code` = '" . $this->db->escape('bus_cache_model_before') . "'");
+							$this->db->query("INSERT INTO `" . DB_PREFIX . "event` SET `code` = 'bus_cache_clear', `trigger` = 'admin/model/*/after', `action` = " . $this->paths['controller']['bus_cache'] . "'|clearEvent', `status` = '1'" . ($this->version_oc >= 3 ? ", `sort_order` = '0'" : false));
+							//$this->db->query("INSERT INTO `" . DB_PREFIX . "event` SET `code` = 'bus_cache_clear', `trigger` = 'catalog/model/tool/image/after', `action` = " . $this->paths['controller']['bus_cache'] . "'|images', `status` = '1'" . ($this->version_oc >= 3 ? ", `sort_order` = '0'" : false));
+							$this->db->query("INSERT INTO `" . DB_PREFIX . "event` SET `code` = 'bus_cache_clear', `trigger` = 'catalog/controller/*/before', `action` = " . $this->paths['controller']['bus_cache'] . "'|start', `status` = '1'" . ($this->version_oc >= 3 ? ", `sort_order` = '0'" : false));
+							$this->db->query("INSERT INTO `" . DB_PREFIX . "event` SET `code` = 'bus_cache_clear', `trigger` = 'catalog/controller/*/after', `action` = " . $this->paths['controller']['bus_cache'] . "'|output', `status` = '1'" . ($this->version_oc >= 3 ? ", `sort_order` = '9999999'" : false));
+							$this->db->query("INSERT INTO `" . DB_PREFIX . "event` SET `code` = 'bus_cache_clear', `trigger` = 'catalog/controller/*/before', `action` = " . $this->paths['controller']['bus_cache'] . "'|controller', `status` = '1'" . ($this->version_oc >= 3 ? ", `sort_order` = '0'" : false));
+							//$this->db->query("INSERT INTO `" . DB_PREFIX . "event` SET `code` = 'bus_cache_clear', `trigger` = 'catalog/model/*/before', `action` = " . $this->paths['controller']['bus_cache'] . "'|model', `status` = '1'" . ($this->version_oc >= 3 ? ", `sort_order` = '0'" : false));
+						}
+					}
+				}
+			}
+
+			// изменяем файлы
+			if ($this->version_oc >= 4) {
+				$path = DIR_SYSTEM . 'library/response.php';
+				if (is_file($path)) {
+					$file = file_get_contents($path);
+					if (strpos($file, 'busGetHeaders') === false) {
+						$file = str_replace("class Response {\r\n", "class Response {\r\npublic function busGetHeaders() {return \$this->headers;}\r\n", $file);
+						$file = str_replace("class Response {\n", "class Response {\npublic function busGetHeaders() {return \$this->headers;}\n", $file);
+						file_put_contents($path, $file);
+					}
+				}
 			}
 
 			// удаляем модификатор модуля, если заливался в БД
