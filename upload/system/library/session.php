@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2022.
+// *	@copyright	OPENCART.PRO 2011 - 2023.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -285,10 +285,10 @@ class Session {
 	}
 
 	public function createId() {
-		if ($this->engine == 'native' && version_compare(phpversion(), '7.6.0', '>=')) {
+		/* if ($this->engine == 'native' && version_compare(phpversion(), '7.6.0', '>=')) {
 			//https://bugs.php.net/bug.php?id=79413
 			return session_create_id();
-		} elseif ($this->engine == 'native' && version_compare(phpversion(), '5.5.4', '>=')) {
+		} else */if ($this->engine == 'native' && version_compare(phpversion(), '5.5.4', '>=')) {
 			//return $this->adaptor->create_sid();
 			return session_id();
 		} elseif (function_exists('random_bytes')) {
