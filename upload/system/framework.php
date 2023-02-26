@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2021.
+// *	@copyright	OPENCART.PRO 2011 - 2023.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -42,10 +42,8 @@ if ($config->get('pre_config') && isset($_GET['route'])) {
 }
 
 // Logging
-if ($config->get('error_log')) {
-	$log = new Log($config->get('error_filename'));
-	$registry->set('log', $log);
-}
+$log = new Log($config->get('error_filename'));
+$registry->set('log', $log);
 
 // Error Handler Fix
 set_error_handler(function($code, $message, $file, $line) use($log, $config) {
