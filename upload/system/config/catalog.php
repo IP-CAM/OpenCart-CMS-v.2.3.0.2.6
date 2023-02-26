@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2021.
+// *	@copyright	OPENCART.PRO 2011 - 2023.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -33,9 +33,9 @@ $_['library_autoload']      = array(
 // Actions
 $_['action_pre_action']     = array(
 	'startup/setting',
+	'startup/error',
 	'startup/session',
 	'startup/startup',
-	'startup/error',
 	'startup/event',
 	'startup/maintenance',
 	//'startup/seo_url'
