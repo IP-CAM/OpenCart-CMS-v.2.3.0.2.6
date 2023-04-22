@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2022.
+// *	@copyright	OPENCART.PRO 2011 - 2023.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -457,7 +457,7 @@ class ControllerToolSeoManager extends Controller {
 		}
 
 		if (isset($this->request->get['page_url'])) {
-			$page_url = $this->request->get['page_url'];
+			$page_url = (int)$this->request->get['page_url'];
 		} else {
 			$page_url = 1;
 		}
@@ -517,7 +517,7 @@ class ControllerToolSeoManager extends Controller {
 		}
 
 		if (isset($this->request->get['page_tag'])) {
-			$page_tag = $this->request->get['page_tag'];
+			$page_tag = (int)$this->request->get['page_tag'];
 		} else {
 			$page_tag = 1;
 		}
@@ -589,12 +589,14 @@ class ControllerToolSeoManager extends Controller {
 			$url .= '&order=' . $this->request->get['order'];
 		}
 
+		$url .= '&page_url={page}';
+
 		$pagination = new Pagination();
 		$pagination->total = $url_alias_total;
 		$pagination->page = $page_url;
 		$pagination->limit = $this->config->get('config_limit_admin');
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('tool/seomanager', 'token=' . $this->session->data['token'] . $url . ($page_url == 1 ? '&page_url={page}' : false), true);
+		$pagination->url = $this->url->link('tool/seomanager', 'token=' . $this->session->data['token'] . $url, true);
 
 		$data['filter_query'] = $filter_query;
 		$data['filter_keyword'] = $filter_keyword;
@@ -603,6 +605,9 @@ class ControllerToolSeoManager extends Controller {
 		$data['order'] = $order;
 
 		$data['pagination_url'] = $pagination->render();
+		if ($data['pagination_url']) {
+			$data['pagination_url'] = str_replace('&amp;page_url={page}', '', $data['pagination_url']);
+		}
 		$data['results_url'] = sprintf($this->language->get('text_pagination'), ($url_alias_total) ? (($page_url - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page_url - 1) * $this->config->get('config_limit_admin')) > ($url_alias_total - $this->config->get('config_limit_admin'))) ? $url_alias_total : ((($page_url - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $url_alias_total, ceil($url_alias_total / $this->config->get('config_limit_admin')));
 
 		$url = '';
@@ -627,16 +632,21 @@ class ControllerToolSeoManager extends Controller {
 			$url .= '&order=' . $this->request->get['order'];
 		}
 
+		$url .= '&page_tag={page}';
+
 		$pagination = new Pagination();
 		$pagination->total = $seo_tags_total;
 		$pagination->page = $page_tag;
 		$pagination->limit = $this->config->get('config_limit_admin');
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('tool/seomanager', 'token=' . $this->session->data['token'] . $url . ($page_tag == 1 ? '&page_url={page}' : false) . '#tab_seotag', true);
+		$pagination->url = $this->url->link('tool/seomanager', 'token=' . $this->session->data['token'] . $url . '#tab_seotag', true);
 
 		$data['filter_store'] = $filter_store;
 
 		$data['pagination_tag'] = $pagination->render();
+		if ($data['pagination_tag']) {
+			$data['pagination_tag'] = str_replace('&amp;page_tag={page}', '', $data['pagination_tag']);
+		}
 		$data['results_tag'] = sprintf($this->language->get('text_pagination'), ($seo_tags_total) ? (($page_tag - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page_tag - 1) * $this->config->get('config_limit_admin')) > ($seo_tags_total - $this->config->get('config_limit_admin'))) ? $seo_tags_total : ((($page_tag - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $seo_tags_total, ceil($seo_tags_total / $this->config->get('config_limit_admin')));
 
 		$url = '';
