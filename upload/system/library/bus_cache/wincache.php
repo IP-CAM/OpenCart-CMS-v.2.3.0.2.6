@@ -11,7 +11,9 @@ if (!defined('VERSION')) {
 	exit('ЗАПРЫШЧАЮ!');
 }
 
-class APC {
+//https://www.php.net/manual/ru/book.wincache.php
+//https://github.com/cakephp/cakephp/blob/3.2.0/src/Cache/Engine/WincacheEngine.php
+class winCache {
 	private $expire;
 	private $active = false;
 
@@ -19,21 +21,22 @@ class APC {
 		if (!defined('CACHE_PREFIX')) {
 			define('CACHE_PREFIX', 'cache_');
 		}
-		if (!defined('CACHE_USERNAME')) {
-			define('CACHE_USERNAME', 'user');
-		}
 		if (!defined('CACHE_NULL')) {
 			define('CACHE_NULL', false);
 		}
 
 		$this->expire = $expire;
 
-		$this->active = ini_get('apc.enabled') && function_exists('apc_cache_info');
+		$this->active = extension_loaded('wincache') && function_exists('wincache_ucache_info');
+		if ($this->active) {
+			// Включает/отключает файловое кеширование.
+			ini_set('wincache.fcenabled', true);
+		}
 	}
 
 	public function get($key) {
 		if ($this->active) {
-			return apc_fetch(CACHE_PREFIX . $key);
+			return wincache_ucache_get(CACHE_PREFIX . $key);
 		} else {
 			return CACHE_NULL;
 		}
@@ -45,40 +48,23 @@ class APC {
 				$expire = $this->expire;
 			}
 
-			apc_store(CACHE_PREFIX . $key, $value, $expire);
+			wincache_ucache_add(CACHE_PREFIX . $key, $value, $expire);
 		}
 	}
 
 	public function delete($key) {
 		if ($this->active) {
-			$cache_info = apc_cache_info(CACHE_USERNAME);
-
-			$cache_list = $cache_info['cache_list'];
-
 			if ($key == '*') {
-				foreach ($cache_list as $entry) {
-					apc_delete($entry['info']);
-				}
+				$this->flush();
 			} else {
-				foreach ($cache_list as $entry) {
-					if (strpos($entry['info'], CACHE_PREFIX . $key) !== false) {
-						apc_delete($entry['info']);
-						break;
-					}
-				}
+				wincache_ucache_delete(CACHE_PREFIX . $key);
 			}
 		}
 	}
 
 	public function flush($timer = 5) {
-		if ($this->active) {
-			if (function_exists('apc_clear_cache')) {
-				return apc_clear_cache('user');
-			} else {
-				$this->delete('*');
-
-				return true;
-			}
+		if ($this->active && function_exists('wincache_ucache_clear')) {
+			return wincache_ucache_clear();
 		} else {
 			return false;
 		}

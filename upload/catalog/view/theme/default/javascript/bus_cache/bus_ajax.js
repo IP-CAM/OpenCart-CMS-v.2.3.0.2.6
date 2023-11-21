@@ -1,125 +1,163 @@
-/*  Аўтар: "БуслікДрэў" ( https://buslikdrev.by/ )
-    © 2016-2022; BuslikDrev - Усе правы захаваныя. 
-    busAjax v0.4 */
-'use strict';
-'use asm';
-var busAjax = function(url, setting) {
-	if (typeof setting['metod'] === 'undefined') {
-		setting['metod'] = 'GET';
+/* Аўтар: "БуслікДрэў" ( https://buslikdrev.by/ ) */
+/* © 2016-2024; BuslikDrev - Усе правы захаваны. */
+
+window.busAjax = function(url, setting) {
+	'use strict';
+	if (typeof url == 'object') {
+		setting = url;
+		if (typeof setting['url'] === 'undefined') {
+			return false;
+		} else {
+			url = setting['url'];
+		}
 	}
-	if (typeof setting['responseType'] === 'undefined') {
+
+	if (typeof setting['headers'] !== 'object') {
+		setting['headers'] = {};
+	}
+
+	if (typeof setting['type'] === 'string') {
+		setting['method'] = setting['type'];
+	}
+
+	if (typeof setting['method'] !== 'string') {
+		setting['method'] = 'GET';
+	}
+
+	if (typeof setting['responseType'] !== 'string') {
 		setting['responseType'] = 'json';
 	}
-	if (typeof setting['dataType'] === 'undefined') {
+
+	if (typeof setting['dataType'] !== 'string') {
 		setting['dataType'] = 'text';
 	}
+
 	if (typeof setting['data'] === 'undefined') {
 		setting['data'] = '';
 	}
-	if (typeof setting['async'] === 'undefined') {
+
+	if (typeof setting['async'] !== 'boolean') {
 		setting['async'] = true;
 	}
+
 	if (typeof setting['user'] === 'undefined') {
 		setting['user'] = null;
 	}
+
 	if (typeof setting['password'] === 'undefined') {
 		setting['password'] = null;
 	}
-	if (typeof setting['success'] === 'undefined') {
-		setting['success'] = function(json) {};
+
+	if (typeof setting['beforeSend'] !== 'function') {
+		setting['beforeSend'] = function() {};
 	}
-	if (typeof setting['error'] === 'undefined') {
-		setting['error'] = function(error) {};
+
+	if (typeof setting['success'] !== 'function') {
+		setting['success'] = function() {};
 	}
-	if (typeof setting['complete'] === 'undefined') {
-		setting['complete'] = function(json) {};
+
+	if (typeof setting['error'] !== 'function') {
+		setting['error'] = function() {};
 	}
-	if (typeof setting['debug'] === 'undefined') {
+
+	if (typeof setting['complete'] !== 'function') {
+		setting['complete'] = function() {};
+	}
+
+	if (typeof setting['debug'] === 'boolean') {
 		setting['debug'] = false;
 	}
-	var datanew = null;
+
+	var i, datanew = null, xhr = new XMLHttpRequest();
+
+	setting['beforeSend'](xhr, setting);
+
 	if (setting['data']) {
 		if (setting['dataType'] == 'json') {
 			datanew = JSON.stringify(setting['data']);
 		} else {
-			if (typeof FormData !== 'undefined') {
-				datanew = new FormData();
-				if (typeof setting['data'] == 'object') {
-					for (var i in setting['data']) {
-						if (typeof setting['data'][i] == 'object') {
-							for (var i2 in setting['data'][i]) {
-								if (typeof setting['data'][i][i2] == 'object') {
-									for (var i3 in setting['data'][i][i2]) {
-										datanew.append(i + '[' + i2 + ']' + '[' + i3 + ']', setting['data'][i][i2][i3]);
-									}
-								} else {
-									datanew.append(i + '[' + i2 + ']', setting['data'][i][i2]);
-								}
+			if (typeof setting['data'] == 'object') {
+				var arrayData, arrayDatas = function(data, gi) {
+					var i, ii, iii, array, arrayg;
+
+					array = {};
+
+					for (i in data) {
+						if (gi) {
+							ii = gi + '[' + encodeURIComponent(i) + ']';
+						} else {
+							ii = encodeURIComponent(i);
+						}
+						if (typeof data[i] == 'object') {
+							arrayg = arrayDatas(data[i], ii);
+							for (iii in arrayg) {
+								array[iii] = encodeURIComponent(arrayg[iii]);
 							}
 						} else {
-							datanew.append(i, setting['data'][i]);
+							array[ii] = encodeURIComponent(data[i]);
 						}
 					}
-				} else {
-					datanew = setting['data'];
-				}
-			} else {
-				datanew = [];
-				if (typeof setting['data'] == 'object') {
-					for (var i in setting['data']) {
-						if (typeof setting['data'][i] == 'object') {
-							for (var i2 in setting['data'][i]) {
-								if (typeof setting['data'][i][i2] == 'object') {
-									for (var i3 in setting['data'][i][i2]) {
-										datanew.push(encodeURIComponent(i) + '[' + encodeURIComponent(i2) + ']' + '[' + encodeURIComponent(i3) + ']=' + encodeURIComponent(setting['data'][i][i2][i3]));
-									}
-								} else {
-									datanew.push(encodeURIComponent(i) + '[' + encodeURIComponent(i2) + ']=' + encodeURIComponent(setting['data'][i][i2]));
-								}
-							}
-						} else {
-							datanew.push(encodeURIComponent(i) + '=' + encodeURIComponent(setting['data'][i]));
-						}
-					}
-				} else {
-					datanew = setting['data'];
+
+					return array;
 				}
 
-				datanew = datanew.join('&').replace(/%20/g, '+');
+				arrayData = arrayDatas(setting['data']);
+
+				if ('FormData' in window) {
+					datanew = new FormData();
+
+					for (i in arrayData) {
+						datanew.append(i, arrayData[i]);
+					}
+				} else {
+					datanew = [];
+
+					for (i in arrayData) {
+						datanew.push(i + '=' + arrayData[i]);
+					}
+
+					datanew = datanew.join('&').replace(/%20/g, '+');
+				}
+			} else {
+				datanew = setting['data'];
 			}
 		}
 	}
 
-	var xhr = new XMLHttpRequest();
-	xhr.open(setting['metod'], url, setting['async'], setting['user'], setting['password']);
+	xhr.open(setting['method'], url, setting['async'], setting['user'], setting['password']);
 	xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-	if (typeof FormData === 'undefined') {
+	if (!('FormData' in window)) {
 		if (setting['dataType'] == 'json') {
-			xhr.setRequestHeader('Content-type', 'application/json;charset=UTF-8');
+			xhr.setRequestHeader('Content-type', 'application/json; charset=UTF-8');
 		} else if (setting['dataType'] == 'text') {
 			xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded; charset=UTF-8');
 		}
 	}
+
+	for (i in setting['headers']) {
+		xhr.setRequestHeader(i, setting['headers'][i]);
+	}
+
 	if (setting['responseType']) {
 		xhr.responseType = setting['responseType']; //\"text\" – строка,\"arraybuffer\", \"blob\", \"document\", \"json\" – JSON (парсится автоматически).
 	}
+
 	if (setting['debug']) {
 		console.log('xhr data: ', datanew);
 	}
-	xhr.send(datanew);
-	xhr.onload = function(oEvent) {
-		if (xhr.status == 200) {
-			setting['success'](xhr.response, xhr);
-			setting['complete'](xhr.response, xhr);
-			return xhr;
+
+	xhr.onload = function(e) {
+		if (e.target.status == 200) {
+			setting['success'](e.target.response, e.target);
+			setting['complete'](e.target, setting, e.target.response);
 		} else {
-			var ajaxOptions = setting;
-			var thrownError = false;
-			setting['error'](xhr, ajaxOptions, thrownError);
-			setting['complete'](xhr, ajaxOptions, thrownError);
-			return xhr;
+			setting['error'](e.target, setting, false);
+			setting['complete'](e.target, setting, false);
 		}
 	};
+	xhr.send(datanew);
+
+	return xhr;
 };
 
 if (typeof window.CustomEvent !== 'function') {

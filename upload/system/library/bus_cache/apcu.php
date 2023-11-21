@@ -1,7 +1,6 @@
 <?php
 // *   Аўтар: "БуслікДрэў" ( https://buslikdrev.by/ )
-// *   © 2016-2022; BuslikDrev - Усе правы захаваныя.
-// *   Спецыяльна для сайта: "OpenCart.pro" ( https://opencart.pro/ )
+// *   © 2016-2024; BuslikDrev - Усе правы захаваны.
 
 namespace Bus_Cache;
 //namespace Opencart\Extension\Bus_Cache\System\library\Bus_Cache;
@@ -12,6 +11,8 @@ if (!defined('VERSION')) {
 	exit('ЗАПРЫШЧАЮ!');
 }
 
+//https://www.php.net/manual/ru/book.apcu.php
+//https://github.com/cakephp/cakephp/blob/3.2.0/src/Cache/Engine/ApcEngine.php
 class APCu {
 	private $expire;
 	private $active = false;
@@ -20,40 +21,65 @@ class APCu {
 		if (!defined('CACHE_PREFIX')) {
 			define('CACHE_PREFIX', 'cache_');
 		}
+		if (!defined('CACHE_NULL')) {
+			define('CACHE_NULL', false);
+		}
+
 		$this->expire = $expire;
+
 		$this->active = ini_get('apc.enabled') && function_exists('apcu_cache_info');
 	}
 
 	public function get($key) {
-		return $this->active ? apcu_fetch(CACHE_PREFIX . $key) : false;
+		if ($this->active) {
+			return apcu_fetch(CACHE_PREFIX . $key);
+		} else {
+			return CACHE_NULL;
+		}
 	}
 
 	public function set($key, $value, $expire = 0) {
-		return $this->active ? apcu_store(CACHE_PREFIX . $key, $value, $this->expire) : false;
+		if ($this->active) {
+			if (!$expire) {
+				$expire = $this->expire;
+			}
+
+			apcu_store(CACHE_PREFIX . $key, $value, $expire);
+		}
 	}
 
 	public function delete($key) {
-		if (!$this->active) {
-			return false;
-		}
+		if ($this->active) {
+			$cache_info = apcu_cache_info();
 
-		$cache_info = apcu_cache_info('user');
-		$cache_list = $cache_info['cache_list'];
-		foreach ($cache_list as $entry) {
-			if (strpos($entry['info'], CACHE_PREFIX . $key) === 0) {
-				apcu_delete($entry['info']);
+			$cache_list = $cache_info['cache_list'];
+
+			if ($key == '*') {
+				foreach ($cache_list as $entry) {
+					apcu_delete($entry['info']);
+				}
+			} else {
+				foreach ($cache_list as $entry) {
+					if (strpos($entry['info'], CACHE_PREFIX . $key) !== false) {
+						apcu_delete($entry['info']);
+						break;
+					}
+				}
 			}
 		}
 	}
 
 	public function flush($timer = 5) {
-		$status = false;
+		if ($this->active) {
+			if (function_exists('apcu_clear_cache')) {
+				return apcu_clear_cache();
+			} else {
+				$this->delete('*');
 
-		if (function_exists('apcu_clear_cache')) {
-			apcu_clear_cache();
-			$status = true;
+				return true;
+			}
+		} else {
+			return false;
 		}
-
-		return $status;
 	}
 }

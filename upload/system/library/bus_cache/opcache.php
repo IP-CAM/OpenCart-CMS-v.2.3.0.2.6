@@ -11,10 +11,11 @@ if (!defined('VERSION')) {
 	exit('ЗАПРЫШЧАЮ!');
 }
 
-class Buslik {
+class Opcache {
 	private $expire;
 	private $data = array();
 	private $save = array();
+	private $active = false;
 
 	public function __construct($expire = 3600) {
 		if (!defined('CACHE_PREFIX')) {
@@ -32,12 +33,24 @@ class Buslik {
 		if (!defined('CACHE_NAME')) {
 			define('CACHE_NAME', 'default');
 		}
-		/* if (!defined('CACHE_DEBUG')) {
-			define('CACHE_DEBUG', false);
-		} */
 
 		$this->expire = $expire;
 		$this->delete('bus_cache_clears');
+		$this->active = ini_get('opcache.enable') && function_exists('opcache_is_script_cached');
+		if ($this->active) {
+			// проверка актуальности кэша
+			ini_set('opcache.validate_timestamps', false);
+			// промежуток времени для проверки актуальности кэша
+			ini_set('opcache.revalidate_freq', $expire);
+			// искать по папкам файл кэша?
+			ini_set('opcache.revalidate_path', false);
+			// включить сверку контрольных сумм каждый N запросов
+			ini_set('opcache.consistency_checks', 0);
+			// запретить кэшировать, если кэш существует меньше указанных секунд
+			ini_set('opcache.file_update_protection', 0);
+			//opcache_reset();
+			//opcache_invalidate(__FILE__, true);
+		}
 	}
 
 	public function get($key) {
@@ -67,34 +80,30 @@ class Buslik {
 		if ($files) {
 			foreach ($files as $file) {
 				if (is_readable($file)) {
-					$expire = (int)substr(strrchr($file, '.'), 1);
+					$expire = filemtime($file);
+					$t = time();
 
-					if ($expire > time()) {
-						$size = filesize($file);
+					if ($expire > $t) {
+						$this->data[$key]['expire'] = ($expire - $t);
+						$this->data[$hash]['path'] = $path;
+						$this->data[$hash]['key'] = $key;
 
-						if ($size > 0) {
-							$handle = fopen($file, 'r');
+						require_once($file);
 
-							if ($handle != false) {
-								flock($handle, LOCK_SH);
+						if (!empty($bus_cache) && $bus_cache = base64_decode($bus_cache)) {
+							$bus_cache = unserialize($bus_cache);
 
-								$result = fread($handle, $size);
+							$this->data[$key]['value'] = $bus_cache;
 
-								flock($handle, LOCK_UN);
-
-								fclose($handle);
-
-								$this->data[$hash]['expire'] = $expire - time();
-								$this->data[$hash]['value'] = json_decode($result, true);
-								$this->data[$hash]['path'] = $path;
-								$this->data[$hash]['key'] = $key;
-
-								return $this->data[$hash]['value'];
-							}
+							return $this->data[$key]['value'];
+						} else {
+							$this->data[$key]['value'] = false;
 						}
+
+						unset($bus_cache);
 					} else {
-						if (is_readable($file)) {
-							unlink($file);
+						if (is_readable($file) && unlink($file) && $this->active) {
+							opcache_invalidate($file, true);
 						}
 					}
 				}
@@ -159,24 +168,35 @@ class Buslik {
 			$key = $hash;
 		}
 
-		unset($this->data[$hash], $this->save[$hash]);
+		unset($this->data[$key], $this->save[$key]);
 
-		$files = glob(DIR_CACHE . 'buslik/' . $path . '/' . CACHE_PREFIX . '.' . $key . '.*', GLOB_NOSORT|GLOB_BRACE);
+		$files = glob(DIR_CACHE . 'buslik/' . $path . '/' . CACHE_PREFIX . '.' . $key . '.*.cc*', GLOB_NOSORT|GLOB_BRACE);
 
 		if ($files) {
 			if ($key != 'bus_cache_clears') {
 				$bus_cache_clears = glob(DIR_CACHE . 'buslik/bus_cache_clears/' . CACHE_PREFIX . '.' . 'bus_cache_clears.*', GLOB_NOSORT|GLOB_BRACE);
 
 				foreach ($bus_cache_clears as $file) {
-					$files = array_merge($files, json_decode(file_get_contents($file)));
+					require_once($file);
+
+					if (!empty($bus_cache) && $bus_cache = base64_decode($bus_cache)) {
+						$bus_cache = unserialize($bus_cache);
+						$files = array_merge($files, $bus_cache);
+					}
+
+					unset($bus_cache);
 				}
 
 				$files = array_merge($files, $bus_cache_clears);
 			}
 
-			foreach ($files as $k => $file) {
+			foreach ($files as $key => $file) {
 				if (is_readable($file) && unlink($file)) {
-					unset($files[$k]);
+					unset($files[$key]);
+
+					if ($this->active) {
+						opcache_invalidate($file, true);
+					}
 				}
 			}
 
@@ -192,6 +212,10 @@ class Buslik {
 	public function flush($timer = 5) {
 		$this->delete('*');
 
+		if ($this->active) {
+			opcache_reset();
+		}
+
 		return empty(glob(DIR_CACHE . 'buslik/*{/*,/*/*,/*/*/*}*', GLOB_NOSORT|GLOB_BRACE));
 	}
 
@@ -202,11 +226,14 @@ class Buslik {
 			}
 
 			$result['expire'] = (time() + $result['expire']);
-			$result['value'] = json_encode($result['value']);
+			$result['value'] = serialize($result['value']);
+			$result['value'] = '<?php $bus_cache = ' . ($result['value'] && is_string($result['value']) ? '"' . base64_encode($result['value']) . '"' : 'false') . '; ?>';
 
-			$file = DIR_CACHE . 'buslik/' . $result['path'] . '/' . CACHE_PREFIX . '.' . $result['key'] . '.cc' . 1 . '.' . $result['expire'];
+			$file = DIR_CACHE . 'buslik/' . $result['path'] . '/' . CACHE_PREFIX . '.' . $result['key'] . '.cc' . 1 . '.php';
 
-			if (!\is_file($file)) {
+			//var_dump(array(is_file($file), opcache_is_script_cached($file), $file, opcache_get_configuration()));
+
+			if (!is_file($file)) {
 				if (!is_dir(DIR_CACHE . 'buslik/' . $result['path'])) {
 					mkdir(DIR_CACHE . 'buslik/' . $result['path'], 0755, true);
 				}
@@ -227,9 +254,21 @@ class Buslik {
 
 				fclose($handle);
 
-				if (CACHE_COUNT > 1 && !is_file(DIR_CACHE . 'buslik/' . $result['path'] . '/' . CACHE_PREFIX . '.' . $result['key'] . '.cc' . CACHE_COUNT . '.' . $result['expire'])) {
+				touch($file, $result['expire']);
+
+				/* if ($this->active && ini_get('opcache.enable_cli')) {
+					opcache_compile_file($file);
+				} */
+
+				if (CACHE_COUNT > 1 && !is_file(DIR_CACHE . 'buslik/' . $result['path'] . '/' . CACHE_PREFIX . '.' . $result['key'] . '.cc' . CACHE_COUNT . '.' . '.php')) {
 					for ($i = 2; $i < CACHE_COUNT + 1; ++$i) {
-						file_put_contents(DIR_CACHE . 'buslik/' . $result['path'] . '/' . CACHE_PREFIX . '.' . $result['key'] . '.cc' . $i . '.' . $result['expire'], $result['value']);
+						file_put_contents(DIR_CACHE . 'buslik/' . $result['path'] . '/' . CACHE_PREFIX . '.' . $result['key'] . '.cc' . $i . '.' . '.php', $result['value']);
+
+						touch(DIR_CACHE . 'buslik/' . $result['path'] . '/' . CACHE_PREFIX . '.' . $result['key'] . '.cc' . $i . '.' . '.php', time(), $result['expire']);
+
+						/* if ($this->active && ini_get('opcache.enable_cli')) {
+							opcache_compile_file(DIR_CACHE . 'buslik/' . $result['path'] . '/' . CACHE_PREFIX . '.' . $result['key'] . '.cc' . $i . '.' . '.php');
+						} */
 					}
 				}
 			}
