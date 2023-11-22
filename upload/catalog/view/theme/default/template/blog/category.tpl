@@ -8,10 +8,13 @@
   <div class="row"><?php echo $column_left; ?>
     <?php if ($column_left && $column_right) { ?>
     <?php $class = 'col-sm-6'; ?>
+    <?php $class_article = 'product-layout product-grid col-lg-6 col-md-6 col-sm-6 col-xs-12'; ?>
     <?php } elseif ($column_left || $column_right) { ?>
     <?php $class = 'col-sm-9'; ?>
+    <?php $class_article = 'product-layout product-grid col-lg-4 col-md-4 col-sm-6 col-xs-12'; ?>
     <?php } else { ?>
     <?php $class = 'col-sm-12'; ?>
+    <?php $class_article = 'product-layout product-grid col-lg-3 col-md-4 col-sm-6 col-xs-12'; ?>
     <?php } ?>
     <div id="content" class="<?php echo $class; ?>"><?php echo $content_top; ?>
       <h1><?php echo $heading_title; ?></h1>
@@ -67,7 +70,7 @@
       </div>
       <div class="row">
         <?php foreach ($articles as $article) { ?>
-        <div class="product-layout product-list col-xs-12">
+        <div class="<?php echo $class_article; ?>">
           <div class="product-thumb transition">
             <div class="image"><a href="<?php echo $article['href']; ?>"><img src="<?php echo $article['thumb']; ?>" alt="<?php echo $article['name']; ?>" title="<?php echo $article['name']; ?>" class="img-responsive" /></a></div>
             <div class="caption">

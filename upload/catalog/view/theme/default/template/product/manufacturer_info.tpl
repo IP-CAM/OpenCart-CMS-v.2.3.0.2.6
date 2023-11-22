@@ -8,10 +8,13 @@
   <div class="row"><?php echo $column_left; ?>
     <?php if ($column_left && $column_right) { ?>
     <?php $class = 'col-sm-6'; ?>
+    <?php $class_product = 'product-layout product-grid col-lg-6 col-md-6 col-sm-6 col-xs-12'; ?>
     <?php } elseif ($column_left || $column_right) { ?>
     <?php $class = 'col-sm-9'; ?>
+    <?php $class_product = 'product-layout product-grid col-lg-4 col-md-4 col-sm-6 col-xs-12'; ?>
     <?php } else { ?>
     <?php $class = 'col-sm-12'; ?>
+    <?php $class_product = 'product-layout product-grid col-lg-3 col-md-4 col-sm-6 col-xs-12'; ?>
     <?php } ?>
     <div id="content" class="<?php echo $class; ?>"><?php echo $content_top; ?>
       <h1><?php echo $heading_title; ?></h1>
@@ -70,7 +73,7 @@
       </div>
       <div class="row">
         <?php foreach ($products as $product) { ?>
-        <div class="product-layout product-grid col-lg-4 col-md-4 col-sm-6 col-xs-12">
+        <div class="<?php echo $class_product; ?>">
           <div class="product-thumb">
             <div class="image"><?php echo $product['sticker']; ?><a href="<?php echo $product['href']; ?>"><img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" title="<?php echo $product['name']; ?>" class="img-responsive" /></a></div>
             <div class="caption">
