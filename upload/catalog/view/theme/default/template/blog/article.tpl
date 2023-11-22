@@ -8,13 +8,13 @@
   <div class="row"><?php echo $column_left; ?>
     <?php if ($column_left && $column_right) { ?>
     <?php $class = 'col-sm-6'; ?>
-    <?php $class_product = 'col-lg-6 col-md-6 col-sm-12 col-xs-12'; ?>
+    <?php $class_article = 'col-lg-6 col-md-6 col-sm-12 col-xs-12'; ?>
     <?php } elseif ($column_left || $column_right) { ?>
     <?php $class = 'col-sm-9'; ?>
-    <?php $class_product = 'col-lg-4 col-md-4 col-sm-6 col-xs-12'; ?>
+    <?php $class_article = 'col-lg-4 col-md-4 col-sm-6 col-xs-12'; ?>
     <?php } else { ?>
     <?php $class = 'col-sm-12'; ?>
-    <?php $class_product = 'col-lg-3 col-md-3 col-sm-6 col-xs-12'; ?>
+    <?php $class_article = 'col-lg-3 col-md-3 col-sm-6 col-xs-12'; ?>
     <?php } ?>
     <div id="content" class="<?php echo $class; ?> product-info"><?php echo $content_top; ?>
       <div class="row">
@@ -62,7 +62,7 @@
       <div class="row module">
         <?php $i = 0; ?>
         <?php foreach ($products as $product) { ?>
-        <div class="<?php echo $class_product; ?>">
+        <div class="<?php echo $class_article; ?>">
           <div class="product-thumb transition">
             <div class="image"><?php echo $product['sticker']; ?><a href="<?php echo $product['href']; ?>"><img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" title="<?php echo $product['name']; ?>" class="img-responsive" /></a></div>
             <div class="caption" style="min-height: 90px;">
@@ -115,7 +115,7 @@
       <div class="row">
         <?php $i = 0; ?>
         <?php foreach ($articles as $article) { ?>
-        <div class="<?php echo $class_product; ?>">
+        <div class="<?php echo $class_article; ?>">
           <div class="product-thumb transition">
             <div class="image"><a href="<?php echo $article['href']; ?>"><img src="<?php echo $article['thumb']; ?>" alt="<?php echo $article['name']; ?>" title="<?php echo $article['name']; ?>" class="img-responsive" /></a></div>
             <div class="caption" style="min-height: 90px;">
