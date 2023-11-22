@@ -21,7 +21,7 @@
 <link href="catalog/view/javascript/bootstrap/css/bootstrap.min.css" type="text/css" rel="stylesheet" media="screen" />
 <script src="catalog/view/javascript/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 <link href="catalog/view/javascript/font-awesome/4.7.0/css/all.min.css" type="text/css" rel="stylesheet" />
-<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,300,700&display=swap" type="text/css" rel="stylesheet" />
+<link href="catalog/view/theme/default/stylesheet/fonts/opensans.css" type="text/css" rel="stylesheet" />
 <link href="catalog/view/theme/default/stylesheet/stylesheet.css" type="text/css" rel="stylesheet" />
 <?php foreach ($styles as $style) { ?>
 <link href="<?php echo $style['href']; ?>" type="text/css" rel="<?php echo $style['rel']; ?>" media="<?php echo $style['media']; ?>" />
@@ -42,7 +42,7 @@
   <div class="container">
     <?php echo $currency; ?>
     <?php echo $language; ?>
-	<?php echo $menu; ?>
+    <?php echo $menu; ?>
     <div id="top-links" class="nav pull-right">
       <ul class="list-inline">
         <li><a href="<?php echo $contact; ?>"><i class="fa fa-phone"></i></a> <span class="hidden-xs hidden-sm hidden-md"><?php echo $telephone; ?></span></li>
