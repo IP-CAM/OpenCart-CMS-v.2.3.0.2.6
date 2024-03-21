@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2022.
+// *	@copyright	OPENCART.PRO 2011 - 2024.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -123,8 +123,8 @@ class ControllerCatalogInformation extends Controller {
 		$this->load->model('catalog/information');
 
 		if (isset($this->request->post['selected']) && $this->validateProStatus()) {
-			foreach ($this->request->post['selected'] as $article_id) {
-				$this->model_catalog_information->editInformationStatus($article_id, 1);
+			foreach ($this->request->post['selected'] as $information_id) {
+				$this->model_catalog_information->editInformationStatus($information_id, 1);
 			}
 
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -157,8 +157,8 @@ class ControllerCatalogInformation extends Controller {
 		$this->load->model('catalog/information');
 
 		if (isset($this->request->post['selected']) && $this->validateProStatus()) {
-			foreach ($this->request->post['selected'] as $article_id) {
-				$this->model_catalog_information->editInformationStatus($article_id, 0);
+			foreach ($this->request->post['selected'] as $information_id) {
+				$this->model_catalog_information->editInformationStatus($information_id, 0);
 			}
 
 			$this->session->data['success'] = $this->language->get('text_success');
