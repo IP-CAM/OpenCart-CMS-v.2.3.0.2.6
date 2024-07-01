@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2021.
+// *	@copyright	OPENCART.PRO 2011 - 2024.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -22,7 +22,7 @@ class ControllerStartupSetting extends Controller {
 		}
 
 		if (!$query->num_rows) {
-			$this->config->set('config_url', HTTP_SERVER);
+			$this->config->set('config_url', ($this->request->server['HTTPS'] ? HTTPS_SERVER : HTTP_SERVER));
 			$this->config->set('config_ssl', HTTPS_SERVER);
 		}
 
