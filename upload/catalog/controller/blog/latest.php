@@ -1,10 +1,10 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2021.
+// *	@copyright	OPENCART.PRO 2011 - 2024.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
-class ControllerBlogLatest extends Controller { 	
+class ControllerBlogLatest extends Controller {
 	public function index() {
 		$this->load->language('blog/latest');
 
@@ -77,7 +77,7 @@ class ControllerBlogLatest extends Controller {
 
 		$data['text_refine'] = $this->language->get('text_refine');
 		$data['text_views'] = $this->language->get('text_views');
-		$data['text_empty'] = $this->language->get('text_empty');			
+		$data['text_empty'] = $this->language->get('text_empty');
 		$data['text_display'] = $this->language->get('text_display');
 		$data['text_sort'] = $this->language->get('text_sort');
 		$data['text_limit'] = $this->language->get('text_limit');
@@ -150,7 +150,7 @@ class ControllerBlogLatest extends Controller {
 			if ($result['image']) {
 				$image = $this->model_tool_image->resize($result['image'], $this->config->get('configblog_image_article_width'), $this->config->get('configblog_image_article_height'));
 			} else {
-				$image = false;
+				$image = $this->model_tool_image->resize('placeholder.png', $this->config->get('configblog_image_article_width'), $this->config->get('configblog_image_article_height'));
 			}
 
 			if ($configblog_review_status) {
