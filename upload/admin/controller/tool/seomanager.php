@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2023.
+// *	@copyright	OPENCART.PRO 2011 - 2024.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -899,6 +899,12 @@ class ControllerToolSeoManager extends Controller {
 
 			if (!$code) {
 				$this->model_extension_event->addEvent('Seomanager', 'catalog/view/*/before', 'tool/seomanager/event', 1, 1001);
+			}
+
+			$code = $this->model_extension_event->getEvent('Seomanager', 'catalog/controller/common/header/before', 'tool/seomanager/event');
+
+			if (!$code) {
+				$this->model_extension_event->addEvent('Seomanager', 'catalog/controller/common/header/before', 'tool/seomanager/event', 1, 1001);
 			}
 
 			$this->model_setting_setting->deleteSetting('seomanager');
