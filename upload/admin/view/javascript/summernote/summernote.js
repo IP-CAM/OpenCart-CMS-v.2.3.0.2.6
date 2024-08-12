@@ -4274,6 +4274,7 @@
 
       $.each(anchors, function (idx, anchor) {
         $(anchor).attr('href', linkUrl);
+		$(anchor).attr('rel', 'noreferrer noopener nofollow');
         if (isNewWindow) {
           $(anchor).attr('target', '_blank');
         } else {
