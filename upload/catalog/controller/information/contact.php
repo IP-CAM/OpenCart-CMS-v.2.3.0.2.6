@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2022.
+// *	@copyright	OPENCART.PRO 2011 - 2024.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -11,6 +11,7 @@ class ControllerInformationContact extends Controller {
 		$this->load->language('information/contact');
 
 		$this->document->setTitle($this->language->get('heading_title'));
+		$this->document->addLink($this->url->link('information/contact', '', true), 'canonical');
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 			$mail = new Mail();

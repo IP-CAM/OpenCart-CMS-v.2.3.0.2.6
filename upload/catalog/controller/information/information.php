@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2021.
+// *	@copyright	OPENCART.PRO 2011 - 2024.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -38,6 +38,7 @@ class ControllerInformationInformation extends Controller {
 
 			$this->document->setDescription($information_info['meta_description']);
 			$this->document->setKeywords($information_info['meta_keyword']);
+			$this->document->addLink($this->url->link('information/information', 'information_id=' . $information_id, true), 'canonical');
 
 			if ($information_info['meta_h1']) {
 				$data['heading_title'] = $information_info['meta_h1'];

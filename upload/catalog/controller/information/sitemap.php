@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2021.
+// *	@copyright	OPENCART.PRO 2011 - 2024.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -9,6 +9,7 @@ class ControllerInformationSitemap extends Controller {
 		$this->load->language('information/sitemap');
 
 		$this->document->setTitle($this->language->get('heading_title'));
+		$this->document->addLink($this->url->link('information/sitemap', '', true), 'canonical');
 
 		$data['breadcrumbs'] = array();
 
