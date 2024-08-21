@@ -1,6 +1,6 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2017.
-// *	@forum	http://forum.opencart.pro
+// *	@copyright	OPENCART.PRO 2011 - 2024.
+// *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
@@ -24,7 +24,7 @@ class ControllerExtensionFeedBlogSitemap extends Controller {
 					$output .= '<image:image>';
 					$output .= '<image:loc>' . $this->model_tool_image->resize($article['image'], $this->config->get($this->config->get('config_theme') . '_image_popup_width'), $this->config->get($this->config->get('config_theme') . '_image_popup_height')) . '</image:loc>';
 					$output .= '<image:caption>' . $article['name'] . '</image:caption>';
-					$output .= '<image:title>' . $article['name'] . '</image:title>';
+					$output .= '<image:title>' . ($article['title'] ? $article['title'] : $article['name']) . '</image:title>';
 					$output .= '</image:image>';
 					$output .= '</url>';
 				}
@@ -56,6 +56,7 @@ class ControllerExtensionFeedBlogSitemap extends Controller {
 			$output .= '<url>';
 			$output .= '<loc>' . $this->url->link('blog/category', 'blog_category_id=' . $new_path) . '</loc>';
 			$output .= '<changefreq>weekly</changefreq>';
+			$output .= '<lastmod>' . date('Y-m-d\TH:i:sP', strtotime($result['date_modified'])) . '</lastmod>';
 			$output .= '<priority>0.7</priority>';
 			$output .= '</url>';
 

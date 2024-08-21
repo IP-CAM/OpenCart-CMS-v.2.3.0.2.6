@@ -1,6 +1,6 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2017.
-// *	@forum	http://forum.opencart.pro
+// *	@copyright	OPENCART.PRO 2011 - 2024.
+// *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
@@ -25,7 +25,7 @@ class ControllerExtensionFeedGoogleSitemap extends Controller {
 					$output .= '<image:image>';
 					$output .= '<image:loc>' . $this->model_tool_image->resize($product['image'], $this->config->get($this->config->get('config_theme') . '_image_popup_width'), $this->config->get($this->config->get('config_theme') . '_image_popup_height')) . '</image:loc>';
 					$output .= '<image:caption>' . $product['name'] . '</image:caption>';
-					$output .= '<image:title>' . $product['name'] . '</image:title>';
+					$output .= '<image:title>' . ($product['title'] ? $product['title'] : $product['name']) . '</image:title>';
 					$output .= '</image:image>';
 					$output .= '</url>';
 				}
@@ -43,9 +43,9 @@ class ControllerExtensionFeedGoogleSitemap extends Controller {
 				$output .= '<url>';
 				$output .= '<loc>' . $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $manufacturer['manufacturer_id']) . '</loc>';
 				$output .= '<changefreq>weekly</changefreq>';
+				$output .= '<lastmod>' . date('Y-m-d\TH:i:sP', strtotime($manufacturer['date_modified'])) . '</lastmod>';
 				$output .= '<priority>0.7</priority>';
 				$output .= '</url>';
-
 			}
 
 			$this->load->model('catalog/information');
@@ -56,6 +56,7 @@ class ControllerExtensionFeedGoogleSitemap extends Controller {
 				$output .= '<url>';
 				$output .= '<loc>' . $this->url->link('information/information', 'information_id=' . $information['information_id']) . '</loc>';
 				$output .= '<changefreq>weekly</changefreq>';
+				$output .= '<lastmod>' . date('Y-m-d\TH:i:sP', strtotime($information['date_modified'])) . '</lastmod>';
 				$output .= '<priority>0.5</priority>';
 				$output .= '</url>';
 			}
@@ -82,6 +83,7 @@ class ControllerExtensionFeedGoogleSitemap extends Controller {
 			$output .= '<url>';
 			$output .= '<loc>' . $this->url->link('product/category', 'path=' . $new_path) . '</loc>';
 			$output .= '<changefreq>weekly</changefreq>';
+			$output .= '<lastmod>' . date('Y-m-d\TH:i:sP', strtotime($result['date_modified'])) . '</lastmod>';
 			$output .= '<priority>0.7</priority>';
 			$output .= '</url>';
 
