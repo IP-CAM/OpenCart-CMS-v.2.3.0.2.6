@@ -24,7 +24,7 @@ class ControllerExtensionFeedBlogSitemap extends Controller {
 					$output .= '<image:image>';
 					$output .= '<image:loc>' . $this->model_tool_image->resize($article['image'], $this->config->get($this->config->get('config_theme') . '_image_popup_width'), $this->config->get($this->config->get('config_theme') . '_image_popup_height')) . '</image:loc>';
 					$output .= '<image:caption>' . $article['name'] . '</image:caption>';
-					$output .= '<image:title>' . ($article['title'] ? $article['title'] : $article['name']) . '</image:title>';
+					$output .= '<image:title>' . ($article['meta_title'] ? $article['meta_title'] : $article['name']) . '</image:title>';
 					$output .= '</image:image>';
 					$output .= '</url>';
 				}
