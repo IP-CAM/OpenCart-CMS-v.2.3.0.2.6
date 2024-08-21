@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2022.
+// *	@copyright	OPENCART.PRO 2011 - 2024.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -1166,7 +1166,7 @@ class ControllerSettingSetting extends Controller {
 		} elseif ($this->config->has('config_seo_url_break_routes')) {
 			$data['config_seo_url_break_routes'] = $this->config->get('config_seo_url_break_routes');
 		} else {
-			$data['config_seo_url_break_routes'] = "error/not_found\r\nextension/feed/google_sitemap\r\nextension/feed/google_base\r\nextension/feed/sitemap_pro\r\nextension/feed/yandex_feed";
+			$data['config_seo_url_break_routes'] = "error/not_found\r\nextension/feed/blog_sitemap\r\nextension/feed/blog_sitemap_yandex\r\nextension/feed/google_base\r\nextension/feed/google_sitemap\r\nextension/feed/sitemap_pro\r\nextension/feed/yandex_feed\r\nextension/feed/yandex_market\r\nextension/feed/yandex_sitemap";
 		}
 
 		if (isset($this->request->post['config_seo_url_get_params_status'])) {
