@@ -4,16 +4,15 @@
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
-//https://stackoverflow.com/questions/74878889/php-warning-deprecated-creation-of-dynamic-property-is-deprecated
-#[\AllowDynamicProperties]
 class Request {
 	public $get = array();
 	public $post = array();
+	public $request = array();
 	public $cookie = array();
 	public $files = array();
 	public $server = array();
 
-	public function __construct() {
+	public function __construct($setting = array()) {
 		$this->get = $this->clean($_GET);
 		$this->post = $this->clean($_POST);
 		$this->request = $this->clean($_REQUEST);
