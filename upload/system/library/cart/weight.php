@@ -5,9 +5,9 @@
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
 namespace Cart;
-//https://stackoverflow.com/questions/74878889/php-warning-deprecated-creation-of-dynamic-property-is-deprecated
-#[\AllowDynamicProperties]
 class Weight {
+	private $db;
+	private $config;
 	private $weights = array();
 
 	public function __construct($registry) {

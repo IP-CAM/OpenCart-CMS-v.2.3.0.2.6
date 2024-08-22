@@ -5,14 +5,15 @@
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
 namespace Cart;
-//https://stackoverflow.com/questions/74878889/php-warning-deprecated-creation-of-dynamic-property-is-deprecated
-#[\AllowDynamicProperties]
 final class Tax {
+	private $db;
+	private $config;
+	private $session;
 	private $tax_rates = array();
 
 	public function __construct($registry) {
-		$this->config = $registry->get('config');
 		$this->db = $registry->get('db');
+		$this->config = $registry->get('config');
 		$this->session = $registry->get('session');
 	}
 

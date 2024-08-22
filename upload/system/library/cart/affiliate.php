@@ -5,9 +5,11 @@
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
 namespace Cart;
-//https://stackoverflow.com/questions/74878889/php-warning-deprecated-creation-of-dynamic-property-is-deprecated
-#[\AllowDynamicProperties]
 class Affiliate {
+	private $db;
+	private $config;
+	private $request;
+	private $session;
 	private $affiliate_id;
 	private $firstname;
 	private $lastname;
@@ -17,8 +19,8 @@ class Affiliate {
 	private $code;
 
 	public function __construct($registry) {
-		$this->config = $registry->get('config');
 		$this->db = $registry->get('db');
+		$this->config = $registry->get('config');
 		$this->request = $registry->get('request');
 		$this->session = $registry->get('session');
 

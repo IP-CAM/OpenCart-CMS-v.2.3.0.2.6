@@ -5,16 +5,14 @@
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
 namespace Cart;
-//https://stackoverflow.com/questions/74878889/php-warning-deprecated-creation-of-dynamic-property-is-deprecated
-#[\AllowDynamicProperties]
 class Cart {
 	private $data = array();
 
 	public function __construct($registry) {
+		$this->db = $registry->get('db');
 		$this->config = $registry->get('config');
 		$this->customer = $registry->get('customer');
 		$this->session = $registry->get('session');
-		$this->db = $registry->get('db');
 		$this->tax = $registry->get('tax');
 		$this->weight = $registry->get('weight');
 
