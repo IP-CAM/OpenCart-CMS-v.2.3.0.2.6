@@ -12,7 +12,7 @@ class Request {
 	public $files = array();
 	public $server = array();
 
-	public function __construct($setting = array()) {
+	public function __construct() {
 		$this->get = $this->clean($_GET);
 		$this->post = $this->clean($_POST);
 		$this->request = $this->clean($_REQUEST);
