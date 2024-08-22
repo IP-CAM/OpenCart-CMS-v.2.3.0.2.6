@@ -14,6 +14,9 @@ CREATE TABLE IF NOT EXISTS `oc_session` (
 */
 namespace Session;
 final class DB {
+	private $db;
+	private $config;
+
 	public function __construct($registry) {
 		$this->db = $registry->get('db');
 		$this->config = $registry->get('config');

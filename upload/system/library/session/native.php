@@ -5,9 +5,9 @@
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
 namespace Session;
-//https://stackoverflow.com/questions/74878889/php-warning-deprecated-creation-of-dynamic-property-is-deprecated
-#[\AllowDynamicProperties]
 class Native extends \SessionHandler {
+	private $config;
+
 	public function __construct($registry) {
 		$this->config = $registry->get('config');
 	}
