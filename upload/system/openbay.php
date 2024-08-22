@@ -4,10 +4,9 @@
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
-//https://stackoverflow.com/questions/74878889/php-warning-deprecated-creation-of-dynamic-property-is-deprecated
-#[\AllowDynamicProperties]
 final class Openbay {
 	private $registry;
+	private $logger;
 	private $installed_modules = array();
 	public $installed_markets = array();
 
