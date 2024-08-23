@@ -6,6 +6,12 @@
 
 namespace Cart;
 class Cart {
+	private $db;
+	private $config;
+	private $customer;
+	private $session;
+	private $tax;
+	private $weight;
 	private $data = array();
 
 	public function __construct($registry) {
