@@ -16,7 +16,11 @@ class ControllerExtensionFeedBlogSitemap extends Controller {
 			$articles = $this->model_blog_article->getArticles();
 
 			foreach ($articles as $article) {
-				if ($article['image']) {
+				if (!$article['noindex']) {
+					continue;
+				}
+
+				if ($article['image'] && $article['noindex']) {
 					$output .= '<url>';
 					$output .= '<loc>' . $this->url->link('blog/article', 'article_id=' . $article['article_id']) . '</loc>';
 					$output .= '<changefreq>weekly</changefreq>';
@@ -47,6 +51,10 @@ class ControllerExtensionFeedBlogSitemap extends Controller {
 		$results = $this->model_blog_category->getCategories($parent_id);
 
 		foreach ($results as $result) {
+			if (!$result['noindex']) {
+				continue;
+			}
+
 			if (!$current_path) {
 				$new_path = $result['blog_category_id'];
 			} else {

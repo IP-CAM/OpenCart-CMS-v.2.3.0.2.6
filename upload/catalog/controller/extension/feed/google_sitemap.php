@@ -16,6 +16,10 @@ class ControllerExtensionFeedGoogleSitemap extends Controller {
 			$products = $this->model_catalog_product->getProducts();
 
 			foreach ($products as $product) {
+				if (!$product['noindex']) {
+					continue;
+				}
+
 				if ($product['image']) {
 					$output .= '<url>';
 					$output .= '<loc>' . $this->url->link('product/product', 'product_id=' . $product['product_id']) . '</loc>';
@@ -40,6 +44,10 @@ class ControllerExtensionFeedGoogleSitemap extends Controller {
 			$manufacturers = $this->model_catalog_manufacturer->getManufacturers();
 
 			foreach ($manufacturers as $manufacturer) {
+				if (!$manufacturer['noindex']) {
+					continue;
+				}
+
 				$output .= '<url>';
 				$output .= '<loc>' . $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $manufacturer['manufacturer_id']) . '</loc>';
 				$output .= '<changefreq>weekly</changefreq>';
@@ -53,6 +61,10 @@ class ControllerExtensionFeedGoogleSitemap extends Controller {
 			$informations = $this->model_catalog_information->getInformations();
 
 			foreach ($informations as $information) {
+				if (!$information['noindex']) {
+					continue;
+				}
+
 				$output .= '<url>';
 				$output .= '<loc>' . $this->url->link('information/information', 'information_id=' . $information['information_id']) . '</loc>';
 				$output .= '<changefreq>weekly</changefreq>';
@@ -74,6 +86,10 @@ class ControllerExtensionFeedGoogleSitemap extends Controller {
 		$results = $this->model_catalog_category->getCategories($parent_id);
 
 		foreach ($results as $result) {
+			if (!$result['noindex']) {
+				continue;
+			}
+
 			if (!$current_path) {
 				$new_path = $result['category_id'];
 			} else {
