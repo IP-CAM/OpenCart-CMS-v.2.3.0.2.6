@@ -20,7 +20,7 @@ class ControllerExtensionFeedBlogSitemap extends Controller {
 					continue;
 				}
 
-				if ($article['image'] && $article['noindex']) {
+				if ($article['image']) {
 					$output .= '<url>';
 					$output .= '<loc>' . $this->url->link('blog/article', 'article_id=' . $article['article_id']) . '</loc>';
 					$output .= '<changefreq>weekly</changefreq>';
