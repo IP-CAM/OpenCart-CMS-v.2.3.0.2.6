@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2023.
+// *	@copyright	OPENCART.PRO 2011 - 2024.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -7,8 +7,10 @@
 class Session {
 	protected $adaptor;
 	protected $session_id = '';
-	private $cookie_status = true;
 	private $engine = 'native';
+	private $config;
+	private $request;
+	private $cookie_status = true;
 	public $data = array();
 
 	public function __construct($engine = 'native', $registry = '') {
@@ -53,7 +55,7 @@ class Session {
 						return false;
 					}
 				} else {
-					if (is_file($cookie_status_path)) {
+					if (is_readable($cookie_status_path)) {
 						@unlink($cookie_status_path);
 					}
 				}
@@ -285,10 +287,10 @@ class Session {
 	}
 
 	public function createId() {
-		/* if ($this->engine == 'native' && version_compare(phpversion(), '7.6.0', '>=')) {
+		if ($this->engine == 'native' && version_compare(phpversion(), '7.6.0', '>=')) {
 			//https://bugs.php.net/bug.php?id=79413
 			return session_create_id();
-		} else */if ($this->engine == 'native' && version_compare(phpversion(), '5.5.4', '>=')) {
+		} elseif ($this->engine == 'native' && version_compare(phpversion(), '5.5.4', '>=')) {
 			//return $this->adaptor->create_sid();
 			return session_id();
 		} elseif (function_exists('random_bytes')) {
