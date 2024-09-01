@@ -10,6 +10,7 @@ class User {
 	private $request;
 	private $session;
 	private $user_id;
+	private $user_group_id;
 	private $username;
 	private $permission = array();
 
