@@ -68,7 +68,6 @@ class ControllerExtensionFeedGoogleSitemap extends Controller {
 				$output .= '<url>';
 				$output .= '<loc>' . $this->url->link('information/information', 'information_id=' . $information['information_id']) . '</loc>';
 				$output .= '<changefreq>weekly</changefreq>';
-				$output .= '<lastmod>' . date('Y-m-d\TH:i:sP', strtotime($information['date_modified'])) . '</lastmod>';
 				$output .= '<priority>0.5</priority>';
 				$output .= '</url>';
 			}
