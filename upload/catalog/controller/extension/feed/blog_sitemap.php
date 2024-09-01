@@ -24,6 +24,7 @@ class ControllerExtensionFeedBlogSitemap extends Controller {
 					$output .= '<url>';
 					$output .= '<loc>' . $this->url->link('blog/article', 'article_id=' . $article['article_id']) . '</loc>';
 					$output .= '<changefreq>weekly</changefreq>';
+					$output .= '<lastmod>' . date('Y-m-d\TH:i:sP', strtotime($article['date_modified'])) . '</lastmod>';
 					$output .= '<priority>1.0</priority>';
 					$output .= '<image:image>';
 					$output .= '<image:loc>' . $this->model_tool_image->resize($article['image'], $this->config->get($this->config->get('config_theme') . '_image_popup_width'), $this->config->get($this->config->get('config_theme') . '_image_popup_height')) . '</image:loc>';
