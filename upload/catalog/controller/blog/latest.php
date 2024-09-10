@@ -59,20 +59,20 @@ class ControllerBlogLatest extends Controller {
 			$limit = (int)$this->config->get('configblog_article_limit');
 		}
 
-		$configblog_html_h1 = $this->config->get('configblog_html_h1');
-
-		if (!empty($configblog_html_h1)) {
-			$data['heading_title'] = $configblog_html_h1;
-		} else {
-			$data['heading_title'] = $this->language->get('heading_title');
-		}
-
 		$configblog_name = $this->config->get('configblog_name');
 
 		if (!empty($configblog_name)) {
 			$name = $configblog_name;
 		} else {
 			$name = $this->language->get('heading_title');
+		}
+
+		$configblog_html_h1 = $this->config->get('configblog_html_h1');
+
+		if (!empty($configblog_html_h1)) {
+			$data['heading_title'] = $configblog_html_h1;
+		} else {
+			$data['heading_title'] = $name;
 		}
 
 		$data['text_refine'] = $this->language->get('text_refine');
