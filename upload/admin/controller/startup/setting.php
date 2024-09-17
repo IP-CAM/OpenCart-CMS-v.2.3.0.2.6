@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2021.
+// *	@copyright	OPENCART.PRO 2011 - 2024.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -67,6 +67,11 @@ class ControllerStartupSetting extends Controller {
 
 			// Sync PHP and DB time zones.
 			$this->db->query("SET time_zone = '" . $this->db->escape(date('P')) . "'");
+		}
+
+		// Response output compression level
+		if ($this->config->get('config_compression')) {
+			$this->response->setCompression((int)$this->config->get('config_compression'));
 		}
 	}
 }
