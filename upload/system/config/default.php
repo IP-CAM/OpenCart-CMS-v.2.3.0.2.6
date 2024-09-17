@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2022.
+// *	@copyright	OPENCART.PRO 2011 - 2024.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -76,7 +76,16 @@ $_['error_log']               = true;
 $_['error_filename']          = 'error.log';
 
 // Reponse
-$_['response_header']         = array('Content-Type: text/html; charset=utf-8');
+$_['response_header']         = array(
+	'Content-Type: text/html; charset=utf-8',
+	/* 'Access-Control-Allow-Origin: *',
+	'Access-Control-Allow-Credentials: true',
+	'Access-Control-Max-Age: 1000',
+	'Access-Control-Allow-Headers: X-Requested-With, Content-Type, Origin, Cache-Control, Pragma, Authorization, Accept, Accept-Encoding',
+	'Access-Control-Allow-Methods: PUT, POST, GET, OPTIONS, DELETE', */
+	'Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0',
+	'Pragma: no-cache'
+);
 $_['response_compression']    = 0;
 
 // Autoload Configs
