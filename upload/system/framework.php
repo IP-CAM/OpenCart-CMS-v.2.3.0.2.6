@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2023.
+// *	@copyright	OPENCART.PRO 2011 - 2024.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -42,8 +42,10 @@ if ($config->get('pre_config') && isset($_GET['route'])) {
 }
 
 // Logging
-$log = new Log($config->get('error_filename'));
-$registry->set('log', $log);
+if ($config->get('error_log')) {
+	$log = new Log($config->get('error_filename'));
+	$registry->set('log', $log);
+}
 
 // Error Handler Fix
 set_error_handler(function($code, $message, $file, $line) use($log, $config) {
@@ -103,8 +105,13 @@ $registry->set('request', new Request());
 
 // Response
 $response = new Response();
-$response->addHeader('Content-Type: text/html; charset=utf-8');
 $registry->set('response', $response);
+
+foreach ($config->get('response_header') as $header) {
+	$response->addHeader($header);
+}
+
+$response->setCompression((int)$config->get('response_compression'));
 
 // Database
 if ($config->get('db_autostart')) {
@@ -176,5 +183,4 @@ if ($config->has('action_pre_action')) {
 $controller->dispatch(new Action($config->get('action_router')), new Action($config->get('action_error')));
 
 // Output
-$response->setCompression($config->get('config_compression'));
 $response->output();
