@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2022.
+// *	@copyright	OPENCART.PRO 2011 - 2024.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -45,7 +45,7 @@ class ModelBlogArticle extends Model {
 		if ($cache) {
 			$cache = 'article.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . (int)$this->config->get('config_customer_group_id') . '.' . md5(http_build_query($data));
 
-			$article_data = $this->cache->get($cache);
+			$article_data = (array)$this->cache->get($cache);
 		}
 
 		if (!$article_data) {
@@ -179,7 +179,7 @@ class ModelBlogArticle extends Model {
 		if ($cache) {
 			$cache = 'article.latest.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . (int)$this->config->get('config_customer_group_id') . '.' . (int)$limit;
 
-			$article_data = $this->cache->get($cache);
+			$article_data = (array)$this->cache->get($cache);
 		}
 
 		if (!$article_data) {
@@ -199,11 +199,24 @@ class ModelBlogArticle extends Model {
 
 	public function getPopularArticles($limit) {
 		$article_data = array();
+		$cache = $this->config->get('configblog_cache_status');
 
-		$query = $this->db->query("SELECT p.article_id FROM " . DB_PREFIX . "article p LEFT JOIN " . DB_PREFIX . "article_to_store p2s ON (p.article_id = p2s.article_id) WHERE p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' ORDER BY p.viewed DESC, p.date_added DESC LIMIT " . (int)$limit);
+		if ($cache) {
+			$cache = 'article.popular.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . (int)$this->config->get('config_customer_group_id') . '.' . (int)$limit;
 
-		foreach ($query->rows as $result) {
-			$article_data[$result['article_id']] = $this->getArticle($result['article_id']);
+			$article_data = (array)$this->cache->get($cache);
+		}
+
+		if (!$article_data) {
+			$query = $this->db->query("SELECT p.article_id FROM " . DB_PREFIX . "article p LEFT JOIN " . DB_PREFIX . "article_to_store p2s ON (p.article_id = p2s.article_id) WHERE p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' ORDER BY p.viewed DESC, p.date_added DESC LIMIT " . (int)$limit);
+
+			foreach ($query->rows as $result) {
+				$article_data[$result['article_id']] = $this->getArticle($result['article_id']);
+			}
+
+			if ($cache) {
+				$this->cache->set($cache, $article_data);
+			}
 		}
 
 		return $article_data;
