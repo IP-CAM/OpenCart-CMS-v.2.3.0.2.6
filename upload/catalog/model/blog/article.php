@@ -40,12 +40,17 @@ class ModelBlogArticle extends Model {
 
 	public function getArticles($data = array()) {
 		$article_data = array();
-		$cache = $this->config->get('configblog_cache_status');
 
-		if ($cache) {
-			$cache = 'article.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . (int)$this->config->get('config_customer_group_id') . '.' . md5(http_build_query($data));
+		$cache_status = $this->config->get('configblog_cache_status');
 
-			$article_data = (array)$this->cache->get($cache);
+		if ($cache_status) {
+			$cache_name = 'article.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . (int)$this->config->get('config_customer_group_id') . '.' . md5(http_build_query($data));
+
+			$cache_data = $this->cache->get($cache_name);
+
+			if ($cache_data) {
+				$article_data = $cache_data;
+			}
 		}
 
 		if (!$article_data) {
@@ -164,8 +169,8 @@ class ModelBlogArticle extends Model {
 				$article_data[$result['article_id']] = $this->getArticle($result['article_id']);
 			}
 
-			if ($cache) {
-				$this->cache->set($cache, $article_data);
+			if ($cache_status) {
+				$this->cache->set($cache_name, $article_data);
 			}
 		}
 
@@ -174,12 +179,17 @@ class ModelBlogArticle extends Model {
 
 	public function getLatestArticles($limit) {
 		$article_data = array();
-		$cache = $this->config->get('configblog_cache_status');
 
-		if ($cache) {
-			$cache = 'article.latest.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . (int)$this->config->get('config_customer_group_id') . '.' . (int)$limit;
+		$cache_status = $this->config->get('configblog_cache_status');
 
-			$article_data = (array)$this->cache->get($cache);
+		if ($cache_status) {
+			$cache_name = 'article.latest.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . (int)$this->config->get('config_customer_group_id') . '.' . (int)$limit;
+
+			$cache_data = $this->cache->get($cache_name);
+
+			if ($cache_data) {
+				$article_data = $cache_data;
+			}
 		}
 
 		if (!$article_data) {
@@ -189,8 +199,8 @@ class ModelBlogArticle extends Model {
 				$article_data[$result['article_id']] = $this->getArticle($result['article_id']);
 			}
 
-			if ($cache) {
-				$this->cache->set($cache, $article_data);
+			if ($cache_status) {
+				$this->cache->set($cache_name, $article_data);
 			}
 		}
 
@@ -199,12 +209,17 @@ class ModelBlogArticle extends Model {
 
 	public function getPopularArticles($limit) {
 		$article_data = array();
-		$cache = $this->config->get('configblog_cache_status');
 
-		if ($cache) {
-			$cache = 'article.popular.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . (int)$this->config->get('config_customer_group_id') . '.' . (int)$limit;
+		$cache_status = $this->config->get('configblog_cache_status');
 
-			$article_data = (array)$this->cache->get($cache);
+		if ($cache_status) {
+			$cache_name = 'article.popular.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . (int)$this->config->get('config_customer_group_id') . '.' . (int)$limit;
+
+			$cache_data = $this->cache->get($cache_name);
+
+			if ($cache_data) {
+				$article_data = $cache_data;
+			}
 		}
 
 		if (!$article_data) {
@@ -214,8 +229,8 @@ class ModelBlogArticle extends Model {
 				$article_data[$result['article_id']] = $this->getArticle($result['article_id']);
 			}
 
-			if ($cache) {
-				$this->cache->set($cache, $article_data);
+			if ($cache_status) {
+				$this->cache->set($cache_name, $article_data);
 			}
 		}
 
@@ -326,13 +341,17 @@ class ModelBlogArticle extends Model {
 
 	public function getTotalArticles($data = array()) {
 		$article_data = false;
-		//$cache = $this->config->get('configblog_cache_status');
-		$cache = false;
 
-		if ($cache) {
-			$cache = 'article.total.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . (int)$this->config->get('config_customer_group_id') . '.' . md5(http_build_query($data));
+		$cache_status = false; //$this->config->get('configblog_cache_status');
 
-			$article_data = $this->cache->get($cache);
+		if ($cache_status) {
+			$cache_name = 'article.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . (int)$this->config->get('config_customer_group_id') . '.' . md5(http_build_query($data));
+
+			$cache_data = $this->cache->get($cache_name);
+
+			if ($cache_data) {
+				$article_data = $cache_data;
+			}
 		}
 
 		if (!$article_data) {
@@ -410,8 +429,8 @@ class ModelBlogArticle extends Model {
 
 			$article_data = $query->row['total'];
 
-			if ($cache) {
-				$this->cache->set($cache, $article_data);
+			if ($cache_status) {
+				$this->cache->set($cache_name, $article_data);
 			}
 		}
 
