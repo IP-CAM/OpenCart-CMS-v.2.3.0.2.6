@@ -1,17 +1,10 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2020.
-// *	@forum		http://forum.opencart.pro
+// *	@copyright	OPENCART.PRO 2011 - 2024.
+// *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
 class ModelCatalogCms extends Model {
-	/* private $NOW;
-
-	public function __construct($registry) {
-		$NOW = date('Y-m-d H:i') . ':00';
-		parent::__construct($registry);
-	} */
-
 	public function getProductRelatedByCategory($data) {
 		$this->load->model('catalog/product');
 
@@ -103,22 +96,14 @@ class ModelCatalogCms extends Model {
 	public function getLatest($data = array()) {
 		$NOW = date('Y-m-d H:i') . ':00';
 
-		$this->load->model('catalog/product');
-
 		$product_data = array();
 
-		$sql = "SELECT * FROM (SELECT p.product_id, p.sort_order, p.model, pd.name, p.quantity, p.price, (SELECT price FROM " . DB_PREFIX . "product_discount pd2 WHERE pd2.product_id = p.product_id AND pd2.quantity = '1' AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < '" . $NOW . "') AND (pd2.date_end = '0000-00-00' OR pd2.date_end > '" . $NOW . "')) ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1) AS discount, (SELECT price FROM " . DB_PREFIX . "product_special ps WHERE ps.product_id = p.product_id  AND ((ps.date_start = '0000-00-00' OR ps.date_start < '" . $NOW . "') AND (ps.date_end = '0000-00-00' OR ps.date_end > '" . $NOW . "')) ORDER BY ps.priority ASC, ps.price ASC LIMIT 1) AS special,  (SELECT AVG(rating) AS total FROM " . DB_PREFIX . "review r1 WHERE r1.product_id = p.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE p.status = '1' AND p.date_available <= '" . $NOW . "' AND p2s.store_id = '" . (int)$this->config->get('config_store_id') .  "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY p.product_id ORDER BY p.date_added DESC, LCASE(pd.name) DESC";
-
-		$sql .= " LIMIT  0," . (int)$data['limit'];
-
-		$sql .= ") p ORDER BY ";
+		$sql = "SELECT p.product_id, p.sort_order, p.model, pd.name, p.quantity, p.price, (SELECT price FROM " . DB_PREFIX . "product_discount pd2 WHERE pd2.product_id = p.product_id AND pd2.quantity = '1' AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < '" . $NOW . "') AND (pd2.date_end = '0000-00-00' OR pd2.date_end > '" . $NOW . "')) ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1) AS discount, (SELECT price FROM " . DB_PREFIX . "product_special ps WHERE ps.product_id = p.product_id  AND ((ps.date_start = '0000-00-00' OR ps.date_start < '" . $NOW . "') AND (ps.date_end = '0000-00-00' OR ps.date_end > '" . $NOW . "')) ORDER BY ps.priority ASC, ps.price ASC LIMIT 1) AS special, (SELECT AVG(rating) AS total FROM " . DB_PREFIX . "review r1 WHERE r1.product_id = p.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE p.status = '1' AND p.date_available <= '" . $NOW . "' AND p2s.store_id = '" . (int)$this->config->get('config_store_id') .  "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY p.product_id ORDER BY";
 
 		$sort_data = array(
 			'pd.name',
-			'quantity',
 			'ps.price',
 			'rating',
-			'p.sort_order',
 			'p.model'
 		);
 
@@ -130,14 +115,14 @@ class ModelCatalogCms extends Model {
 			} else {
 				$sql .= " " . $data['sort'];
 			}
-		} else {
-			$sql .= " sort_order";
-		}
 
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
-			$sql .= " DESC, LCASE(name) DESC";
+			if (isset($data['order']) && ($data['order'] == 'DESC')) {
+				$sql .= " DESC";
+			} else {
+				$sql .= " ASC";
+			}
 		} else {
-			$sql .= " ASC, LCASE(name) ASC";
+			$sql .= " p.date_added DESC";
 		}
 
 		if (isset($data['start']) || isset($data['limit'])) {
@@ -154,8 +139,10 @@ class ModelCatalogCms extends Model {
 
 		$query = $this->db->query($sql);
 
+		$this->load->model('catalog/product');
+
 		foreach ($query->rows as $result) {
-			$product_data[$result['product_id']] = $this->model_catalog_product->getProduct($result['product_id']);
+			$product_data[] = $this->model_catalog_product->getProduct($result['product_id']);
 		}
 
 		return $product_data;
@@ -164,18 +151,12 @@ class ModelCatalogCms extends Model {
 	public function getMostViewed($data = array()) {
 		$NOW = date('Y-m-d H:i') . ':00';
 
-		$this->load->model('catalog/product');
+		$config_language_id = (int)$this->config->get('config_language_id');
+		$config_store_id = (int)$this->config->get('config_store_id');
+		$config_customer_group_id = (int)$this->config->get('config_customer_group_id');
+		$data['limit'] = (isset($data['limit']) ? (int)$data['limit'] : 20);
 
-		$language_id = (int)$this->config->get('config_language_id');
-		$store_id = (int)$this->config->get('config_store_id');
-		$customer_group_id = (int)$this->config->get('config_customer_group_id');
-		$product_data = false;
-		//$cache = $this->config->get('turbo_status');
-		$cache = false;
-
-		if ($cache) {
-			$product_data = $this->cache->get('product.mostviewed.' . $language_id . '.' . $store_id . '.' .$customer_group_id . '.' . (int)$data['limit']);
-		}
+		$product_data = $this->cache->get('product.cms.mostviewed.' . $config_language_id . '.' . $config_store_id . '.' .$config_customer_group_id . '.' . $data['limit']);
 
 		if (!$product_data) {
 			$product_data = array();
@@ -183,31 +164,28 @@ class ModelCatalogCms extends Model {
 			$sql = "SELECT * FROM (SELECT p.product_id, 
 			(SELECT AVG(rating) AS total FROM " . DB_PREFIX . "review r1 WHERE r1.product_id = p.product_id 
 			AND r1.status = '1' GROUP BY r1.product_id) AS rating, (SELECT price FROM " . DB_PREFIX . "product_discount pd2 
-			WHERE pd2.product_id = p.product_id AND pd2.customer_group_id = '" . $customer_group_id . "' 
+			WHERE pd2.product_id = p.product_id AND pd2.customer_group_id = '" . $config_customer_group_id . "' 
 			AND pd2.quantity = '1' AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < '" . $NOW . "') 
 			AND (pd2.date_end = '0000-00-00' OR pd2.date_end > '" . $NOW . "')) ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1) AS discount, 
 			(SELECT price FROM " . DB_PREFIX . "product_special ps 
-			WHERE ps.product_id = p.product_id AND ps.customer_group_id = '" . $customer_group_id . "' 
+			WHERE ps.product_id = p.product_id AND ps.customer_group_id = '" . $config_customer_group_id . "' 
 			AND ((ps.date_start = '0000-00-00' OR ps.date_start < '" . $NOW . "') AND (ps.date_end = '0000-00-00' OR ps.date_end > '" . $NOW . "')) 
 			ORDER BY ps.priority ASC, ps.price ASC LIMIT 1) AS special, p.sort_order, p.viewed, p.price, p.model"; 
 
 			$sql .= " FROM " . DB_PREFIX . "product p 
 			LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) 
 			WHERE p.status = '1' AND p.date_available <= '" . $NOW . "' 
-			AND p2s.store_id = '" . $store_id . "' 
-			GROUP BY p.product_id  ORDER by p.viewed DESC  LIMIT 0, " . (int)$data['limit'];
+			AND p2s.store_id = '" . $config_store_id . "' 
+			GROUP BY p.product_id  ORDER by p.viewed DESC  LIMIT 0, " . $data['limit'];
 
-			$sql .= ") p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id AND pd.language_id = '". $language_id ."') ORDER BY ";
+			$sql .= ") p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id AND pd.language_id = '" . $config_language_id . "') ORDER BY ";
 
 			$sort_data = array(
 				'pd.name',
-				'quantity',
 				'ps.price',
 				'rating',
-				'p.sort_order',
-				'p.model',
-				'p.viewed'
-			);	
+				'p.model'
+			);
 
 			if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 				if ($data['sort'] == 'pd.name') {
@@ -217,14 +195,14 @@ class ModelCatalogCms extends Model {
 				} else {
 					$sql .= " " . $data['sort'];
 				}
-			} else {
-				$sql .= " p.sort_order";	
-			}
 
-			if (isset($data['order']) && ($data['order'] == 'DESC')) {
-				$sql .= " DESC, LCASE(name) DESC";
+				if (isset($data['order']) && ($data['order'] == 'DESC')) {
+					$sql .= " DESC";
+				} else {
+					$sql .= " ASC";
+				}
 			} else {
-				$sql .= " ASC, LCASE(name) ASC";
+				$sql .= " p.viewed DESC";	
 			}
 
 			if (isset($data['start']) || isset($data['limit'])) {
@@ -236,17 +214,19 @@ class ModelCatalogCms extends Model {
 					$data['limit'] = 20;
 				}
 
-				$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+				$sql .= " LIMIT " . (int)$data['start'] . "," . $data['limit'];
 			}
 
 			$query = $this->db->query($sql);
 
+			$this->load->model('catalog/product');
+
 			foreach ($query->rows as $result) { 		
-				$product_data[$result['product_id']] = $this->model_catalog_product->getProduct($result['product_id']);
+				$product_data[] = $this->model_catalog_product->getProduct($result['product_id']);
 			}
 
 			if ($cache) {
-				$this->cache->set('product.mostviewed.' . $language_id . '.' . $store_id . '.' .$customer_group_id . '.' . (int)$data['limit'], $product_data);
+				$this->cache->set('product.cms.mostviewed.' . $config_language_id . '.' . $config_store_id . '.' .$config_customer_group_id . '.' . $data['limit'], $product_data);
 			}
 		}
 
