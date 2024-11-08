@@ -1,6 +1,6 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2017.
-// *	@forum	http://forum.opencart.pro
+// *	@copyright	OPENCART.PRO 2011 - 2024.
+// *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
@@ -8,7 +8,7 @@ class ControllerStartupStartup extends Controller {
 	public function index() {
 		// Language
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "language` WHERE code = '" . $this->db->escape($this->config->get('config_admin_language')) . "'");
-		
+
 		if ($query->num_rows) {
 			$this->config->set('config_language_id', $query->row['language_id']);
 		}
@@ -53,6 +53,6 @@ class ControllerStartupStartup extends Controller {
 		$this->registry->set('encryption', new Encryption($this->config->get('config_encryption')));
 
 		// OpenBay Pro
-		$this->registry->set('openbay', new Openbay($this->registry));					
+		$this->registry->set('openbay', new Openbay($this->registry));
 	}
 }
