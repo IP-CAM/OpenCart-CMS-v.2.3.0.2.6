@@ -8,7 +8,7 @@
 $_['heading_title'] = 'Popular Articles';
 
 // Text
-$_['text_views'] 	  = 'Reviews:';
+$_['text_views']    = 'Reviews:';
 $_['text_reviews']  = 'Based on %s reviews.';
 
 // Button
