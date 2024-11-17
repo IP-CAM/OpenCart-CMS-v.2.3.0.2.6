@@ -36,6 +36,7 @@ class ControllerStartupSeoPro extends Controller {
 			$r = isset($this->request->get['route'])?$this->request->get['route']:'';
 			$this->response->redirect(str_replace('&amp;', '&', $this->url->link($r, $this->getQueryString(array('route')))), 301);
 		}
+		$this->request->server['REQUEST_URI'] = str_replace('&amp;', '&', $this->request->server['REQUEST_URI']);
 		$ssl_mode = (bool)$this->config->get('config_secure') + $this->valid_server;
 		switch ($ssl_mode) {
 			case '2':
