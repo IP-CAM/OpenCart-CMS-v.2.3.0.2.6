@@ -225,9 +225,7 @@ class ModelCatalogCms extends Model {
 				$product_data[] = $this->model_catalog_product->getProduct($result['product_id']);
 			}
 
-			if ($cache) {
-				$this->cache->set('product.cms.mostviewed.' . $config_language_id . '.' . $config_store_id . '.' .$config_customer_group_id . '.' . $data['limit'], $product_data);
-			}
+			$this->cache->set('product.cms.mostviewed.' . $config_language_id . '.' . $config_store_id . '.' .$config_customer_group_id . '.' . $data['limit'], $product_data);
 		}
 
 		return $product_data;
