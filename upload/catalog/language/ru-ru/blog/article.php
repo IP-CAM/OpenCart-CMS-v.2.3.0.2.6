@@ -21,8 +21,9 @@ $_['text_tax']             = 'Без НДС:';
 $_['text_related']         = 'Похожие статьи';
 $_['text_related_product'] = 'Сопутствующие объявления';
 $_['text_benefits']        = 'Преимущества:';
+$_['text_date_added']      = 'Дата публикации:';
+$_['text_date_modified']   = 'Дата редактирования:';
 $_['text_author']          = 'Автор:';
-$_['text_date']            = 'Дата публикации:';
 
 // Entry
 $_['entry_name']           = 'Ваше Имя';
