@@ -56,14 +56,14 @@ class ControllerAccountForgotten extends Controller {
 
 				// Add to activity log
 				if ($this->config->get('config_customer_activity')) {
-						$this->load->model('account/activity');
+					$this->load->model('account/activity');
 
-						$activity_data = array(
-							'customer_id' => $customer_info['customer_id'],
-							'name'        => $customer_info['firstname'] . ' ' . $customer_info['lastname']
-						);
+					$activity_data = array(
+						'customer_id' => $customer_info['customer_id'],
+						'name'        => $customer_info['firstname'] . ' ' . $customer_info['lastname']
+					);
 
-						$this->model_account_activity->addActivity('forgotten', $activity_data);
+					$this->model_account_activity->addActivity('forgotten', $activity_data);
 				}
 			}
 
