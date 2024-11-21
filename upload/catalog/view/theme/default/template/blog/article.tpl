@@ -37,6 +37,7 @@
               <?php if ($date_modified) { ?>
               <span><b><?php echo $text_date_modified; ?></b></span> <span><?php echo $date_modified; ?></span>
               <?php } ?>
+              <span><b><?php echo $text_views; ?></b></span> <span><?php echo $viewed; ?></span>
             </div>
             <hr>
             <div id="description"><?php echo $description; ?></div>
