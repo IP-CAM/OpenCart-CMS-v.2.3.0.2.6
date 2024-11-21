@@ -28,32 +28,45 @@
         <div class="col-sm-12">
           <h1><?php echo $heading_title; ?></h1>
           <div class="tab-content">
-          <div id="description"><?php echo $description; ?></div>
-          <?php if ($review_status) { ?>
-          <div class="rating">
-            <p>
-              <?php for ($i = 1; $i <= 5; $i++) { ?>
-              <?php if ($rating < $i) { ?>
-              <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-1x"></i></span>
-              <?php } else { ?>
-              <span class="fa fa-stack"><i class="fa fa-star fa-stack-1x"></i><i class="fa fa-star-o fa-stack-1x"></i></span>
-              <?php } ?>
-              <?php } ?>
-              <a href="" onclick="gotoReview(); return false;"><?php echo $reviews; ?></a> / <a href="" onclick="gotoReviewWrite(); return false;"><?php echo $text_write; ?></a></p>
             <hr>
-          </div><br />
-          <?php } ?>
-          <?php if ($download_status) { ?>
-          <div class="blog-info">
-            <?php if ($downloads) { ?>
+            <div>
+              <?php if ($date_modified) { ?>
+              <span><b><?php echo $text_author; ?></b></span> <span><?php echo $author; ?></span>
+              <?php } ?>
+              <span><b><?php echo $text_date_added; ?></b></span> <span><?php echo $date_added; ?></span>
+              <?php if ($date_modified) { ?>
+              <span><b><?php echo $text_date_modified; ?></b></span> <span><?php echo $date_modified; ?></span>
+              <?php } ?>
+            </div>
+            <hr>
+            <div id="description"><?php echo $description; ?></div>
+            <?php if ($review_status) { ?>
+            <div class="rating">
+              <p>
+                <?php for ($i = 1; $i <= 5; $i++) { ?>
+                <?php if ($rating < $i) { ?>
+                <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-1x"></i></span>
+                <?php } else { ?>
+                <span class="fa fa-stack"><i class="fa fa-star fa-stack-1x"></i><i class="fa fa-star-o fa-stack-1x"></i></span>
+                <?php } ?>
+                <?php } ?>
+                <a href="" onclick="gotoReview(); return false;"><?php echo $reviews; ?></a> / <a href="" onclick="gotoReviewWrite(); return false;"><?php echo $text_write; ?></a>
+              </p>
+              <hr>
+            </div>
             <br />
-            <?php foreach($downloads as $download){ ?>
-            <a href="<?php echo $download['href']; ?>" title=""><i class="fa fa-floppy-o"></i> <?php echo $download['name']; ?> <?php echo " (". $download['size'] .")";?></a><br>
             <?php } ?>
-            <br />
-            <?php } ?> 
-          </div>
-          <?php } ?>
+            <?php if ($download_status) { ?>
+            <div class="blog-info">
+              <?php if ($downloads) { ?>
+              <br />
+              <?php foreach ($downloads as $download) { ?>
+              <a href="<?php echo $download['href']; ?>" title=""><i class="fa fa-floppy-o"></i> <?php echo $download['name']; ?> <?php echo " (". $download['size'] .")";?></a><br>
+              <?php } ?>
+              <br />
+              <?php } ?> 
+            </div>
+            <?php } ?>
           </div>
         </div>
       </div>
