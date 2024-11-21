@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2021.
+// *	@copyright	OPENCART.PRO 2011 - 2024.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -148,6 +148,8 @@ class ControllerBlogArticle extends Controller {
 			$data['text_related'] = $this->language->get('text_related');
 			$data['text_related_product'] = $this->language->get('text_related_product');
 			$data['text_benefits'] = $this->language->get('text_benefits');
+			$data['text_author'] = $this->language->get('text_author');
+			$data['text_date'] = $this->language->get('text_date');
 
 			$data['entry_name'] = $this->language->get('entry_name');
 			$data['entry_review'] = $this->language->get('entry_review');
@@ -186,6 +188,9 @@ class ControllerBlogArticle extends Controller {
 			$data['reviews'] = sprintf($this->language->get('text_reviews'), (int)$article_info['reviews']);
 			$data['rating'] = (int)$article_info['rating'];
 			$data['gstatus'] = (int)$article_info['gstatus'];
+			$data['author'] = $article_info['author'];
+			$data['date_added'] = date($this->language->get('date_format_short'), strtotime($article_info['date_added']));
+			$data['date_modified'] = date($this->language->get('date_format_short'), strtotime($article_info['date_modified']));
 
 			// Captcha
 			if ($this->config->get($this->config->get('config_captcha') . '_status') && in_array('review', (array)$this->config->get('config_captcha_page'))) {
@@ -409,7 +414,7 @@ class ControllerBlogArticle extends Controller {
 				exit('Error: Headers already sent out!');
 			}
 		} else {
-			$this->redirect(HTTP_SERVER . 'index.php?route=account/download');
+			$this->redirect($this->url->link('account/download', '', true));
 		}
 	}
 
