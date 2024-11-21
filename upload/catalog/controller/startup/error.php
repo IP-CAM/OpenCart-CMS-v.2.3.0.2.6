@@ -42,7 +42,7 @@ class ControllerStartupError extends Controller {
 			$this->log->write('PHP ' . $error . ':  ' . $message . ' in ' . $file . ' on line ' . $line);
 		}
 
-		if ($this->config->get('config_error_display')) {
+		if ($this->config->get('config_error_display') || empty($this->session->data['user_id'])) {
 			echo '<b>' . $error . '</b>: ' . $message . ' in <b>' . $file . '</b> on line <b>' . $line . '</b>';
 		} else {
 			error_reporting(0);
@@ -56,7 +56,7 @@ class ControllerStartupError extends Controller {
 			$this->log->write('PHP ' . get_class($e) . ':  ' . $e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine());
 		}
 
-		if ($this->config->get('config_error_display') || empty($this->session->data['user_id'])) {
+		if ($this->config->get('config_error_display') && !empty($this->session->data['user_id'])) {
 			echo '<b>' . get_class($e) . '</b>: ' . $e->getMessage() . ' in <b>' . $e->getFile() . '</b> on line <b>' . $e->getLine() . '</b>';
 		}
 	}
