@@ -21,8 +21,9 @@ $_['button_more']          = 'more';
 $_['text_related']         = 'Related Articles';
 $_['text_related_product'] = 'Related Products';
 $_['text_benefits']        = 'Benefits:';
+$_['text_date_added']      = 'Publication date:';
+$_['text_date_modified']   = 'Edited date:';
 $_['text_author']          = 'Author:';
-$_['text_date']            = 'Publication date:';
 
 // Entry
 $_['entry_name']           = 'Your Name:';
