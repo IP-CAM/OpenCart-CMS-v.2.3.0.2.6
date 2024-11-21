@@ -149,7 +149,8 @@ class ControllerBlogArticle extends Controller {
 			$data['text_related_product'] = $this->language->get('text_related_product');
 			$data['text_benefits'] = $this->language->get('text_benefits');
 			$data['text_author'] = $this->language->get('text_author');
-			$data['text_date'] = $this->language->get('text_date');
+			$data['text_date_added'] = $this->language->get('text_date_added');
+			$data['text_date_modified'] = $this->language->get('text_date_modified');
 
 			$data['entry_name'] = $this->language->get('entry_name');
 			$data['entry_review'] = $this->language->get('entry_review');
