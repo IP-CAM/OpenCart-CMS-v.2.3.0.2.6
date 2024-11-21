@@ -189,8 +189,8 @@ class ControllerBlogArticle extends Controller {
 			$data['reviews'] = sprintf($this->language->get('text_reviews'), (int)$article_info['reviews']);
 			$data['rating'] = (int)$article_info['rating'];
 			$data['gstatus'] = (int)$article_info['gstatus'];
-			$data['date_added'] = date($this->language->get('date_format_short'), strtotime($article_info['date_added']));
-			$data['date_modified'] = date($this->language->get('date_format_short'), strtotime($article_info['date_modified']));
+			$data['date_added'] = date($this->language->get('datetime_format'), strtotime($article_info['date_added']));
+			$data['date_modified'] = date($this->language->get('datetime_format'), strtotime($article_info['date_modified']));
 			$data['viewed'] = (int)$article_info['viewed'];
 			$data['author'] = $article_info['author'];
 
