@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2021.
+// *	@copyright	OPENCART.PRO 2011 - 2024.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -21,6 +21,8 @@ $_['button_more']          = 'more';
 $_['text_related']         = 'Related Articles';
 $_['text_related_product'] = 'Related Products';
 $_['text_benefits']        = 'Benefits:';
+$_['text_author']          = 'Author:';
+$_['text_date']            = 'Publication date:';
 
 // Entry
 $_['entry_name']           = 'Your Name:';
