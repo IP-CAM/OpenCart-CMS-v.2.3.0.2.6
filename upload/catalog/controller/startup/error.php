@@ -42,7 +42,7 @@ class ControllerStartupError extends Controller {
 			$this->log->write('PHP ' . $error . ':  ' . $message . ' in ' . $file . ' on line ' . $line);
 		}
 
-		if ($this->config->get('config_error_display') || empty($this->session->data['user_id'])) {
+		if ($this->config->get('config_error_display') && !empty($this->session->data['user_id'])) {
 			echo '<b>' . $error . '</b>: ' . $message . ' in <b>' . $file . '</b> on line <b>' . $line . '</b>';
 		} else {
 			error_reporting(0);
