@@ -13,6 +13,16 @@ class ModelBlogArticle extends Model {
 		$query = $this->db->query("SELECT DISTINCT *, pd.name AS name, p.image, (SELECT AVG(rating) AS total FROM " . DB_PREFIX . "review_article r1 WHERE r1.article_id = p.article_id AND r1.status = '1' GROUP BY r1.article_id) AS rating, (SELECT COUNT(*) AS total FROM " . DB_PREFIX . "review_article r2 WHERE r2.article_id = p.article_id AND r2.status = '1' GROUP BY r2.article_id) AS reviews, p.sort_order FROM " . DB_PREFIX . "article p LEFT JOIN " . DB_PREFIX . "article_description pd ON (p.article_id = pd.article_id) LEFT JOIN " . DB_PREFIX . "article_to_store p2s ON (p.article_id = p2s.article_id)  WHERE p.article_id = '" . (int)$article_id . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'");
 
 		if ($query->num_rows) {
+			if ($query->row['user_id']) {
+				$author = $this->db->query("SELECT CONCAT(firstname, ' ', lastname) AS author FROM " . DB_PREFIX . "user WHERE user_id='" . (int)$article_info['user_id'] . "'");
+				$author = ($author->num_rows ? $author->row['author'] : false);
+			} elseif ($query->row['customer_id']) {
+				$author = $this->db->query("SELECT CONCAT(firstname, ' ', lastname) AS author FROM " . DB_PREFIX . "customer WHERE customer_id='" . (int)$article_info['customer_id'] . "'");
+				$author = ($author->num_rows ? $author->row['author'] : false);
+			} else {
+				$author = false;
+			}
+
 			return array(
 				'meta_title'       => $query->row['meta_title'],
 				'noindex'          => $query->row['noindex'],
@@ -31,7 +41,8 @@ class ModelBlogArticle extends Model {
 				'gstatus'          => $query->row['gstatus'],
 				'date_added'       => $query->row['date_added'],
 				'date_modified'    => $query->row['date_modified'],
-				'viewed'           => $query->row['viewed']
+				'viewed'           => $query->row['viewed'],
+				'author'           => $author,
 			);
 		} else {
 			return false;
