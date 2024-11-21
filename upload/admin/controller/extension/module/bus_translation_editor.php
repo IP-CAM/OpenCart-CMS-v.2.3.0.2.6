@@ -1,6 +1,6 @@
 <?php
 // *   Аўтар: "БуслікДрэў" ( https://buslikdrev.by/ )
-// *   © 2016-2021; BuslikDrev - Усе правы захаваныя.
+// *   © 2016-2024; BuslikDrev - Усе правы захаваныя.
 // *   Спецыяльна для сайта: "OpenCart.pro" ( https://opencart.pro/ )
 
 /*
@@ -97,7 +97,7 @@ class BusTranslationEditor extends Controller {
 	private $code_event = 'bus_translation_editor';
 	private $code = '01000061';
 	private $mame = 'Редактор перевода - "Translation editor"';
-	private $version = '1.0.6';
+	private $version = '1.0.8';
 	private $author = 'BuslikDrev.by';
 	private $link = 'https://liveopencart.ru/buslikdrev';
 	private $version_oc = 2.2;
@@ -643,8 +643,8 @@ class BusTranslationEditor extends Controller {
 					foreach ($languages as $language) {
 						$language['code'] = ($this->version_oc != 2 ? $language['code'] : $language['directory']);
 						foreach ($this->loadLanguage($path, $language['code'], $dir) as $lang) {
-							$md5 = md5($lang['name'] . $path);
 							if (strpos(mb_strtolower($lang['name']), $search) !== false || strpos(mb_strtolower($lang['value']), $search) !== false) {
+								$md5 = md5($lang['name'] . $path);
 								$files['count_result']++;
 								$data['list_lang'][$md5]['path'] = str_replace('.php', '', $path);
 								$data['list_lang'][$md5]['name'] = $lang['name'];
@@ -795,7 +795,7 @@ class BusTranslationEditor extends Controller {
 
 					$value[$language['code']] = str_replace(array("\r", "\n"), '', html_entity_decode($value[$language['code']], ENT_QUOTES));
 					if (stristr($data, '$_[' . $name . ']') !== false) {
-						$data = preg_replace('/\$_\[' . preg_quote($name, '/') . '\](.[\s\=]*)(.*?);(\n|\r|\r\n){0,2}/S', '$_[' . $name . ']$1' . $value[$language['code']] . ';' . "\r\n", $data);
+						$data = preg_replace('/\$_\[' . preg_quote($name, '/') . '\](.[\s\=]*)(.*?);(?=\r\n|\n|\r|)/S', '$_[' . $name . ']$1' . $value[$language['code']] . ';$3', $data);
 					} else {
 						$data = str_replace('<?php', '<?php' . "\r\n" . '$_[' . $name . '] = ' . $value[$language['code']] . ';', $data);
 					}
@@ -896,7 +896,7 @@ class BusTranslationEditor extends Controller {
 					$data = file_get_contents($dir . $language['code'] . '/' . $path);
 
 					if (stristr($data, '$_[' . $name . ']') !== false) {
-						$data = preg_replace('/\$_\[' . preg_quote($name, '/') . '\](.[\s\=]*)(.*?);(\n|\r|\r\n){0,2}/S', '', $data);
+						$data = preg_replace('/\$_\[' . preg_quote($name, '/') . '\](.[\s\=]*)(.*?);(?=\r\n|\n|\r|)/S', '', $data);
 					}
 
 					file_put_contents($dir . $language['code'] . '/' . $path, $data);
@@ -996,7 +996,7 @@ class BusTranslationEditor extends Controller {
 		if (is_file($file)) {
 			$data = file_get_contents($file);
 
-			if (preg_match_all('/\$_\[(.[^\]]*?)](.[\s\=]*)(.*?);(\n|\r|\r\n){0,2}/S', $data, $matches)) {
+			if (preg_match_all('/\$_\[(.[^\]]*?)](.[\s\=]*)(.*?);(?=\r\n|\n|\r|)/S', $data, $matches)) {
 				if (isset($matches[1]) && isset($matches[3])) {
 					foreach ($matches[1] as $key => $result) {
 						$_[] = array(
@@ -1070,7 +1070,8 @@ class BusTranslationEditor extends Controller {
 			$this->model_setting_setting->editSetting('bus_translation_editor', array('bus_translation_editor' => $this->request->post));
 
 			if ($apply) {
-				$this->session->data['success'] = $this->language->get('success_setting_apply');
+				$this->session->data['success'] = $this->modification('', true, 300);
+				//$this->session->data['success'] = $this->language->get('success_setting_apply');
 
 				$this->response->redirect($this->url->link($this->paths['controller']['bus_translation_editor'], $this->paths['token'], true));
 			} else {

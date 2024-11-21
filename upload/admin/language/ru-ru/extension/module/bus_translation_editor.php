@@ -1,7 +1,6 @@
 <?php
 // *   Аўтар: "БуслікДрэў" ( https://buslikdrev.by/ )
-// *   © 2016-2021; BuslikDrev - Усе правы захаваныя.
-// *   Спецыяльна для сайта: "OpenCart.pro" ( https://opencart.pro/ )
+// *   © 2016-2024; BuslikDrev - Усе правы захаваны.
 
 // Heading
 $_['heading_title']                              = '<b>Редактор перевода <span style="color:limegreen">Full</span></b> v' . (isset($this->data['bus_translation_editor_version']) ? $this->data['bus_translation_editor_version'] : '1.0');

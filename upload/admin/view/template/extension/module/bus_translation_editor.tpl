@@ -18,8 +18,8 @@
 <?php } ?>
   </td>
   <td class="text-right" style="vertical-align: top;">
-    <span title="<?php echo $button_save; ?>" data-toggle="tooltip"><a class="btn btn-primary" onClick="bus_translation_editor.saveLang('<?php echo $tab; ?>', <?php echo $key; ?>);"><?php echo $button_save; ?></a></span>
-    <span title="<?php echo $button_delete; ?>" data-toggle="tooltip"><a class="btn btn-danger" onClick="bus_translation_editor.deleteLang('<?php echo $tab; ?>', <?php echo $key; ?>);"><?php echo $button_delete; ?></a></span>
+    <span title="<?php echo $button_save; ?>" data-toggle="tooltip"><a class="btn btn-primary" onClick="bus_translation_editor.saveLang('<?php echo $tab; ?>', <?php echo $key; ?>);"><i class="fa fa-save"></i></a></span>
+    <span title="<?php echo $button_delete; ?>" data-toggle="tooltip"><a class="btn btn-danger" onClick="bus_translation_editor.deleteLang('<?php echo $tab; ?>', <?php echo $key; ?>);"><i class="fa fa-trash-o"></i></a></span>
   </td>
 </tr>
 <?php $key++; ?>
@@ -52,8 +52,7 @@ pre{
 </style>
 <?php echo $column_left; ?>
 <!-- // *   Аўтар: "БуслікДрэў" ( https://buslikdrev.by/ )
-     // *   © 2016-2021; BuslikDrev - Усе правы захаваныя.
-     // *   Спецыяльна для сайта: "OpenCart.pro" ( https://opencart.pro/ ) -->
+     // *   © 2016-2024; BuslikDrev - Усе правы захаваны. -->
 <div id="content">
   <div class="page-header">
     <div class="container-fluid">
@@ -272,8 +271,8 @@ var bus_translation_editor = {
 <?php } ?>
 		html += '  </td>';
 		html += '  <td class="text-right" style="vertical-align: top;">';
-		html += '    <span title="<?php echo $button_save; ?>" data-toggle="tooltip"><a class="btn btn-primary" onClick="bus_translation_editor.saveLang(\'' + tab + '\', ' + lang_row + ');"><?php echo $button_save; ?></a></span>';
-		html += '    <span title="<?php echo $button_delete; ?>" data-toggle="tooltip"><a class="btn btn-danger" onClick="bus_translation_editor.deleteLang(\'' + tab + '\', ' + lang_row + ');"><?php echo $button_delete; ?></a></span>';
+		html += '    <span title="<?php echo $button_save; ?>" data-toggle="tooltip"><a class="btn btn-primary" onClick="bus_translation_editor.saveLang(\'' + tab + '\', ' + lang_row + ');"><i class="fa fa-save"></i></a></span>';
+		html += '    <span title="<?php echo $button_delete; ?>" data-toggle="tooltip"><a class="btn btn-danger" onClick="bus_translation_editor.deleteLang(\'' + tab + '\', ' + lang_row + ');"><i class="fa fa-trash-o"></i></a></span>';
 		html += '  </td>';
 		html += '</tr>';
 
@@ -310,7 +309,7 @@ var bus_translation_editor = {
 
 					if (json['error']) {
 						var button = $(node).html();
-						$(node).removeClass('btn-danger').addClass('btn-danger').html('<?php echo $error_install; ?>');
+						$(node).removeClass('btn-danger').addClass('btn-danger').html('<i class="fa fa-times fa-xmark fa-solid"></i>');
 						setTimeout(function() {
 							$(node).removeClass('btn-danger').addClass('btn-danger').html(button);
 						}, 1000);
@@ -319,7 +318,7 @@ var bus_translation_editor = {
 
 					if (json['success']) {
 						var button = $(node).html();
-						$(node).removeClass('btn-danger').addClass('btn-success').html('<?php echo $success_delete; ?>');
+						$(node).removeClass('btn-danger').addClass('btn-success').html('<i class="fa fa-check fa-solid"></i>');
 						setTimeout(function() {
 							$('#' + tab + '-lang-' + lang_row).remove();
 						}, 1000);
@@ -362,7 +361,7 @@ var bus_translation_editor = {
 
 				if (json['error']) {
 					var button = $(node).html();
-					$(node).removeClass('btn-primary').addClass('btn-danger').html('<?php echo $error_install; ?>');
+					$(node).removeClass('btn-primary').addClass('btn-danger').html('<i class="fa fa-times fa-xmark fa-solid"></i>');
 					setTimeout(function() {
 						$(node).removeClass('btn-danger').addClass('btn-primary').html(button);
 					}, 1000);
@@ -371,7 +370,7 @@ var bus_translation_editor = {
 
 				if (json['success']) {
 					var button = $(node).html();
-					$(node).removeClass('btn-primary').addClass('btn-success').html('<?php echo $success_add; ?>');
+					$(node).removeClass('btn-primary').addClass('btn-success').html('<i class="fa fa-check fa-solid"></i>');
 					setTimeout(function() {
 						$(node).removeClass('btn-success').addClass('btn-primary').html(button);
 					}, 1000);
@@ -651,26 +650,35 @@ $('#tab-admin .bus-path').on('click', 'a.file', function(e) {
 });
 
 // поиск
-$('#tab-catalog .bus-search').on('click', 'button', function(e) {
+var search = $('#tab-catalog .bus-search');
+search.on('click', 'button', function(e) {
 	e.preventDefault();
 
-	var node = this;
-
-	bus_translation_editor.search('catalog', node);
+	bus_translation_editor.search('catalog', this);
 });
 
-$('#tab-admin .bus-search').on('click', 'button', function(e) {
+search.on('keydown', 'input', function(e) {
+	if (e.keyCode == 13) {
+		$('#tab-catalog .bus-search').find('button').trigger('click');
+	}
+});
+
+search = $('#tab-admin .bus-search');
+search.on('click', 'button', function(e) {
 	e.preventDefault();
 
-	var node = this;
-
-	bus_translation_editor.search('admin', node);
+	bus_translation_editor.search('admin', this);
 });
 
-$('.bus-editor textarea').on('keyup', function(e) {
-	console.log('xui');
+search.on('keydown', 'input', function(e) {
+	if (e.keyCode == 13) {
+		$('#tab-admin .bus-search').find('button').trigger('click');
+	}
+});
+
+/* $('.bus-editor textarea').on('keyup', function(e) {
 	sh_highlightDocument();
-});
+}); */
 //--></script>
 <script type="text/javascript"><!--
 window.addEventListener('load', function() {
@@ -841,7 +849,6 @@ window.addEventListener('load', function() {
 });
 //--></script>
 <!-- // *   Аўтар: "БуслікДрэў" ( https://buslikdrev.by/ )
-     // *   © 2016-2021; BuslikDrev - Усе правы захаваныя.
-     // *   Спецыяльна для сайта: "OpenCart.pro" ( https://opencart.pro/ ) -->
+     // *   © 2016-2024; BuslikDrev - Усе правы захаваны. -->
 <?php echo $footer; ?>
 <?php } ?>
