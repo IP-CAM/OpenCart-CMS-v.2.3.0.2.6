@@ -1,11 +1,15 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2021.
+// *	@copyright	OPENCART.PRO 2011 - 2024.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
 
 class ControllerBlogMenu extends Controller {
 	public function index() {
+		if (!$this->config->get('configblog_blog_menu')) {
+			return false;
+		}
+
 		$this->load->language('blog/menu');
 
 		$configblog_name = $this->config->get('configblog_name');
@@ -64,6 +68,8 @@ class ControllerBlogMenu extends Controller {
 			}
 
 			return $this->load->view('blog/menu', $data);
+		} else {
+			return false;
 		}
 	}
 }
