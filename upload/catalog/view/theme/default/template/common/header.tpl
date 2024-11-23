@@ -42,7 +42,7 @@
   <div class="container">
     <?php echo $currency; ?>
     <?php echo $language; ?>
-    <?php echo $menu; ?>
+    <?php echo $blog_menu; ?>
     <div id="top-links" class="nav pull-right">
       <ul class="list-inline">
         <li><a href="<?php echo $contact; ?>"><i class="fa fa-phone"></i></a> <span class="hidden-xs hidden-sm hidden-md"><?php echo $telephone; ?></span></li>
@@ -79,8 +79,7 @@
           <?php } ?>
         </div>
       </div>
-      <div class="col-sm-5"><?php echo $search; ?>
-      </div>
+      <div class="col-sm-5"><?php echo $search; ?></div>
       <div class="col-sm-3"><?php echo $cart; ?></div>
     </div>
   </div>
