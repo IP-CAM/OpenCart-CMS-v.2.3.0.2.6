@@ -9,7 +9,7 @@ OPENCART.PRO  является  готовым коробочным решени
 	- Сайт Проекта: https://opencart.pro
 	- Форум поддержки: https://forum.opencart.pro
 	- Демо: https://demo23.opencart.pro
- 	- Действующий Сайт: https://freebob.by
+ 	- Действующий Сайт: https://catdog.by
 
 ## Рекомендации
 Отключите "open_basedir" на сервере т.к. он отключает "realpath_cache". После отключения вы сможете прочувствовать всю мощь сборки.
@@ -28,7 +28,7 @@ OpenCart.pro is a ready-made online trading solution. You just install, choose a
 	- Project site: https://opencart.pro
 	- Support Forum: https://forum.opencart.pro
 	- Demo: https://demo23.opencart.pro
-	- Current Website: https://freebob.by
+	- Current Website: https://catdog.by
 
 ## Recommendations
 Disable "open_basedir" on the server because it disables "realpath_cache". After disconnecting, you will be able to feel the full power of the assembly.
