@@ -134,37 +134,10 @@ class ControllerCommonHeader extends Controller {
 			}
 		}
 
+		$data['blog_menu'] = $this->load->controller('blog/menu');
 		$data['language'] = $this->load->controller('common/language');
 		$data['currency'] = $this->load->controller('common/currency');
-		if ($this->config->get('configblog_blog_menu')) {
-			$data['menu'] = $this->load->controller('blog/menu');
-		} else {
-			$data['menu'] = '';
-		}
 		$data['search'] = $this->load->controller('common/search');
-		if ($this->config->get('configblog_blog_search')) {
-			$blog_search_status = false;
-
-			if ($this->config->get('configblog_blog_search') == 2) {
-				$blog_search_status = true;
-			} else {
-				if (isset($this->request->get[ 'route' ])) {
-					if ($this->request->get['route'] == 'blog/article') {
-						$blog_search_status = true;
-					} elseif ($this->request->get['route'] == 'blog/category') {
-						$blog_search_status = true;
-					} elseif ($this->request->get['route'] == 'blog/latest') {
-						$blog_search_status = true;
-					} elseif ($this->request->get['route'] == 'blog/search') {
-						$blog_search_status = true;
-					}
-				}
-			}
-
-			if ($blog_search_status) {
-				$data[ 'search' ] = $this->load->controller('extension/module/blog_search');
-			}
-		}
 		$data['cart'] = $this->load->controller('common/cart');
 
 		// For page specific css
