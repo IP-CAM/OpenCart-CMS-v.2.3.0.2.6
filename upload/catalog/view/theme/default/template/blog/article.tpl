@@ -30,7 +30,7 @@
           <div class="tab-content">
             <hr>
             <div>
-              <?php if ($date_modified) { ?>
+              <?php if ($author) { ?>
               <span><b><?php echo $text_author; ?></b></span> <span><?php echo $author; ?></span>
               <?php } ?>
               <span><b><?php echo $text_date_added; ?></b></span> <span><?php echo $date_added; ?></span>
