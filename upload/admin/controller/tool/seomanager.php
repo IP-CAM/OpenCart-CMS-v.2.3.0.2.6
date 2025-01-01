@@ -1,5 +1,5 @@
 <?php
-// *	@copyright	OPENCART.PRO 2011 - 2024.
+// *	@copyright	OPENCART.PRO 2011 - 2025.
 // *	@forum		https://forum.opencart.pro
 // *	@source		See SOURCE.txt for source and other copyright.
 // *	@license	GNU General Public License version 3; see LICENSE.txt
@@ -595,7 +595,6 @@ class ControllerToolSeoManager extends Controller {
 		$pagination->total = $url_alias_total;
 		$pagination->page = $page_url;
 		$pagination->limit = $this->config->get('config_limit_admin');
-		$pagination->text = $this->language->get('text_pagination');
 		$pagination->url = $this->url->link('tool/seomanager', 'token=' . $this->session->data['token'] . $url, true);
 
 		$data['filter_query'] = $filter_query;
@@ -638,7 +637,6 @@ class ControllerToolSeoManager extends Controller {
 		$pagination->total = $seo_tags_total;
 		$pagination->page = $page_tag;
 		$pagination->limit = $this->config->get('config_limit_admin');
-		$pagination->text = $this->language->get('text_pagination');
 		$pagination->url = $this->url->link('tool/seomanager', 'token=' . $this->session->data['token'] . $url . '#tab_seotag', true);
 
 		$data['filter_store'] = $filter_store;
